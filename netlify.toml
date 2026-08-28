@@ -1,0 +1,15 @@
+[build]
+  publish = "build/web"
+  command = "flutter build web --release --no-tree-shake-icons"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cross-Origin-Opener-Policy = "same-origin"
+    Cross-Origin-Embedder-Policy = "credentialless"
+    Access-Control-Allow-Origin = "*"

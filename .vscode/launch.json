@@ -1,0 +1,30 @@
+﻿{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Rainbow (Phone / LAN Web Server)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "web-server",
+            "args": [
+                "--web-hostname=0.0.0.0",
+                "--web-port=8080"
+            ],
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "Rainbow (Chrome)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "chrome",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "Rainbow (Windows Desktop)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "windows",
+            "program": "lib/main.dart"
+        }
+    ]
+}
