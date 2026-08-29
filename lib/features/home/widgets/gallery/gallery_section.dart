@@ -449,6 +449,44 @@ class _SimplifiedGalleryCardState extends State<_SimplifiedGalleryCard> {
                         ),
                       ),
 
+                      // Category Tag Badge (e.g., Surgical & OT, Diagnostics, Patient Recovery...)
+                      Positioned(
+                        top: 10,
+                        left: 10,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.70),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: widget.item.category.color.withValues(alpha: 0.6),
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              FaIcon(
+                                widget.item.category.icon,
+                                size: 10,
+                                color: widget.item.category.color,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                widget.item.category.title,
+                                style: const TextStyle(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
                       // Subtle hover zoom icon
                       Positioned(
                         top: 10,
