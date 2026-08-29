@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,12 +13,17 @@ import 'gallery_modal.dart';
 /// Section 9 — Hospital Infrastructure, Clinical OT Suites & Optical Plaza Gallery.
 ///
 /// Features:
-/// - Simplified Cards: Only the picture photo and the name/title of the photo.
-/// - Responsive initial visible cards:
-///   * Laptop/PC (>= 1024px): exactly 4 cards
-///   * Tablet (600px - 1023px): exactly 2 cards
-///   * Mobile (< 600px): exactly 1 card
-/// - Interactive "See More / Virtual Tour" button that launches the manual scrolling Virtual Tour.
+/// - One photo for each category (5 photos total by default) representing all infrastructure areas:
+///   1. Surgical & OT
+///   2. Diagnostics
+///   3. Patient Recovery
+///   4. Campus & Lounge
+///   5. Optical & Pharmacy
+/// - Responsive card layouts:
+///   * Mobile (< 600px): 1 card per row, scrolling down displays all 5 follow-up category cards
+///   * Tablet (600px - 1023px): 2 cards per row
+///   * Laptop / PC (>= 1024px): 3 cards per row
+/// - "See More" button launches the full interactive Virtual Tour (all 16 photos).
 class GallerySection extends StatefulWidget {
   const GallerySection({super.key});
 
@@ -30,9 +34,19 @@ class GallerySection extends StatefulWidget {
 class _GallerySectionState extends State<GallerySection> {
   GalleryCategory _selectedCategory = GalleryCategory.all;
 
-  List<HospitalPhotoItem> get _filteredItems {
+  /// Returns 1 representative photo per category when "All" is active (5 cards total),
+  /// or all photos belonging to the selected category.
+  List<HospitalPhotoItem> get _displayedItems {
     if (_selectedCategory == GalleryCategory.all) {
-      return HospitalGalleryData.items;
+      final List<HospitalPhotoItem> categoryShowcase = [];
+      for (final cat in GalleryCategory.values) {
+        if (cat == GalleryCategory.all) continue;
+        final match = HospitalGalleryData.items.where((item) => item.category == cat).toList();
+        if (match.isNotEmpty) {
+          categoryShowcase.add(match.first);
+        }
+      }
+      return categoryShowcase;
     }
     return HospitalGalleryData.items
         .where((item) => item.category == _selectedCategory)
@@ -46,11 +60,10 @@ class _GallerySectionState extends State<GallerySection> {
   }
 
   void _openVirtualTour({int initialIndex = 0}) {
-    HapticFeedback.lightImpact();
     showHospitalGalleryModal(
       context,
       initialIndex: initialIndex,
-      items: _filteredItems,
+      items: HospitalGalleryData.items,
     );
   }
 
@@ -60,25 +73,20 @@ class _GallerySectionState extends State<GallerySection> {
     final isMobile = screenWidth < 600;
     final isTablet = screenWidth >= 600 && screenWidth < 1024;
 
-    // Responsive visible card count requirement:
-    // - Laptop & PC (>= 1024px): 4 cards
-    // - Tablet (600px - 1023px): 2 cards
-    // - Phone (< 600px): 1 card
+    // Responsive columns:
+    // - Phone: 1 card per row (user scrolls down to see each of the 5 categories)
+    // - Tablet: 2 cards per row
+    // - Desktop: 3 cards per row
     final int crossAxisCount;
-    final int initialVisibleCount;
     if (isMobile) {
       crossAxisCount = 1;
-      initialVisibleCount = 1;
     } else if (isTablet) {
       crossAxisCount = 2;
-      initialVisibleCount = 2;
     } else {
-      crossAxisCount = 4;
-      initialVisibleCount = 4;
+      crossAxisCount = 3;
     }
 
-    final filtered = _filteredItems;
-    final visibleItems = filtered.take(initialVisibleCount).toList();
+    final itemsToDisplay = _displayedItems;
 
     return Container(
       key: SectionNavigator.galleryKey,
@@ -223,10 +231,10 @@ class _GallerySectionState extends State<GallerySection> {
 
                 const SizedBox(height: 32),
 
-                // ── 5. Responsive Photo Grid (4 on Desktop, 2 on Tablet, 1 on Mobile) ──
+                // ── 5. Responsive Photo Grid (1 per row on Phone, 2 on Tablet, 3 on Desktop) ──
                 LayoutBuilder(
                   builder: (context, constraints) {
-                    const double spacing = 18.0;
+                    const double spacing = 20.0;
                     final double totalSpacing = (crossAxisCount - 1) * spacing;
                     final double cardWidth = (constraints.maxWidth - totalSpacing) / crossAxisCount;
 
@@ -234,18 +242,21 @@ class _GallerySectionState extends State<GallerySection> {
                       spacing: spacing,
                       runSpacing: spacing,
                       alignment: WrapAlignment.center,
-                      children: visibleItems.asMap().entries.map((entry) {
+                      children: itemsToDisplay.asMap().entries.map((entry) {
                         final index = entry.key;
                         final item = entry.value;
+                        final fullIndex = HospitalGalleryData.items.indexWhere((it) => it.id == item.id);
 
                         return SizedBox(
                           width: cardWidth,
                           child: ScrollReveal(
                             duration: const Duration(milliseconds: 500),
-                            delay: Duration(milliseconds: index * 80),
+                            delay: Duration(milliseconds: (index % crossAxisCount) * 80),
                             child: _SimplifiedGalleryCard(
                               item: item,
-                              onTap: () => _openVirtualTour(initialIndex: index),
+                              onTap: () => _openVirtualTour(
+                                initialIndex: fullIndex >= 0 ? fullIndex : index,
+                              ),
                             ),
                           ),
                         );
@@ -254,7 +265,7 @@ class _GallerySectionState extends State<GallerySection> {
                   },
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 36),
 
                 // ── 6. "See More" Button ──
                 ScrollReveal(
@@ -267,7 +278,7 @@ class _GallerySectionState extends State<GallerySection> {
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
                         padding: EdgeInsets.symmetric(
-                          horizontal: isMobile ? 32 : 44,
+                          horizontal: isMobile ? 36 : 48,
                           vertical: isMobile ? 14 : 16,
                         ),
                         shape: RoundedRectangleBorder(
@@ -438,7 +449,7 @@ class _SimplifiedGalleryCardState extends State<_SimplifiedGalleryCard> {
                         ),
                       ),
 
-                      // Subtle hover zoom pill
+                      // Subtle hover zoom icon
                       Positioned(
                         top: 10,
                         right: 10,

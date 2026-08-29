@@ -17,7 +17,6 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -253,7 +252,6 @@ class _BlogsSectionState extends State<BlogsSection> {
   }
 
   void _showArticleReader(BlogArticle article) {
-    HapticFeedback.lightImpact();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1307,7 +1305,6 @@ class _CategoryFilterBar extends StatelessWidget {
             final isSelected = cat == selectedCategory;
             return GestureDetector(
               onTap: () {
-                HapticFeedback.selectionClick();
                 onCategorySelected(cat);
               },
               child: AnimatedContainer(

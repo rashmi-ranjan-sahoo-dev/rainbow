@@ -102,12 +102,10 @@ class _BookingModalState extends State<BookingModal> {
 
   Future<void> _handleConfirmSlot() async {
     if (!_formKey.currentState!.validate()) {
-      HapticFeedback.lightImpact();
       return;
     }
 
     setState(() => _isSubmitting = true);
-    HapticFeedback.mediumImpact();
 
     final name = _nameController.text.trim();
     final phone = _phoneController.text.trim();

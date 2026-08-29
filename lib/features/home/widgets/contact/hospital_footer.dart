@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -612,7 +611,6 @@ class _SocialIconButtonState extends State<_SocialIconButton> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () async {
-          HapticFeedback.lightImpact();
           final uri = Uri.parse(widget.url);
           if (await canLaunchUrl(uri)) {
             await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -694,7 +692,6 @@ class _ScrollToTopFloatingButtonState extends State<_ScrollToTopFloatingButton> 
   bool _isHovered = false;
 
   void _scrollToTop() {
-    HapticFeedback.mediumImpact();
     SectionNavigator.scrollTo(SectionNavigator.heroKey);
   }
 

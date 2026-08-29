@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_typography.dart';
@@ -191,7 +190,6 @@ class _ServicesSectionState extends State<ServicesSection> {
   List<ServiceItem> get _lowerServices => _allServices.sublist(4, 8);
 
   void _showServiceDetails(ServiceItem service) {
-    HapticFeedback.lightImpact();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

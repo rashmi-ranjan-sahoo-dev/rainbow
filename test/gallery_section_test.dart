@@ -13,7 +13,7 @@ void main() {
     VisibilityDetectorController.instance.updateInterval = Duration.zero;
   });
 
-  testWidgets('GallerySection renders 4 cards on desktop with See More button', (tester) async {
+  testWidgets('GallerySection renders 5 category showcase cards with See More button', (tester) async {
     await tester.runAsync(() async {
       tester.view.physicalSize = const Size(1280, 900);
       tester.view.devicePixelRatio = 1.0;

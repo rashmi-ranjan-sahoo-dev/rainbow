@@ -12,7 +12,6 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -291,7 +290,6 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
   int mathMax(int a, int b) => a > b ? a : b;
 
   void _goToPrevious() {
-    HapticFeedback.lightImpact();
     final total = _filteredTestimonials.length;
     if (total == 0) return;
 
@@ -308,7 +306,6 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
   }
 
   void _goToNext() {
-    HapticFeedback.lightImpact();
     final total = _filteredTestimonials.length;
     if (total == 0) return;
 
@@ -517,7 +514,6 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
             final isActive = idx == _currentIndex;
             return GestureDetector(
               onTap: () {
-                HapticFeedback.selectionClick();
                 final width = MediaQuery.sizeOf(context).width;
                 final cardWidth = _calculateCardWidth(width, cardsPerView);
                 _scrollCardTo(idx, cardWidth, 16.0, totalItems, cardsPerView);
@@ -700,7 +696,6 @@ class _CategoryFilterBar extends StatelessWidget {
             final isSelected = cat == selectedCategory;
             return GestureDetector(
               onTap: () {
-                HapticFeedback.selectionClick();
                 onCategorySelected(cat);
               },
               child: AnimatedContainer(
@@ -763,7 +758,6 @@ class _TestimonialCardState extends State<_TestimonialCard> {
   bool _isPressed = false;
 
   void _showFullStoryModal() {
-    HapticFeedback.lightImpact();
     final t = widget.testimonial;
 
     showModalBottomSheet(

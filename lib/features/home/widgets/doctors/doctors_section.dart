@@ -24,7 +24,6 @@
 
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -447,7 +446,6 @@ class _FilterPillState extends State<_FilterPill> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          HapticFeedback.selectionClick();
           widget.onTap();
         },
         child: AnimatedContainer(
@@ -508,7 +506,6 @@ class _ResponsiveDoctorsGridState extends State<_ResponsiveDoctorsGrid> {
   int _mobileVisibleCount = 2;
 
   void _handleSeeMore(int totalDoctors) {
-    HapticFeedback.lightImpact();
     setState(() {
       if (_mobileVisibleCount < totalDoctors) {
         _mobileVisibleCount = math.min(_mobileVisibleCount + 2, totalDoctors);
@@ -784,7 +781,6 @@ class _DoctorCardState extends State<_DoctorCard>
         onTapDown: (_) => setState(() => _isPressed = true),
         onTapUp: (_) {
           setState(() => _isPressed = false);
-          HapticFeedback.lightImpact();
           showBookingDialog(
             context,
             initialTreatment: doc.specialtyBadge,

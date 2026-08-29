@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -73,7 +72,6 @@ class _VisionDeckModalState extends State<VisionDeckModal> {
   void _onAnswer(int index, bool isYes) {
     if (_isAutoAdvancing) return;
 
-    HapticFeedback.lightImpact();
     setState(() {
       _symptoms[index].isYes = isYes;
     });
@@ -105,7 +103,6 @@ class _VisionDeckModalState extends State<VisionDeckModal> {
   }
 
   void _resetAssessment() {
-    HapticFeedback.mediumImpact();
     setState(() {
       _symptoms = SymptomCheckerEngine.getInitialSymptoms();
       _currentPage = 0;

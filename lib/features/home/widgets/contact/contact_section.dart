@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -379,7 +378,6 @@ class _ContactInfoTileState extends State<_ContactInfoTile> {
   bool _isHovered = false;
 
   void _handleTap() {
-    HapticFeedback.lightImpact();
     if (widget.phoneNumber != null) {
       _ContactSectionState._makeCall(widget.phoneNumber!);
     } else if (widget.emailAddress != null) {
@@ -557,8 +555,6 @@ class _InteractiveContactFormState extends State<_InteractiveContactForm> {
       _isSubmitting = true;
       _isSuccess = false;
     });
-
-    HapticFeedback.mediumImpact();
 
     await Future.delayed(const Duration(milliseconds: 1200));
 
