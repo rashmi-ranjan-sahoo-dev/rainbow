@@ -423,7 +423,7 @@ class _VisionDeckModalState extends State<VisionDeckModal> {
                       ),
                     ),
 
-                    // Category Badge Pill at top-left
+                    // Question Pill at top-left
                     Positioned(
                       top: 12,
                       left: 12,
@@ -441,9 +441,9 @@ class _VisionDeckModalState extends State<VisionDeckModal> {
                           children: [
                             FaIcon(symptom.icon, size: 11, color: const Color(0xFF22D3EE)),
                             const SizedBox(width: 6),
-                            Text(
-                              symptom.category.toUpperCase(),
-                              style: const TextStyle(
+                            const Text(
+                              'EYE CHECK',
+                              style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 0.5,
@@ -482,30 +482,19 @@ class _VisionDeckModalState extends State<VisionDeckModal> {
           ),
           const SizedBox(height: 14),
 
-          // ── 2. Centered Symptom Name / Title ──
-          Column(
-            children: [
-              Text(
-                symptom.title,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  fontSize: isMobile ? 17 : 19,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  height: 1.25,
-                ),
+          // ── 2. Centered Symptom Question / Title ──
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: Text(
+              symptom.title,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                fontSize: isMobile ? 16.5 : 18.5,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                height: 1.3,
               ),
-              const SizedBox(height: 4),
-              Text(
-                '(${symptom.category})',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: isMobile ? 12 : 13,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF94A3B8),
-                ),
-              ),
-            ],
+            ),
           ),
           const SizedBox(height: 16),
 

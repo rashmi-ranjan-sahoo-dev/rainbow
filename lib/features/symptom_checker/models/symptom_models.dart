@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class SymptomCardItem {
   final String id;
   final String title;
-  final String category;
   final String imageAsset;
   final FaIconData icon;
   bool? isYes; // null = unselected, true = Yes, false = No
@@ -13,19 +12,15 @@ class SymptomCardItem {
   SymptomCardItem({
     required this.id,
     required this.title,
-    required this.category,
     required this.imageAsset,
     required this.icon,
     this.isYes,
   });
 
-  String get fullTitle => '$title\n($category)';
-
   SymptomCardItem copyWith({bool? isYes}) {
     return SymptomCardItem(
       id: id,
       title: title,
-      category: category,
       imageAsset: imageAsset,
       icon: icon,
       isYes: isYes ?? this.isYes,
@@ -72,42 +67,37 @@ class SymptomCheckerEngine {
   SymptomCheckerEngine._();
 
   static const String whatsAppAppointmentUrl =
-      'https://wa.me/8341104525?text=Hi%20Sir%2C%20Is%20appointment%20available%20for%20eye%20checkup%3F';
+      'https://wa.me/918341104525?text=Hi%20Sir%2C%20Is%20appointment%20available%20for%20eye%20checkup%3F';
 
   static List<SymptomCardItem> getInitialSymptoms() {
     return [
       SymptomCardItem(
         id: 'cloudy_vision',
-        title: 'Cloudy / Blurry Vision',
-        category: 'Cataract & Refraction',
+        title: 'Do you have cloudy or blurry vision?',
         imageAsset: 'assets/images/symptom_blurry_cataract.jpg',
         icon: FontAwesomeIcons.eyeLowVision,
       ),
       SymptomCardItem(
         id: 'flashes_floaters',
-        title: 'Flashes & Dark Floaters',
-        category: 'Retina & Vitreous',
+        title: 'Are you seeing flashes of light or dark floaters?',
         imageAsset: 'assets/images/symptom_flashes_floaters.jpg',
         icon: FontAwesomeIcons.boltLightning,
       ),
       SymptomCardItem(
         id: 'redness_burning',
-        title: 'Redness, Burning & Dryness',
-        category: 'Ocular Surface & Dry Eye',
+        title: 'Are you experiencing redness, burning, or dryness?',
         imageAsset: 'assets/images/symptom_dry_redness.jpg',
         icon: FontAwesomeIcons.fireFlameSimple,
       ),
       SymptomCardItem(
         id: 'eye_strain_pain',
-        title: 'Severe Eye Strain & Brow Pain',
-        category: 'Glaucoma & Asthenopia',
+        title: 'Do you feel severe eye strain or brow pain?',
         imageAsset: 'assets/images/symptom_strain_pain.jpg',
         icon: FontAwesomeIcons.brain,
       ),
       SymptomCardItem(
         id: 'sudden_loss_double',
-        title: 'Sudden Loss of Vision / Double Vision',
-        category: 'Emergency & Neuro-Ophthalmic',
+        title: 'Did you experience sudden vision loss or double vision?',
         imageAsset: 'assets/images/blog_blind_spot.jpg',
         icon: FontAwesomeIcons.triangleExclamation,
       ),
