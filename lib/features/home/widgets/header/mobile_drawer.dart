@@ -5,6 +5,7 @@ import '../../../../core/constants/app_typography.dart';
 import '../../../../core/utils/section_navigator.dart';
 import '../../../../shared/widgets/rainbow_logo.dart';
 import '../../../../shared/widgets/social_icon_row.dart';
+import '../../../symptom_checker/widgets/vision_deck_modal.dart';
 import '../booking/booking_modal.dart';
 
 /// Opens the mobile drawer with a customized smooth 420ms cubic slide-in curve.
@@ -112,7 +113,7 @@ class MobileDrawer extends StatelessWidget {
                       icon: FontAwesomeIcons.heartPulse,
                       onTap: () {
                         Navigator.pop(context);
-                        Navigator.pushNamed(context, '/symptom-checker');
+                        showVisionDeckModal(context);
                       },
                     ),
                     _DrawerNavItem(

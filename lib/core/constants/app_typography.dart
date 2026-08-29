@@ -28,14 +28,19 @@ class AppTypography {
     fontWeight: FontWeight.w700,
     color: Colors.white,
     letterSpacing: 1.8,
-    shadows: [
-      Shadow(
-        color: Colors.black.withValues(alpha: 0.60),
-        offset: const Offset(0, 1.5),
-        blurRadius: 6,
-      ),
-    ],
   );
+
+  static TextStyle sectionEyebrow({
+    Color? color,
+    double? fontSize,
+    double? letterSpacing,
+  }) =>
+      GoogleFonts.poppins(
+        fontSize: fontSize ?? 11.5,
+        fontWeight: FontWeight.w700,
+        color: color ?? AppColors.primary,
+        letterSpacing: letterSpacing ?? 1.1,
+      );
 
   static TextStyle heroSubtext(double fontSize) => GoogleFonts.inter(
     fontSize: fontSize,

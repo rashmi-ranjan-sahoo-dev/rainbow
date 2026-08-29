@@ -96,12 +96,10 @@ class _ContactSectionState extends State<ContactSection> {
                               const SizedBox(width: 7),
                               Text(
                                 'GET IN TOUCH & VISIT US',
-                                style: AppTypography.heroEyebrow.copyWith(
+                                style: AppTypography.sectionEyebrow(
                                   color: AppColors.primary,
                                   fontSize: isMobile ? 11 : 12,
-                                  fontWeight: FontWeight.w700,
                                   letterSpacing: 1.2,
-                                  shadows: [],
                                 ),
                               ),
                             ],

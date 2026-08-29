@@ -6,6 +6,7 @@ import '../../../../core/constants/app_typography.dart';
 import '../../../../core/utils/responsive_helper.dart';
 import '../../../../core/utils/section_navigator.dart';
 import '../../../../shared/widgets/app_button.dart';
+import '../../../symptom_checker/widgets/vision_deck_modal.dart';
 import '../booking/booking_modal.dart';
 
 /// Data model for a single hero slide.
@@ -507,7 +508,7 @@ class _HeroSlideState extends State<_HeroSlide>
                             children: [
                               _PulsatingSymptomCheckerButton(
                                 isFullWidth: true,
-                                onTap: () => Navigator.pushNamed(context, '/symptom-checker'),
+                                onTap: () => showVisionDeckModal(context),
                               ),
                               const SizedBox(height: 10),
                               AppButton(
@@ -531,7 +532,7 @@ class _HeroSlideState extends State<_HeroSlide>
                             children: [
                               _PulsatingSymptomCheckerButton(
                                 isFullWidth: false,
-                                onTap: () => Navigator.pushNamed(context, '/symptom-checker'),
+                                onTap: () => showVisionDeckModal(context),
                               ),
                               const SizedBox(width: 14),
                               AppButton(

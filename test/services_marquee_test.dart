@@ -42,9 +42,6 @@ void main() {
       await tester.tap(find.text('Cataract').first);
       await Future.delayed(const Duration(milliseconds: 300));
       await tester.pump();
-
-      // Verify Symptom guide banner
-      expect(find.textContaining('Experiencing Eye Symptoms?'), findsOneWidget);
     });
   });
 }

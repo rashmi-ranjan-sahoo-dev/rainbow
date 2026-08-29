@@ -328,10 +328,9 @@ class _SectionHeader extends StatelessWidget {
               const SizedBox(width: 7),
               Text(
                 'WORLD-CLASS MEDICAL FACULTY',
-                style: AppTypography.heroEyebrow.copyWith(
+                style: AppTypography.sectionEyebrow(
                   color: AppColors.primary,
                   fontSize: isMobile ? 10.5 : 11.5,
-                  fontWeight: FontWeight.w700,
                   letterSpacing: 1.1,
                 ),
               ),
