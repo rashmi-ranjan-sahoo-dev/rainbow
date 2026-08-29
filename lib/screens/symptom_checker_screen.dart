@@ -349,80 +349,26 @@ class _SymptomCheckerScreenState extends State<SymptomCheckerScreen> {
                   ),
                 ),
               ),
-              child: Column(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        _showResult ? 'Assessment Complete' : 'Step $currentStep of $total',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF22D3EE),
-                        ),
-                      ),
-                      Text(
-                        _showResult
-                            ? '100%'
-                            : '${((currentStep / total) * 100).toInt()}%',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white70,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    _showResult ? 'Assessment Complete' : 'Instant Symptom Assessment',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF22D3EE),
+                    ),
                   ),
-                  const SizedBox(height: 10),
-
-                  // 5 Step Segment Progress Dots
-                  Row(
-                    children: List.generate(total, (i) {
-                      final isCurrent = i == _currentPage && !_showResult;
-                      final isAnswered = _symptoms[i].isYes != null;
-                      final isYes = _symptoms[i].isYes == true;
-
-                      Color dotColor;
-                      if (isCurrent) {
-                        dotColor = const Color(0xFF22D3EE);
-                      } else if (isAnswered) {
-                        dotColor = isYes ? const Color(0xFF10B981) : const Color(0xFF64748B);
-                      } else {
-                        dotColor = Colors.white.withValues(alpha: 0.15);
-                      }
-
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            if (!_showResult) {
-                              _pageController.animateToPage(
-                                i,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOutCubic,
-                              );
-                            }
-                          },
-                          child: Container(
-                            height: 6,
-                            margin: EdgeInsets.only(right: i < total - 1 ? 6 : 0),
-                            decoration: BoxDecoration(
-                              color: dotColor,
-                              borderRadius: BorderRadius.circular(3),
-                              boxShadow: isCurrent
-                                  ? [
-                                      BoxShadow(
-                                        color: const Color(0xFF22D3EE).withValues(alpha: 0.6),
-                                        blurRadius: 8,
-                                      ),
-                                    ]
-                                  : null,
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
+                  if (!_showResult)
+                    Text(
+                      'Question $currentStep of $total',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white70,
+                      ),
+                    ),
                 ],
               ),
             ),

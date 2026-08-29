@@ -36,8 +36,8 @@ void main() {
       expect(find.text('OUR INFRASTRUCTURE & FACILITIES'), findsOneWidget);
       expect(find.text('Take A Tour Of Rainbow Eye Hospital'), findsOneWidget);
 
-      // Verify "See More / Explore Virtual Tour" button
-      expect(find.textContaining('See More / Explore Virtual Tour'), findsOneWidget);
+      // Verify "See More" button
+      expect(find.text('See More'), findsOneWidget);
     });
   });
 }

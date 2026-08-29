@@ -256,39 +256,34 @@ class _GallerySectionState extends State<GallerySection> {
 
                 const SizedBox(height: 32),
 
-                // ── 6. "See More / Explore Virtual Tour" Button ──
+                // ── 6. "See More" Button ──
                 ScrollReveal(
                   duration: const Duration(milliseconds: 600),
                   delay: const Duration(milliseconds: 200),
                   child: Center(
-                    child: ElevatedButton.icon(
+                    child: ElevatedButton(
                       onPressed: () => _openVirtualTour(initialIndex: 0),
-                      icon: const FaIcon(
-                        FontAwesomeIcons.expand,
-                        size: 14,
-                        color: Colors.white,
-                      ),
-                      label: Text(
-                        'See More / Explore Virtual Tour (${_filteredItems.length} Photos) →',
-                        style: GoogleFonts.poppins(
-                          fontSize: isMobile ? 13 : 15,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
                         padding: EdgeInsets.symmetric(
-                          horizontal: isMobile ? 22 : 32,
-                          vertical: isMobile ? 14 : 18,
+                          horizontal: isMobile ? 32 : 44,
+                          vertical: isMobile ? 14 : 16,
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
                         elevation: 3,
                         shadowColor: AppColors.primary.withValues(alpha: 0.35),
+                      ),
+                      child: Text(
+                        'See More',
+                        style: GoogleFonts.poppins(
+                          fontSize: isMobile ? 14 : 15.5,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          letterSpacing: 0.4,
+                        ),
                       ),
                     ),
                   ),

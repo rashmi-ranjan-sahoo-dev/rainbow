@@ -17,8 +17,8 @@ void showHospitalGalleryModal(
     context: context,
     barrierDismissible: true,
     barrierLabel: 'Dismiss Gallery Modal',
-    barrierColor: Colors.black.withValues(alpha: 0.88),
-    transitionDuration: const Duration(milliseconds: 380),
+    barrierColor: Colors.black.withValues(alpha: 0.90),
+    transitionDuration: const Duration(milliseconds: 350),
     pageBuilder: (context, anim1, anim2) {
       return _HospitalGalleryModal(
         initialIndex: initialIndex,
@@ -33,7 +33,7 @@ void showHospitalGalleryModal(
       return FadeTransition(
         opacity: curve,
         child: ScaleTransition(
-          scale: Tween<double>(begin: 0.95, end: 1.0).animate(curve),
+          scale: Tween<double>(begin: 0.96, end: 1.0).animate(curve),
           child: child,
         ),
       );
@@ -59,7 +59,6 @@ class _HospitalGalleryModalState extends State<_HospitalGalleryModal> {
   late final PageController _pageController;
   late final ScrollController _filmstripController;
   final FocusNode _focusNode = FocusNode();
-  bool _showDetails = true;
 
   @override
   void initState() {
@@ -154,7 +153,7 @@ class _HospitalGalleryModalState extends State<_HospitalGalleryModal> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: isMobile ? 12 : 72,
-                        vertical: isMobile ? 80 : 110,
+                        vertical: isMobile ? 80 : 100,
                       ),
                       child: InteractiveViewer(
                         minScale: 1.0,
@@ -186,7 +185,7 @@ class _HospitalGalleryModalState extends State<_HospitalGalleryModal> {
               ),
             ),
 
-            // ── 2. Top Header Bar (Counter, Category Pill, Close) ──
+            // ── 2. Top Header Bar (Brand Badge, Counter, Close Button) ──
             Positioned(
               top: 0,
               left: 0,
@@ -220,7 +219,7 @@ class _HospitalGalleryModalState extends State<_HospitalGalleryModal> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              isMobile ? 'Rainbow Gallery' : 'Rainbow Eye Hospital Campus',
+                              'Rainbow Eye Hospital',
                               style: GoogleFonts.inter(
                                 color: Colors.white,
                                 fontSize: 13,
@@ -230,42 +229,6 @@ class _HospitalGalleryModalState extends State<_HospitalGalleryModal> {
                           ],
                         ),
                       ),
-
-                      const SizedBox(width: 10),
-
-                      // Category Pill
-                      if (!isMobile)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: currentItem.category.color.withValues(alpha: 0.25),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: currentItem.category.color.withValues(alpha: 0.6),
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              FaIcon(
-                                currentItem.category.icon,
-                                size: 11,
-                                color: currentItem.category.color,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                currentItem.category.title,
-                                style: GoogleFonts.inter(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
 
                       const Spacer(),
 
@@ -289,23 +252,6 @@ class _HospitalGalleryModalState extends State<_HospitalGalleryModal> {
                       ),
 
                       const SizedBox(width: 10),
-
-                      // Toggle details visibility
-                      IconButton(
-                        tooltip: _showDetails ? 'Hide Info' : 'Show Info',
-                        icon: Icon(
-                          _showDetails
-                              ? Icons.info_rounded
-                              : Icons.info_outline_rounded,
-                          color: Colors.white,
-                          size: 22,
-                        ),
-                        onPressed: () {
-                          setState(() => _showDetails = !_showDetails);
-                        },
-                      ),
-
-                      const SizedBox(width: 4),
 
                       // Close Button
                       InkWell(
@@ -363,7 +309,7 @@ class _HospitalGalleryModalState extends State<_HospitalGalleryModal> {
                 ),
               ),
 
-            // ── 5. Bottom Info Card & Thumbnail Filmstrip ──
+            // ── 5. Bottom Picture Name Only & Thumbnail Filmstrip ──
             Positioned(
               bottom: 0,
               left: 0,
@@ -372,91 +318,50 @@ class _HospitalGalleryModalState extends State<_HospitalGalleryModal> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Dynamic Caption Card
-                    if (_showDetails)
-                      Center(
-                        child: Container(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: isMobile ? 14 : 32,
-                            vertical: 8,
+                    // Picture Name / Title Only
+                    Center(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: isMobile ? 16 : 32,
+                          vertical: 8,
+                        ),
+                        constraints: const BoxConstraints(maxWidth: 680),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isMobile ? 16 : 24,
+                          vertical: isMobile ? 9 : 11,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0F172A).withValues(alpha: 0.90),
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.16),
                           ),
-                          constraints: const BoxConstraints(maxWidth: 820),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isMobile ? 14 : 20,
-                            vertical: isMobile ? 10 : 12,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF0F172A).withValues(alpha: 0.88),
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.4),
+                              blurRadius: 18,
+                              offset: const Offset(0, 4),
                             ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.4),
-                                blurRadius: 20,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 3),
-                                    decoration: BoxDecoration(
-                                      color: currentItem.category.color
-                                          .withValues(alpha: 0.25),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: Text(
-                                      currentItem.tag.toUpperCase(),
-                                      style: TextStyle(
-                                        color: currentItem.category.color,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w800,
-                                        letterSpacing: 0.6,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      currentItem.title,
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.white,
-                                        fontSize: isMobile ? 14 : 16,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                currentItem.description,
-                                style: GoogleFonts.inter(
-                                  color: Colors.white.withValues(alpha: 0.82),
-                                  fontSize: isMobile ? 11.5 : 12.5,
-                                  height: 1.35,
-                                ),
-                                maxLines: isMobile ? 2 : 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                          ],
+                        ),
+                        child: Text(
+                          currentItem.title,
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: isMobile ? 13.5 : 15.5,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.2,
                           ),
                         ),
                       ),
+                    ),
 
                     // Thumbnail Filmstrip Strip
                     Container(
-                      height: isMobile ? 56 : 68,
+                      height: isMobile ? 54 : 64,
                       margin: const EdgeInsets.only(bottom: 8),
                       child: ListView.separated(
                         controller: _filmstripController,
@@ -480,7 +385,7 @@ class _HospitalGalleryModalState extends State<_HospitalGalleryModal> {
                             },
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 220),
-                              width: isMobile ? 64 : 80,
+                              width: isMobile ? 62 : 78,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
@@ -532,7 +437,7 @@ class _HospitalGalleryModalState extends State<_HospitalGalleryModal> {
   }
 }
 
-class _NavArrowButton extends StatefulWidget {
+class _NavArrowButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
   final String tooltip;
@@ -544,52 +449,32 @@ class _NavArrowButton extends StatefulWidget {
   });
 
   @override
-  State<_NavArrowButton> createState() => _NavArrowButtonState();
-}
-
-class _NavArrowButtonState extends State<_NavArrowButton> {
-  bool _isHovered = false;
-
-  @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: Tooltip(
-        message: widget.tooltip,
-        child: GestureDetector(
-          onTap: widget.onTap,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: _isHovered
-                  ? AppColors.primary
-                  : Colors.black.withValues(alpha: 0.55),
-              border: Border.all(
-                color: _isHovered
-                    ? Colors.white.withValues(alpha: 0.4)
-                    : Colors.white.withValues(alpha: 0.2),
-                width: 1.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.4),
-                  blurRadius: 14,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(30),
+        child: Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.black.withValues(alpha: 0.55),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.25),
             ),
-            child: Center(
-              child: Icon(
-                widget.icon,
-                color: Colors.white,
-                size: 28,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.3),
+                blurRadius: 12,
               ),
-            ),
+            ],
+          ),
+          child: Icon(
+            icon,
+            color: Colors.white,
+            size: 28,
           ),
         ),
       ),

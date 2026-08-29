@@ -198,11 +198,8 @@ class _VisionDeckModalState extends State<VisionDeckModal> {
   }
 
   Widget _buildHeader(bool isMobile) {
-    final total = _symptoms.length;
-    final currentStep = _showResult ? total : (_currentPage + 1);
-
     return Container(
-      padding: EdgeInsets.fromLTRB(16, isMobile ? 12 : 14, 14, 10),
+      padding: EdgeInsets.fromLTRB(16, isMobile ? 12 : 14, 14, isMobile ? 12 : 14),
       decoration: BoxDecoration(
         color: const Color(0xFF1E293B).withValues(alpha: 0.9),
         border: const Border(
@@ -212,106 +209,27 @@ class _VisionDeckModalState extends State<VisionDeckModal> {
           ),
         ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Row(
         children: [
-          Row(
-            children: [
-              const RainbowLogoIcon(size: 24),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'Instant Symptom Checker',
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                    fontSize: isMobile ? 13.5 : 15,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
-                ),
+          const RainbowLogoIcon(size: 24),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Instant Symptom Checker',
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.poppins(
+                fontSize: isMobile ? 14 : 15.5,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
               ),
-              if (!_showResult) ...[
-                // Step pill badge
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3.5),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF0891B2).withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: const Color(0xFF22D3EE).withValues(alpha: 0.4),
-                    ),
-                  ),
-                  child: Text(
-                    'Step $currentStep of $total',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF22D3EE),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 4),
-              ],
-              IconButton(
-                icon: const Icon(Icons.close_rounded, color: Colors.white70, size: 20),
-                padding: const EdgeInsets.all(4),
-                constraints: const BoxConstraints(),
-                tooltip: 'Close',
-                onPressed: () => Navigator.pop(context),
-              ),
-            ],
+            ),
           ),
-          const SizedBox(height: 10),
-
-          // Progress Bar & Step Dots
-          Row(
-            children: [
-              // 5 Pagination Indicator Dots
-              ...List.generate(total, (i) {
-                final isCurrent = i == _currentPage && !_showResult;
-                final isAnswered = _symptoms[i].isYes != null;
-                final isYes = _symptoms[i].isYes == true;
-
-                Color dotColor;
-                if (isCurrent) {
-                  dotColor = const Color(0xFF22D3EE);
-                } else if (isAnswered) {
-                  dotColor = isYes ? const Color(0xFF10B981) : const Color(0xFF64748B);
-                } else {
-                  dotColor = Colors.white.withValues(alpha: 0.15);
-                }
-
-                return Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      if (!_showResult) {
-                        _pageController.animateToPage(
-                          i,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOutCubic,
-                        );
-                      }
-                    },
-                    child: Container(
-                      height: 5,
-                      margin: EdgeInsets.only(right: i < total - 1 ? 6 : 0),
-                      decoration: BoxDecoration(
-                        color: dotColor,
-                        borderRadius: BorderRadius.circular(3),
-                        boxShadow: isCurrent
-                            ? [
-                                BoxShadow(
-                                  color: const Color(0xFF22D3EE).withValues(alpha: 0.6),
-                                  blurRadius: 6,
-                                ),
-                              ]
-                            : null,
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ],
+          IconButton(
+            icon: const Icon(Icons.close_rounded, color: Colors.white70, size: 20),
+            padding: const EdgeInsets.all(4),
+            constraints: const BoxConstraints(),
+            tooltip: 'Close',
+            onPressed: () => Navigator.pop(context),
           ),
         ],
       ),
