@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/utils/responsive_helper.dart';
 import '../../shared/widgets/eye_animation_loader.dart';
+import '../../shared/widgets/floating_whatsapp_button.dart';
 import '../../shared/widgets/scroll_aware_header.dart';
 import '../../shared/widgets/scroll_reveal.dart';
 import '../../shared/widgets/smooth_scroll_wrapper.dart';
@@ -162,11 +163,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       return HeaderWidget(headerState: state);
                     },
                   ),
+
+                  // ── 3. Sticky Floating WhatsApp Widget (Bottom-Right) ──
+                  const FloatingWhatsAppButton(),
                 ],
               ),
             ),
 
-            // ── 3. Eye Animation Initial Loader (Blinks & Scans) ──
+            // ── 4. Eye Animation Initial Loader (Blinks & Scans) ──
             if (_isLoading)
               Positioned.fill(
                 child: Container(

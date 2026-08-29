@@ -1163,7 +1163,7 @@ class _ServiceDetailsModal extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        showBookingDialog(context);
+                        showBookingDialog(context, initialTreatment: s.title);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,

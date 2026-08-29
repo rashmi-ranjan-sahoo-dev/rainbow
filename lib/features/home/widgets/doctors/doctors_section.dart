@@ -785,7 +785,11 @@ class _DoctorCardState extends State<_DoctorCard>
         onTapUp: (_) {
           setState(() => _isPressed = false);
           HapticFeedback.lightImpact();
-          showBookingDialog(context);
+          showBookingDialog(
+            context,
+            initialTreatment: doc.specialtyBadge,
+            prefilledNotes: 'Preferred Specialist: ${doc.name} (${doc.specialtyBadge})',
+          );
         },
         onTapCancel: () => setState(() => _isPressed = false),
         child: AnimatedContainer(

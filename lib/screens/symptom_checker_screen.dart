@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../features/symptom_checker/models/symptom_models.dart';
+import '../shared/widgets/floating_whatsapp_button.dart';
 import '../shared/widgets/rainbow_logo.dart';
 
 /// Dedicated Instant Eye Symptom Checker Screen (`/symptom-checker`)
@@ -108,37 +109,44 @@ class _SymptomCheckerScreenState extends State<SymptomCheckerScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF0B1120), // Deep Obsidian
       appBar: _buildTopNav(context, isMobile),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 820),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: isMobile ? 14 : (isTablet ? 24 : 32),
-                  vertical: isMobile ? 14 : 20,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // ── 1. Hero / Clinical Header ──
-                    _buildHeaderHero(isMobile),
-                    const SizedBox(height: 16),
+      body: Stack(
+        children: [
+          SafeArea(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 820),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isMobile ? 14 : (isTablet ? 24 : 32),
+                      vertical: isMobile ? 14 : 20,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // ── 1. Hero / Clinical Header ──
+                        _buildHeaderHero(isMobile),
+                        const SizedBox(height: 16),
 
-                    // ── 2. Carousel & Triage Card Container ──
-                    _buildMainCardContainer(isMobile),
-                    const SizedBox(height: 20),
+                        // ── 2. Carousel & Triage Card Container ──
+                        _buildMainCardContainer(isMobile),
+                        const SizedBox(height: 20),
 
-                    // ── 3. Clinical Disclaimer Footer ──
-                    _buildClinicalDisclaimerFooter(isMobile),
-                    const SizedBox(height: 20),
-                  ],
+                        // ── 3. Clinical Disclaimer Footer ──
+                        _buildClinicalDisclaimerFooter(isMobile),
+                        const SizedBox(height: 40),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
+
+          // ── Sticky Floating WhatsApp Widget (Bottom-Right) ──
+          const FloatingWhatsAppButton(),
+        ],
       ),
     );
   }
