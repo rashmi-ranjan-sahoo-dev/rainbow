@@ -50,7 +50,7 @@ class NavMenu extends StatelessWidget {
         _NavMenuItem(
           title: 'Blogs',
           horizontalPadding: horizontalItemPadding,
-          onTap: () => SectionNavigator.scrollTo(SectionNavigator.blogsKey),
+          onTap: () => Navigator.pushNamed(context, '/blogs'),
         ),
         _NavMenuItem(
           title: 'Contact',

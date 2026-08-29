@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'core/constants/app_colors.dart';
 import 'features/home/home_screen.dart';
+import 'screens/blogs_screen.dart';
 import 'screens/symptom_checker_screen.dart';
 
 import 'dart:ui';
@@ -30,11 +31,18 @@ class RainbowApp extends StatelessWidget {
       routes: {
         '/': (context) => const HomeScreen(),
         '/symptom-checker': (context) => const SymptomCheckerScreen(),
+        '/blogs': (context) => const BlogsScreen(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/symptom-checker') {
           return MaterialPageRoute(
             builder: (_) => const SymptomCheckerScreen(),
+            settings: settings,
+          );
+        }
+        if (settings.name == '/blogs') {
+          return MaterialPageRoute(
+            builder: (_) => const BlogsScreen(),
             settings: settings,
           );
         }

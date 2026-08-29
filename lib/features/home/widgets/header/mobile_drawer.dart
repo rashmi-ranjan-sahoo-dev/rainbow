@@ -153,7 +153,7 @@ class MobileDrawer extends StatelessWidget {
                       icon: FontAwesomeIcons.bookOpen,
                       onTap: () {
                         Navigator.pop(context);
-                        SectionNavigator.scrollTo(SectionNavigator.blogsKey);
+                        Navigator.pushNamed(context, '/blogs');
                       },
                     ),
                     _DrawerNavItem(

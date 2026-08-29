@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rainbow/features/home/widgets/blogs/blogs_section.dart';
+import 'package:rainbow/screens/blogs_screen.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 void main() {
@@ -13,7 +13,7 @@ void main() {
     VisibilityDetectorController.instance.updateInterval = Duration.zero;
   });
 
-  testWidgets('BlogsSection renders headline, category filter pills, and research articles',
+  testWidgets('BlogsScreen renders top navigation, hero banner, category filters, and articles',
       (WidgetTester tester) async {
     await tester.runAsync(() async {
       tester.view.physicalSize = const Size(1280, 800);
@@ -21,21 +21,20 @@ void main() {
 
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: SingleChildScrollView(
-              child: BlogsSection(),
-            ),
-          ),
+          home: BlogsScreen(),
         ),
       );
 
       VisibilityDetectorController.instance.notifyNow();
-      await Future.delayed(const Duration(milliseconds: 600));
+      await Future.delayed(const Duration(milliseconds: 100));
       await tester.pump();
 
-      // Verify Section Eyebrow and Headline
-      expect(find.textContaining('RAINBOW CLINICAL KNOWLEDGE BASE'), findsOneWidget);
-      expect(find.text('Latest Eye Care Insights & Research Guides'), findsOneWidget);
+      // Verify AppBar
+      expect(find.text('Clinical Knowledge Base'), findsOneWidget);
+
+      // Verify Hero Banner
+      expect(find.text('AIIMS-TRAINED SURGICAL INSIGHTS'), findsOneWidget);
+      expect(find.text('Evidence-Based Eye Care & Clinical Research'), findsOneWidget);
 
       // Verify Category Filter Pills
       expect(find.text('All'), findsOneWidget);

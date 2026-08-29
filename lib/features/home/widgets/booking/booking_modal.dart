@@ -145,7 +145,6 @@ class _BookingModalState extends State<BookingModal> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final screenHeight = MediaQuery.sizeOf(context).height;
     final isMobile = screenWidth < 580;
 
     return Material(

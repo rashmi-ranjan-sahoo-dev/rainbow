@@ -18,7 +18,6 @@ import 'widgets/services/services_section.dart';
 import 'widgets/doctors/doctors_section.dart';
 import 'widgets/marquee/clinical_features_marquee.dart';
 import 'widgets/testimonials/testimonials_section.dart';
-import 'widgets/blogs/blogs_section.dart';
 import 'widgets/contact/contact_section.dart';
 
 /// Main home screen that assembles all sections top-to-bottom:
@@ -141,11 +140,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       // ── Section 10: Verified Patient Testimonials & Google Reviews ──
                       const SliverToBoxAdapter(
                         child: TestimonialsSection(),
-                      ),
-
-                      // ── Section 10: Clinical Knowledge Base & Researched Blogs ──
-                      const SliverToBoxAdapter(
-                        child: BlogsSection(),
                       ),
 
                       // ── Section 11: Contact Us & Interactive Map Section ──
