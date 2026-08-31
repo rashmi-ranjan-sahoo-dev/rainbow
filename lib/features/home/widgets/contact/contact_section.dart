@@ -860,7 +860,7 @@ class _HospitalMapCard extends StatelessWidget {
   const _HospitalMapCard();
 
   static const String _embedMapUrl =
-      'https://maps.google.com/maps?q=Rainbow+Eye+Hospital+Madhavadhara+Visakhapatnam&t=&z=16&ie=UTF8&iwloc=near&output=embed';
+      'https://maps.google.com/maps?q=17.7449,83.2646&hl=en&z=16&iwloc=near&output=embed';
 
   @override
   Widget build(BuildContext context) {

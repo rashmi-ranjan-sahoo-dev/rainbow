@@ -143,8 +143,8 @@ class _GoogleMapEmbedViewState extends State<GoogleMapEmbedView> {
 <body>
   <div id="map"></div>
   <script>
-    var lat = 17.7578;
-    var lng = 83.2721;
+    var lat = 17.7449;
+    var lng = 83.2646;
     var map = L.map('map', {
       zoomControl: true,
       scrollWheelZoom: true
