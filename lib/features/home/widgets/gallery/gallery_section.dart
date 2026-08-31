@@ -33,31 +33,17 @@ class GallerySection extends StatefulWidget {
 }
 
 class _GallerySectionState extends State<GallerySection> {
-  GalleryCategory _selectedCategory = GalleryCategory.all;
-
-  /// Returns 1 representative photo per category when "All" is active (5 cards total),
-  /// or all photos belonging to the selected category.
+  /// Returns 1 representative photo per category (6 cards total)
   List<HospitalPhotoItem> get _displayedItems {
-    if (_selectedCategory == GalleryCategory.all) {
-      final List<HospitalPhotoItem> categoryShowcase = [];
-      for (final cat in GalleryCategory.values) {
-        if (cat == GalleryCategory.all) continue;
-        final match = HospitalGalleryData.items.where((item) => item.category == cat).toList();
-        if (match.isNotEmpty) {
-          categoryShowcase.add(match.first);
-        }
+    final List<HospitalPhotoItem> categoryShowcase = [];
+    for (final cat in GalleryCategory.values) {
+      if (cat == GalleryCategory.all) continue;
+      final match = HospitalGalleryData.items.where((item) => item.category == cat).toList();
+      if (match.isNotEmpty) {
+        categoryShowcase.add(match.first);
       }
-      return categoryShowcase;
     }
-    return HospitalGalleryData.items
-        .where((item) => item.category == _selectedCategory)
-        .toList();
-  }
-
-  void _onCategorySelected(GalleryCategory category) {
-    setState(() {
-      _selectedCategory = category;
-    });
+    return categoryShowcase;
   }
 
   void _openVirtualTour({int initialIndex = 0}) {
@@ -75,7 +61,7 @@ class _GallerySectionState extends State<GallerySection> {
     final isTablet = screenWidth >= 600 && screenWidth < 1024;
 
     // Responsive columns:
-    // - Phone: 1 card per row (user scrolls down to see each of the 5 categories)
+    // - Phone: 1 card per row (user scrolls down to see each of the 6 categories)
     // - Tablet: 2 cards per row
     // - Desktop: 3 cards per row
     final int crossAxisCount;
@@ -162,77 +148,9 @@ class _GallerySectionState extends State<GallerySection> {
                   ),
                 ),
 
-                const SizedBox(height: 10),
+                SizedBox(height: isMobile ? 24 : 36),
 
-                // ── 3. Section Subtitle ──
-                ScrollReveal(
-                  duration: const Duration(milliseconds: 700),
-                  delay: const Duration(milliseconds: 140),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 680),
-                    child: Text(
-                      'Explore our world-class surgical suites, Carl Zeiss laser diagnostics, recovery lounges, and optical center in Visakhapatnam.',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
-                        fontSize: isMobile ? 13 : 15,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.textSecondary,
-                        height: 1.55,
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // ── 4. Category Filter Tabs ──
-                ScrollReveal(
-                  duration: const Duration(milliseconds: 700),
-                  delay: const Duration(milliseconds: 180),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: GalleryCategory.values.map((category) {
-                        final isSelected = _selectedCategory == category;
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: ChoiceChip(
-                            label: Text(
-                              category.title,
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: isMobile ? 12 : 13,
-                                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                                color: isSelected ? Colors.white : const Color(0xFF475569),
-                              ),
-                            ),
-                            selected: isSelected,
-                            selectedColor: AppColors.primary,
-                            backgroundColor: Colors.white,
-                            side: BorderSide(
-                              color: isSelected ? AppColors.primary : const Color(0xFFE2E8F0),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            onSelected: (selected) {
-                              if (selected) {
-                                _onCategorySelected(category);
-                              }
-                            },
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 32),
-
-                // ── 5. Responsive Photo Grid (1 per row on Phone, 2 on Tablet, 3 on Desktop) ──
+                // ── 3. Responsive Photo Grid (1 per row on Phone, 2 on Tablet, 3 on Desktop) ──
                 LayoutBuilder(
                   builder: (context, constraints) {
                     const double spacing = 20.0;
@@ -264,95 +182,6 @@ class _GallerySectionState extends State<GallerySection> {
                       }).toList(),
                     );
                   },
-                ),
-
-                const SizedBox(height: 36),
-
-                // ── 6. "See More" Button ──
-                ScrollReveal(
-                  duration: const Duration(milliseconds: 600),
-                  delay: const Duration(milliseconds: 200),
-                  child: Center(
-                    child: ElevatedButton(
-                      onPressed: () => _openVirtualTour(initialIndex: 0),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: isMobile ? 36 : 48,
-                          vertical: isMobile ? 14 : 16,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        elevation: 3,
-                        shadowColor: AppColors.primary.withValues(alpha: 0.35),
-                      ),
-                      child: Text(
-                        'See More',
-                        style: GoogleFonts.poppins(
-                          fontSize: isMobile ? 14 : 15.5,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          letterSpacing: 0.4,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 40),
-
-                // ── 7. Quality & Accreditation Trust Badges ──
-                ScrollReveal(
-                  duration: const Duration(milliseconds: 700),
-                  delay: const Duration(milliseconds: 250),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: isMobile ? 16 : 28,
-                      vertical: 18,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.03),
-                          blurRadius: 14,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: const Wrap(
-                      alignment: WrapAlignment.spaceAround,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      spacing: 24,
-                      runSpacing: 16,
-                      children: [
-                        _FeatureBadge(
-                          icon: FontAwesomeIcons.shieldHalved,
-                          title: 'NABH-Standard OTs',
-                          subtitle: '100% Laminar Sterile Airflow',
-                        ),
-                        _FeatureBadge(
-                          icon: FontAwesomeIcons.microscope,
-                          title: 'German Carl Zeiss Optics',
-                          subtitle: 'Sub-micron surgical precision',
-                        ),
-                        _FeatureBadge(
-                          icon: FontAwesomeIcons.heartPulse,
-                          title: 'Day-Care Recovery',
-                          subtitle: 'Same-day walk-in discharge',
-                        ),
-                        _FeatureBadge(
-                          icon: FontAwesomeIcons.prescriptionBottleMedical,
-                          title: '24/7 Optical & Pharmacy',
-                          subtitle: 'Genuine medicines & branded frames',
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
               ],
             ),
@@ -544,65 +373,4 @@ class _SimplifiedGalleryCardState extends State<_SimplifiedGalleryCard> {
   }
 }
 
-class _FeatureBadge extends StatelessWidget {
-  final FaIconData icon;
-  final String title;
-  final String subtitle;
 
-  const _FeatureBadge({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 38,
-          height: 38,
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: AppColors.primary.withValues(alpha: 0.20),
-            ),
-          ),
-          child: Center(
-            child: FaIcon(
-              icon,
-              size: 15,
-              color: AppColors.primary,
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 12.5,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF0F172A),
-              ),
-            ),
-            Text(
-              subtitle,
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 11,
-                color: Color(0xFF64748B),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}

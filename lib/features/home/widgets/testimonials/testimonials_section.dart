@@ -71,21 +71,10 @@ class TestimonialsSection extends StatefulWidget {
 }
 
 class _TestimonialsSectionState extends State<TestimonialsSection> {
-  String _selectedCategory = 'All';
   final PageController _pageController = PageController();
   int _currentPageIndex = 0;
   Timer? _autoPlayTimer;
   bool _isUserInteracting = false;
-
-  static const List<String> _categories = [
-    'All',
-    'LASIK & SMILE',
-    'Cataract',
-    'Retina',
-    'Pediatric',
-    'Glaucoma',
-    'Cornea & Oculoplasty',
-  ];
 
   static const List<Testimonial> _allTestimonials = [
     Testimonial(
@@ -226,12 +215,7 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
     ),
   ];
 
-  List<Testimonial> get _filteredTestimonials {
-    if (_selectedCategory == 'All') return _allTestimonials;
-    return _allTestimonials
-        .where((t) => t.procedureTag == _selectedCategory)
-        .toList();
-  }
+  List<Testimonial> get _filteredTestimonials => _allTestimonials;
 
   @override
   void initState() {
@@ -340,28 +324,9 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
                 child: _TestimonialsHeader(isMobile: isMobile),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: isMobile ? 24 : 36),
 
-              // ── 2. Specialty Filter Category Bar ──
-              _CategoryFilterBar(
-                categories: _categories,
-                selectedCategory: _selectedCategory,
-                onCategorySelected: (cat) {
-                  setState(() {
-                    _selectedCategory = cat;
-                    _currentPageIndex = 0;
-                  });
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (_pageController.hasClients) {
-                      _pageController.jumpToPage(0);
-                    }
-                  });
-                },
-              ),
-
-              SizedBox(height: isMobile ? 22 : 32),
-
-              // ── 3. Responsive PageView Showcase ──
+              // ── 2. Responsive PageView Showcase ──
               LayoutBuilder(
                 builder: (context, constraints) {
                   return _buildResponsiveShowcase(
@@ -600,82 +565,7 @@ class _TestimonialsHeader extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 4. SPECIALTY FILTER PILLS BAR
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _CategoryFilterBar extends StatelessWidget {
-  final List<String> categories;
-  final String selectedCategory;
-  final ValueChanged<String> onCategorySelected;
-
-  const _CategoryFilterBar({
-    required this.categories,
-    required this.selectedCategory,
-    required this.onCategorySelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 6,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: categories.map((cat) {
-            final isSelected = cat == selectedCategory;
-            return GestureDetector(
-              onTap: () => onCategorySelected(cat),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 220),
-                curve: Curves.easeOutCubic,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6.5),
-                decoration: BoxDecoration(
-                  color: isSelected ? AppColors.primary : Colors.transparent,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: isSelected
-                      ? [
-                          BoxShadow(
-                            color: AppColors.primary.withValues(alpha: 0.28),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ]
-                      : null,
-                ),
-                child: Text(
-                  cat,
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 11.5,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                    color: isSelected ? Colors.white : const Color(0xFF64748B),
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 5. CLEAN, MODERN TESTIMONIAL CARD (PHOTO, RATINGS, NAME, FEEDBACK)
+// 4. CLEAN, MODERN TESTIMONIAL CARD (PHOTO, RATINGS, NAME, FEEDBACK)
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _TestimonialCard extends StatefulWidget {

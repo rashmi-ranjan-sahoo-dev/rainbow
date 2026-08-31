@@ -18,7 +18,7 @@ class RainbowApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rainbow Eye Hospital | AI Eye Care & Surgery',
+      title: 'Rainbow Eye Hospital',
       debugShowCheckedModeBanner: false,
       scrollBehavior: const SmoothMaterialScrollBehavior(),
       theme: ThemeData(

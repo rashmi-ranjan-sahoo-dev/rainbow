@@ -22,7 +22,6 @@
 //   • Automatically respects MediaQuery.disableAnimations (Reduce Motion).
 // ─────────────────────────────────────────────────────────────────────────────
 
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -87,17 +86,8 @@ class DoctorsSection extends StatefulWidget {
 }
 
 class _DoctorsSectionState extends State<DoctorsSection> {
-  String _selectedCategory = 'All';
   int _visibilityEpoch = 0;
   bool _isInView = true;
-
-  static const List<String> _categories = [
-    'All',
-    'Cataract & LASIK',
-    'Retina & Vitreous',
-    'Glaucoma & Cornea',
-    'Pediatric & Oculoplasty',
-  ];
 
   /// Realistic, verified Indian male and female ophthalmologists
   static const List<DoctorProfile> _allDoctors = [
@@ -211,13 +201,6 @@ class _DoctorsSectionState extends State<DoctorsSection> {
     ),
   ];
 
-  List<DoctorProfile> get _filteredDoctors {
-    if (_selectedCategory == 'All') return _allDoctors;
-    return _allDoctors
-        .where((doc) => doc.category == _selectedCategory)
-        .toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveHelper.isMobile(context);
@@ -265,23 +248,12 @@ class _DoctorsSectionState extends State<DoctorsSection> {
                   isMobile: isMobile,
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: isMobile ? 24 : 36),
 
-                // ── 2. Specialty Filter Category Bar ──
-                _SpecialtyFilterBar(
-                  categories: _categories,
-                  selectedCategory: _selectedCategory,
-                  onCategorySelected: (cat) {
-                    setState(() => _selectedCategory = cat);
-                  },
-                ),
-
-                SizedBox(height: isMobile ? 28 : 40),
-
-                // ── 3. Responsive Animated Doctors Grid with Alternating Motion & Mobile Pagination ──
+                // ── 2. Responsive Animated Doctors Grid with Alternating Motion & Mobile Pagination ──
                 _ResponsiveDoctorsGrid(
-                  key: ValueKey('doctors_grid_${_selectedCategory}_$_visibilityEpoch'),
-                  doctors: _filteredDoctors,
+                  key: ValueKey('doctors_grid_$_visibilityEpoch'),
+                  doctors: _allDoctors,
                 ),
               ],
             ),
@@ -371,125 +343,7 @@ class _SectionHeader extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 4. SPECIALTY FILTER PILLS BAR
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _SpecialtyFilterBar extends StatelessWidget {
-  final List<String> categories;
-  final String selectedCategory;
-  final ValueChanged<String> onCategorySelected;
-
-  const _SpecialtyFilterBar({
-    required this.categories,
-    required this.selectedCategory,
-    required this.onCategorySelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: categories.map((cat) {
-            final isSelected = cat == selectedCategory;
-            return _FilterPill(
-              title: cat,
-              isSelected: isSelected,
-              onTap: () => onCategorySelected(cat),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-}
-
-class _FilterPill extends StatefulWidget {
-  final String title;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _FilterPill({
-    required this.title,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  State<_FilterPill> createState() => _FilterPillState();
-}
-
-class _FilterPillState extends State<_FilterPill> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () {
-          widget.onTap();
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: widget.isSelected
-                ? AppColors.primary
-                : (_isHovered ? AppColors.surface : Colors.transparent),
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: widget.isSelected
-                ? [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.28),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                : [
-                    const BoxShadow(
-                      color: Colors.transparent,
-                      blurRadius: 0,
-                      offset: Offset.zero,
-                    ),
-                  ],
-          ),
-          child: Text(
-            widget.title,
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 12.5,
-              fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w500,
-              color: widget.isSelected ? Colors.white : const Color(0xFF64748B),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 5. RESPONSIVE DOCTORS GRID (Alternating Direction Animation + Mobile +2 Pagination)
+// 4. RESPONSIVE DOCTORS GRID (Alternating Direction Animation + Mobile Pagination)
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _ResponsiveDoctorsGrid extends StatefulWidget {
@@ -502,13 +356,13 @@ class _ResponsiveDoctorsGrid extends StatefulWidget {
 }
 
 class _ResponsiveDoctorsGridState extends State<_ResponsiveDoctorsGrid> {
-  /// Mobile pagination count: Starts at 2 doctors, loads +2 per click
+  /// Mobile pagination count: Starts at 2 doctors, expands when clicking See More
   int _mobileVisibleCount = 2;
 
   void _handleSeeMore(int totalDoctors) {
     setState(() {
       if (_mobileVisibleCount < totalDoctors) {
-        _mobileVisibleCount = math.min(_mobileVisibleCount + 2, totalDoctors);
+        _mobileVisibleCount = totalDoctors;
       } else {
         _mobileVisibleCount = 2;
       }
@@ -523,7 +377,7 @@ class _ResponsiveDoctorsGridState extends State<_ResponsiveDoctorsGrid> {
 
     final totalDoctors = widget.doctors.length;
 
-    // Mobile: Show only _mobileVisibleCount doctors (initially 2, then 4, 6)
+    // Mobile: Show only _mobileVisibleCount doctors (initially 2, then all)
     final displayDoctors = isMobile
         ? widget.doctors.take(_mobileVisibleCount).toList()
         : widget.doctors;
@@ -607,12 +461,11 @@ class _ResponsiveDoctorsGridState extends State<_ResponsiveDoctorsGrid> {
               }),
             ),
 
-            // ── Mobile "See More" Button (+2 Specialists at a time) ──
+            // ── Mobile "See More" Button ──
             if (isMobile && totalDoctors > 2) ...[
               const SizedBox(height: 20),
               _SeeMorePaginationButton(
                 isExpanded: _mobileVisibleCount >= totalDoctors,
-                remainingCount: math.max(0, totalDoctors - _mobileVisibleCount),
                 onTap: () => _handleSeeMore(totalDoctors),
               ),
             ],
@@ -624,17 +477,15 @@ class _ResponsiveDoctorsGridState extends State<_ResponsiveDoctorsGrid> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 6. MOBILE "SEE MORE" PAGINATION BUTTON
+// 5. MOBILE "SEE MORE" PAGINATION BUTTON
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _SeeMorePaginationButton extends StatefulWidget {
   final bool isExpanded;
-  final int remainingCount;
   final VoidCallback onTap;
 
   const _SeeMorePaginationButton({
     required this.isExpanded,
-    required this.remainingCount,
     required this.onTap,
   });
 
@@ -648,8 +499,6 @@ class _SeeMorePaginationButtonState extends State<_SeeMorePaginationButton> {
 
   @override
   Widget build(BuildContext context) {
-    final nextBatchCount = math.min(2, widget.remainingCount);
-
     return GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) {
@@ -699,8 +548,8 @@ class _SeeMorePaginationButtonState extends State<_SeeMorePaginationButton> {
               const SizedBox(width: 8),
               Text(
                 widget.isExpanded
-                    ? 'Show Fewer Specialists'
-                    : 'See More (+$nextBatchCount Specialists)',
+                    ? 'Show Less'
+                    : 'See More',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 13,

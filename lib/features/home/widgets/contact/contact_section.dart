@@ -8,6 +8,7 @@ import '../../../../core/utils/responsive_helper.dart';
 import '../../../../core/utils/section_navigator.dart';
 import '../../../../shared/widgets/scroll_reveal.dart';
 import 'hospital_footer.dart';
+import 'map_embed/map_view.dart';
 
 /// Section 11 — Contact Us & Interactive Real Location Map Section with Consultation Form and Hospital Footer.
 /// Includes staggered scroll reveal animations and real satellite location imagery.
@@ -24,8 +25,12 @@ class _ContactSectionState extends State<ContactSection> {
 
   static Future<void> _launchUrlString(String urlStr) async {
     final uri = Uri.parse(urlStr);
-    if (await canLaunchUrl(uri)) {
+    try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      try {
+        await launchUrl(uri);
+      } catch (_) {}
     }
   }
 
@@ -524,20 +529,8 @@ class _InteractiveContactFormState extends State<_InteractiveContactForm> {
   final _emailController = TextEditingController();
   final _messageController = TextEditingController();
 
-  String _selectedDepartment = 'LASIK & SMILE Pro Laser';
   bool _isSubmitting = false;
   bool _isSuccess = false;
-
-  static const _departments = [
-    'LASIK & SMILE Pro Laser',
-    'Cataract & Premium IOL Implants',
-    'Retina & Diabetic Eye Care',
-    'Glaucoma & SLT Laser',
-    'Pediatric Ophthalmology & Squint',
-    'Cornea & Keratoconus C3R',
-    'Dry Eye & LipiFlow Care',
-    'Comprehensive Eye Checkup',
-  ];
 
   @override
   void dispose() {
@@ -559,7 +552,6 @@ class _InteractiveContactFormState extends State<_InteractiveContactForm> {
     final name = _nameController.text.trim();
     final phone = _phoneController.text.trim();
     final email = _emailController.text.trim();
-    final department = _selectedDepartment;
     final message = _messageController.text.trim();
 
     final buffer = StringBuffer();
@@ -569,9 +561,8 @@ class _InteractiveContactFormState extends State<_InteractiveContactForm> {
     if (email.isNotEmpty) {
       buffer.writeln('• Email: $email');
     }
-    buffer.writeln('• Department / Specialty: $department');
     if (message.isNotEmpty) {
-      buffer.writeln('• Symptoms / Notes: $message');
+      buffer.writeln('• Query / Notes: $message');
     }
 
     final encodedText = Uri.encodeComponent(buffer.toString());
@@ -750,48 +741,19 @@ class _InteractiveContactFormState extends State<_InteractiveContactForm> {
             ),
             const SizedBox(height: 12),
 
-            // Input Fields Row 2: Email & Department Dropdown
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final isNarrow = constraints.maxWidth < 500;
-                if (isNarrow) {
-                  return Column(
-                    children: [
-                      _buildTextFormField(
-                        controller: _emailController,
-                        hint: 'Email Address (Optional)',
-                        icon: Icons.email_outlined,
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                      const SizedBox(height: 12),
-                      _buildDepartmentDropdown(),
-                    ],
-                  );
-                }
-                return Row(
-                  children: [
-                    Expanded(
-                      child: _buildTextFormField(
-                        controller: _emailController,
-                        hint: 'Email Address (Optional)',
-                        icon: Icons.email_outlined,
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildDepartmentDropdown(),
-                    ),
-                  ],
-                );
-              },
+            // Input Field: Email Address
+            _buildTextFormField(
+              controller: _emailController,
+              hint: 'Email Address (Optional)',
+              icon: Icons.email_outlined,
+              keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 12),
 
             // Message Field
             _buildTextFormField(
               controller: _messageController,
-              hint: 'Describe your symptoms or preferred appointment date & time...',
+              hint: 'Describe your query or preferred appointment date & time...',
               icon: Icons.chat_bubble_outline_rounded,
               maxLines: 3,
             ),
@@ -891,96 +853,33 @@ class _InteractiveContactFormState extends State<_InteractiveContactForm> {
       ),
     );
   }
-
-  Widget _buildDepartmentDropdown() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: _selectedDepartment,
-          isExpanded: true,
-          dropdownColor: Colors.white,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF64748B), size: 20),
-          items: _departments.map((dept) {
-            return DropdownMenuItem(
-              value: dept,
-              child: Text(
-                dept,
-                style: const TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 12.5,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-            );
-          }).toList(),
-          onChanged: (val) {
-            if (val != null) {
-              setState(() => _selectedDepartment = val);
-            }
-          },
-        ),
-      ),
-    );
-  }
 }
 
-/// High-Fidelity Real Location Satellite Map with Drag-Pan, Zoom Controls, Pulsing Hospital Pin, and Directions.
-class _HospitalMapCard extends StatefulWidget {
+/// Interactive Live Google Map View without any intrusive cards or popup overlays.
+class _HospitalMapCard extends StatelessWidget {
   const _HospitalMapCard();
 
-  @override
-  State<_HospitalMapCard> createState() => _HospitalMapCardState();
-}
-
-class _HospitalMapCardState extends State<_HospitalMapCard>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _pulseController;
-  double _zoomLevel = 1.0;
-  Offset _panOffset = Offset.zero;
-
-  @override
-  void initState() {
-    super.initState();
-    _pulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1800),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _pulseController.dispose();
-    super.dispose();
-  }
-
-  void _zoomIn() {
-    setState(() => _zoomLevel = (_zoomLevel + 0.25).clamp(0.75, 2.5));
-  }
-
-  void _zoomOut() {
-    setState(() => _zoomLevel = (_zoomLevel - 0.25).clamp(0.75, 2.5));
-  }
+  static const String _embedMapUrl =
+      'https://maps.google.com/maps?q=Rainbow+Eye+Hospital+Madhavadhara+Visakhapatnam&t=&z=16&ie=UTF8&iwloc=near&output=embed';
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final isMobile = screenWidth < 700;
-    final mapHeight = isMobile ? 380.0 : 490.0;
+    final isTablet = screenWidth >= 700 && screenWidth < 1080;
+
+    // Desktop matches the full height of the left contact column (~540px)
+    // Tablet ~440px, Mobile ~360px
+    final double mapCardHeight = isMobile ? 360.0 : (isTablet ? 440.0 : 540.0);
 
     return Container(
       width: double.infinity,
-      height: mapHeight,
+      height: mapCardHeight,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppColors.divider,
+          color: const Color(0xFFE2E8F0),
           width: 1.2,
         ),
         boxShadow: [
@@ -991,286 +890,11 @@ class _HospitalMapCardState extends State<_HospitalMapCard>
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Stack(
-          children: [
-            // ── 1. Interactive Real Satellite Location Map with Gesture Pan & Zoom ──
-            GestureDetector(
-              onPanUpdate: (details) {
-                setState(() {
-                  _panOffset += details.delta;
-                });
-              },
-              child: AnimatedScale(
-                duration: const Duration(milliseconds: 180),
-                scale: _zoomLevel,
-                child: Transform.translate(
-                  offset: _panOffset,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.asset(
-                        'assets/images/rainbow_hospital_real_location_map.jpg',
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
-                      ),
-                      // Subtle gradient vignette overlay
-                      DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black.withValues(alpha: 0.12),
-                              Colors.transparent,
-                              Colors.black.withValues(alpha: 0.22),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            // ── 2. Pulsing Location Beacon on Rainbow Eye Hospital ──
-            Center(
-              child: Transform.translate(
-                offset: const Offset(0, -10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Outer Pulsing Wave
-                        AnimatedBuilder(
-                          animation: _pulseController,
-                          builder: (context, child) {
-                            final scale = 1.0 + (_pulseController.value * 1.3);
-                            final opacity = (1.0 - _pulseController.value).clamp(0.0, 1.0);
-                            return Transform.scale(
-                              scale: scale,
-                              child: Container(
-                                width: 52,
-                                height: 52,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.primary.withValues(alpha: opacity * 0.40),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-
-                        // Map Pin Bubble
-                        GestureDetector(
-                          onTap: () {
-                            _ContactSectionState._launchUrlString(_ContactSectionState._googleMapsUrl);
-                          },
-                          child: Container(
-                            width: 38,
-                            height: 38,
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [AppColors.primary, AppColors.primaryDark],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.primary.withValues(alpha: 0.50),
-                                  blurRadius: 14,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: const Center(
-                              child: FaIcon(
-                                FontAwesomeIcons.hospital,
-                                size: 16,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-
-                    // Pin Label Tag
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: AppColors.primary.withValues(alpha: 0.40),
-                          width: 1,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.15),
-                            blurRadius: 10,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.verified_rounded, size: 12, color: AppColors.primary),
-                          SizedBox(width: 4),
-                          Text(
-                            'Rainbow Eye Hospital',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // ── 3. Zoom Buttons (+ and -) ──
-            Positioned(
-              right: 14,
-              bottom: 74,
-              child: Column(
-                children: [
-                  _buildControlIconButton(
-                    icon: Icons.add_rounded,
-                    tooltip: 'Zoom In',
-                    onTap: _zoomIn,
-                  ),
-                  const SizedBox(height: 6),
-                  _buildControlIconButton(
-                    icon: Icons.remove_rounded,
-                    tooltip: 'Zoom Out',
-                    onTap: _zoomOut,
-                  ),
-                ],
-              ),
-            ),
-
-            // ── 4. Bottom Floating Action Bar with GPS Directions ──
-            Positioned(
-              bottom: 12,
-              left: 12,
-              right: 12,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.96),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppColors.divider),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.10),
-                      blurRadius: 14,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Rainbow Eye Hospital Location',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-                          Text(
-                            'Opp. SVBN EM School, Kapparada, Visakhapatnam',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 10,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        _ContactSectionState._launchUrlString(_ContactSectionState._googleMapsUrl);
-                      },
-                      icon: const Icon(Icons.directions_rounded, size: 14),
-                      label: const Text(
-                        'Directions ↗',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        elevation: 0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+      child: const ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        child: GoogleMapEmbedView(
+          embedUrl: _embedMapUrl,
         ),
-      ),
-    );
-  }
-
-  Widget _buildControlIconButton({
-    required IconData icon,
-    required String tooltip,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      width: 32,
-      height: 32,
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.94),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.divider),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 6,
-          ),
-        ],
-      ),
-      child: IconButton(
-        padding: EdgeInsets.zero,
-        icon: Icon(icon, size: 16, color: AppColors.textPrimary),
-        tooltip: tooltip,
-        onPressed: onTap,
       ),
     );
   }

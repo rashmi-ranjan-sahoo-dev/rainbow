@@ -81,17 +81,8 @@ class BlogsSection extends StatefulWidget {
 }
 
 class _BlogsSectionState extends State<BlogsSection> {
-  String _selectedCategory = 'All';
   int _visibilityEpoch = 0;
   bool _isInView = false;
-
-  static const List<String> _categories = [
-    'All',
-    'Laser & SMILE',
-    'Cataract & Retina',
-    'Pediatric Care',
-    'Digital Eye Health',
-  ];
 
   static const List<BlogArticle> _allArticles = [
     BlogArticle(
@@ -246,11 +237,6 @@ class _BlogsSectionState extends State<BlogsSection> {
     _allArticles[5],
   ];
 
-  List<BlogArticle> get _filteredArticles {
-    if (_selectedCategory == 'All') return _allArticles;
-    return _allArticles.where((a) => a.category == _selectedCategory).toList();
-  }
-
   void _showArticleReader(BlogArticle article) {
     showModalBottomSheet(
       context: context,
@@ -325,63 +311,37 @@ class _BlogsSectionState extends State<BlogsSection> {
                       key: ValueKey('blogs_header_$_visibilityEpoch'),
                       isMobile: isMobile,
                     ),
-
-                    const SizedBox(height: 20),
-
-                    // ── 2. Specialty Category Filter Bar ──
-                    _CategoryFilterBar(
-                      categories: _categories,
-                      selectedCategory: _selectedCategory,
-                      onCategorySelected: (cat) {
-                        setState(() {
-                          _selectedCategory = cat;
-                        });
-                      },
-                    ),
                   ],
                 ),
               ),
             ),
 
-            SizedBox(height: isMobile ? 20 : 28),
+            SizedBox(height: isMobile ? 24 : 32),
 
-            // ── 3. Dual Stepped Infinite Scroll Rows (2s Auto-Step) ──
-            if (_selectedCategory == 'All') ...[
-              // Line 1: Upper Row (Steps smoothly Left-to-Right every 2s)
-              _SteppedInfiniteBlogRow(
-                key: const ValueKey('blog_upper_stream_all'),
-                items: _upperArticles,
-                direction: BlogMarqueeDirection.leftToRight,
-                cardWidth: cardWidth,
-                cardSpacing: cardSpacing,
-                height: rowHeight,
-                onCardTap: _showArticleReader,
-              ),
+            // ── 2. Dual Stepped Infinite Scroll Rows (2s Auto-Step) ──
+            // Line 1: Upper Row (Steps smoothly Left-to-Right every 2s)
+            _SteppedInfiniteBlogRow(
+              key: const ValueKey('blog_upper_stream_all'),
+              items: _upperArticles,
+              direction: BlogMarqueeDirection.leftToRight,
+              cardWidth: cardWidth,
+              cardSpacing: cardSpacing,
+              height: rowHeight,
+              onCardTap: _showArticleReader,
+            ),
 
-              SizedBox(height: isMobile ? 12 : 16),
+            SizedBox(height: isMobile ? 12 : 16),
 
-              // Line 2: Lower Row (Steps smoothly Right-to-Left every 2s)
-              _SteppedInfiniteBlogRow(
-                key: const ValueKey('blog_lower_stream_all'),
-                items: _lowerArticles,
-                direction: BlogMarqueeDirection.rightToLeft,
-                cardWidth: cardWidth,
-                cardSpacing: cardSpacing,
-                height: rowHeight,
-                onCardTap: _showArticleReader,
-              ),
-            ] else ...[
-              // Filtered Category Stream
-              _SteppedInfiniteBlogRow(
-                key: ValueKey('blog_filtered_stream_$_selectedCategory'),
-                items: _filteredArticles,
-                direction: BlogMarqueeDirection.leftToRight,
-                cardWidth: cardWidth,
-                cardSpacing: cardSpacing,
-                height: rowHeight,
-                onCardTap: _showArticleReader,
-              ),
-            ],
+            // Line 2: Lower Row (Steps smoothly Right-to-Left every 2s)
+            _SteppedInfiniteBlogRow(
+              key: const ValueKey('blog_lower_stream_all'),
+              items: _lowerArticles,
+              direction: BlogMarqueeDirection.rightToLeft,
+              cardWidth: cardWidth,
+              cardSpacing: cardSpacing,
+              height: rowHeight,
+              onCardTap: _showArticleReader,
+            ),
           ],
         ),
       ),
@@ -1272,72 +1232,4 @@ class _BlogsHeader extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 7. CATEGORY FILTER BAR
-// ─────────────────────────────────────────────────────────────────────────────
 
-class _CategoryFilterBar extends StatelessWidget {
-  final List<String> categories;
-  final String selectedCategory;
-  final ValueChanged<String> onCategorySelected;
-
-  const _CategoryFilterBar({
-    required this.categories,
-    required this.selectedCategory,
-    required this.onCategorySelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF8FAFC),
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: categories.map((cat) {
-            final isSelected = cat == selectedCategory;
-            return GestureDetector(
-              onTap: () {
-                onCategorySelected(cat);
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeOutCubic,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                decoration: BoxDecoration(
-                  color: isSelected ? AppColors.primary : Colors.transparent,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: isSelected
-                      ? [
-                          BoxShadow(
-                            color: AppColors.primary.withValues(alpha: 0.28),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ]
-                      : null,
-                ),
-                child: Text(
-                  cat,
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 11.5,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                    color: isSelected ? Colors.white : const Color(0xFF64748B),
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-}

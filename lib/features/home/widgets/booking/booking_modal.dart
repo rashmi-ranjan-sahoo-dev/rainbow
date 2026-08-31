@@ -64,34 +64,7 @@ class _BookingModalState extends State<BookingModal> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
-  late String _selectedTreatment;
   bool _isSubmitting = false;
-
-  static const List<String> _treatments = [
-    'LASIK & Contoura Vision (Blade-Free)',
-    'Micro-Incision Cataract Surgery (MICS)',
-    'Retina & Diabetic Eye Care',
-    'Glaucoma Care & Laser Treatment',
-    'Dry Eyes & Ocular Surface Care',
-    'Pediatric Ophthalmology & Squint',
-    'Cornea & Keratoconus Care',
-    'General Comprehensive Eye Checkup',
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.initialTreatment != null) {
-      final match = _treatments.firstWhere(
-        (t) => t.toLowerCase().contains(widget.initialTreatment!.toLowerCase()) ||
-            widget.initialTreatment!.toLowerCase().contains(t.toLowerCase()),
-        orElse: () => _treatments.first,
-      );
-      _selectedTreatment = match;
-    } else {
-      _selectedTreatment = _treatments.first;
-    }
-  }
 
   @override
   void dispose() {
@@ -109,16 +82,17 @@ class _BookingModalState extends State<BookingModal> {
 
     final name = _nameController.text.trim();
     final phone = _phoneController.text.trim();
-    final treatment = _selectedTreatment;
 
     final buffer = StringBuffer();
     buffer.writeln('Hi, I would like to book an eye consultation.');
     buffer.writeln('• Name: $name');
     buffer.writeln('• Mobile: $phone');
-    buffer.write('• Treatment: $treatment');
 
+    if (widget.initialTreatment != null && widget.initialTreatment!.trim().isNotEmpty) {
+      buffer.writeln('• Department / Concern: ${widget.initialTreatment!.trim()}');
+    }
     if (widget.prefilledNotes != null && widget.prefilledNotes!.trim().isNotEmpty) {
-      buffer.write('\n• Notes: ${widget.prefilledNotes!.trim()}');
+      buffer.write('• Notes: ${widget.prefilledNotes!.trim()}');
     }
 
     final encodedText = Uri.encodeComponent(buffer.toString());
@@ -427,58 +401,7 @@ class _BookingModalState extends State<BookingModal> {
                     },
                   ),
 
-                  const SizedBox(height: 16),
-
-                  // ── 4. Treatment / Concern Dropdown ──
-                  const Text(
-                    'Select Treatment / Concern',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF0F172A),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAFC),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFCBD5E1)),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _selectedTreatment,
-                        isExpanded: true,
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          color: AppColors.primary,
-                        ),
-                        items: _treatments.map((treatment) {
-                          return DropdownMenuItem(
-                            value: treatment,
-                            child: Text(
-                              treatment,
-                              style: const TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 13.5,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF0F172A),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (val) {
-                          if (val != null) {
-                            setState(() => _selectedTreatment = val);
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 22),
 
                   // ── 5. Submit Button ("Confirm Appointment Slot →") ──
                   SizedBox(

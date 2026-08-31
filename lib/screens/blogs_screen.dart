@@ -18,16 +18,6 @@ class BlogsScreen extends StatefulWidget {
 }
 
 class _BlogsScreenState extends State<BlogsScreen> {
-  String _selectedCategory = 'All';
-
-  static const List<String> _categories = [
-    'All',
-    'Laser & SMILE',
-    'Cataract & Retina',
-    'Pediatric Care',
-    'Digital Eye Health',
-  ];
-
   static const List<BlogArticle> _allArticles = [
     BlogArticle(
       id: 'blog_1',
@@ -169,11 +159,6 @@ class _BlogsScreenState extends State<BlogsScreen> {
     ),
   ];
 
-  List<BlogArticle> get _filteredArticles {
-    if (_selectedCategory == 'All') return _allArticles;
-    return _allArticles.where((a) => a.category == _selectedCategory).toList();
-  }
-
   void _openArticleModal(BlogArticle article) {
     showModalBottomSheet(
       context: context,
@@ -201,12 +186,9 @@ class _BlogsScreenState extends State<BlogsScreen> {
                 // ── 1. Hero Header Banner ──
                 _buildHeroHeader(isMobile, isTablet),
 
-                // ── 2. Category Filter Bar ──
-                _buildCategoryFilters(isMobile),
+                SizedBox(height: isMobile ? 24 : 36),
 
-                const SizedBox(height: 24),
-
-                // ── 3. Articles Responsive Grid ──
+                // ── 2. Articles Responsive Grid ──
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: ResponsiveHelper.horizontalPadding(context),
@@ -219,7 +201,7 @@ class _BlogsScreenState extends State<BlogsScreen> {
 
                 const SizedBox(height: 48),
 
-                // ── 4. Consultation CTA Banner ──
+                // ── 3. Consultation CTA Banner ──
                 _buildBottomBanner(context, isMobile),
 
                 const SizedBox(height: 48),
@@ -379,57 +361,8 @@ class _BlogsScreenState extends State<BlogsScreen> {
     );
   }
 
-  Widget _buildCategoryFilters(bool isMobile) {
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      child: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: _categories.map((cat) {
-              final isSelected = cat == _selectedCategory;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: ChoiceChip(
-                  label: Text(
-                    cat,
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 12.5,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                      color: isSelected ? Colors.white : const Color(0xFF475569),
-                    ),
-                  ),
-                  selected: isSelected,
-                  selectedColor: AppColors.primary,
-                  backgroundColor: const Color(0xFFF1F5F9),
-                  side: BorderSide(
-                    color: isSelected ? AppColors.primary : const Color(0xFFE2E8F0),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  onSelected: (selected) {
-                    if (selected) {
-                      setState(() => _selectedCategory = cat);
-                    }
-                  },
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildArticlesGrid(double screenWidth, bool isMobile, bool isTablet) {
-    final articles = _filteredArticles;
+    final articles = _allArticles;
     final int crossAxisCount = isMobile ? 1 : (isTablet ? 2 : 3);
 
     return LayoutBuilder(

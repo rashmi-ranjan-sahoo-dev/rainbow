@@ -652,79 +652,21 @@ class _SocialIconButtonState extends State<_SocialIconButton> {
   }
 }
 
-/// Bottom Copyright Bar with Smooth Scroll-To-Top button
+/// Bottom Copyright Bar
 class _BottomCopyrightBar extends StatelessWidget {
   const _BottomCopyrightBar();
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const SizedBox(width: 40), // Balances the scroll-to-top button on wide screens
-        const Expanded(
-          child: Text(
-            'Rainbow Eye Hospital © 2026 All Right Reserved',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 12.5,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        const _ScrollToTopFloatingButton(),
-      ],
-    );
-  }
-}
-
-/// Floating Scroll-to-Top circular button (↑)
-class _ScrollToTopFloatingButton extends StatefulWidget {
-  const _ScrollToTopFloatingButton();
-
-  @override
-  State<_ScrollToTopFloatingButton> createState() => _ScrollToTopFloatingButtonState();
-}
-
-class _ScrollToTopFloatingButtonState extends State<_ScrollToTopFloatingButton> {
-  bool _isHovered = false;
-
-  void _scrollToTop() {
-    SectionNavigator.scrollTo(SectionNavigator.heroKey);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: _scrollToTop,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: 38,
-          height: 38,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: _isHovered ? const Color(0xFF00E5FF) : Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.20),
-                blurRadius: 10,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Icon(
-              Icons.arrow_upward_rounded,
-              color: _isHovered ? Colors.white : AppColors.primary,
-              size: 20,
-            ),
-          ),
+    return const Center(
+      child: Text(
+        'Rainbow Eye Hospital © 2026 All Right Reserved',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 12.5,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
         ),
       ),
     );

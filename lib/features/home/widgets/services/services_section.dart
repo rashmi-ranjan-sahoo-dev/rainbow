@@ -49,16 +49,6 @@ class ServicesSection extends StatefulWidget {
 }
 
 class _ServicesSectionState extends State<ServicesSection> {
-  String _selectedCategory = 'All';
-
-  static const _categories = [
-    'All',
-    'Laser & LASIK',
-    'Cataract',
-    'Retina & Glaucoma',
-    'Pediatric & Cornea',
-  ];
-
   static const _allServices = [
     ServiceItem(
       id: 'lasik',
@@ -178,11 +168,6 @@ class _ServicesSectionState extends State<ServicesSection> {
     ),
   ];
 
-  List<ServiceItem> get _filteredServices {
-    if (_selectedCategory == 'All') return _allServices;
-    return _allServices.where((s) => s.category == _selectedCategory).toList();
-  }
-
   /// Upper row services (Laser, Cataract, Retina, Glaucoma)
   List<ServiceItem> get _upperServices => _allServices.sublist(0, 4);
 
@@ -291,169 +276,39 @@ class _ServicesSectionState extends State<ServicesSection> {
                         letterSpacing: -0.5,
                       ),
                     ),
-                    const SizedBox(height: 10),
-
-                    // ── Category Filter Bar ──
-                    _CategoryFilterBar(
-                      categories: _categories,
-                      selectedCategory: _selectedCategory,
-                      onCategorySelected: (cat) {
-                        setState(() => _selectedCategory = cat);
-                      },
-                    ),
                   ],
                 ),
               ),
             ),
           ),
 
-          SizedBox(height: isMobile ? 20 : 28),
+          SizedBox(height: isMobile ? 24 : 32),
 
           // ── 2. Dual Stepped Infinite Scroll Rows (2s Auto-Step) ──
-          if (_selectedCategory == 'All') ...[
-            // Line 1: Upper Row (Steps smoothly Left-to-Right every 2s)
-            _SteppedInfiniteServiceRow(
-              key: const ValueKey('upper_stream_all'),
-              items: _upperServices,
-              direction: MarqueeDirection.leftToRight,
-              cardWidth: cardWidth,
-              cardSpacing: cardSpacing,
-              height: rowHeight,
-              onCardTap: _showServiceDetails,
-            ),
-
-            SizedBox(height: isMobile ? 12 : 16),
-
-            // Line 2: Lower Row (Steps smoothly Right-to-Left every 2s)
-            _SteppedInfiniteServiceRow(
-              key: const ValueKey('lower_stream_all'),
-              items: _lowerServices,
-              direction: MarqueeDirection.rightToLeft,
-              cardWidth: cardWidth,
-              cardSpacing: cardSpacing,
-              height: rowHeight,
-              onCardTap: _showServiceDetails,
-            ),
-          ] else ...[
-            // Filtered Category Stream
-            _SteppedInfiniteServiceRow(
-              key: ValueKey('filtered_stream_$_selectedCategory'),
-              items: _filteredServices,
-              direction: MarqueeDirection.leftToRight,
-              cardWidth: cardWidth,
-              cardSpacing: cardSpacing,
-              height: rowHeight,
-              onCardTap: _showServiceDetails,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-/// Horizontal category filter pills bar with mobile touch responsiveness.
-class _CategoryFilterBar extends StatelessWidget {
-  final List<String> categories;
-  final String selectedCategory;
-  final ValueChanged<String> onCategorySelected;
-
-  const _CategoryFilterBar({
-    required this.categories,
-    required this.selectedCategory,
-    required this.onCategorySelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: categories.map((cat) {
-            final isSelected = cat == selectedCategory;
-            return _FilterPillButton(
-              title: cat,
-              isSelected: isSelected,
-              onTap: () => onCategorySelected(cat),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-}
-
-/// A single filter pill button
-class _FilterPillButton extends StatefulWidget {
-  final String title;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _FilterPillButton({
-    required this.title,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  State<_FilterPillButton> createState() => _FilterPillButtonState();
-}
-
-class _FilterPillButtonState extends State<_FilterPillButton> {
-  bool _isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) {
-        setState(() => _isPressed = false);
-        widget.onTap();
-      },
-      onTapCancel: () => setState(() => _isPressed = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        curve: Curves.easeOutCubic,
-        transform: Matrix4.diagonal3Values(_isPressed ? 0.95 : 1.0, _isPressed ? 0.95 : 1.0, 1.0),
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
-        decoration: BoxDecoration(
-          color: widget.isSelected ? AppColors.primary : Colors.transparent,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: widget.isSelected
-              ? [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.28),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : [],
-        ),
-        child: Text(
-          widget.title,
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 12,
-            fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w500,
-            color: widget.isSelected ? Colors.white : const Color(0xFF64748B),
+          // Line 1: Upper Row (Steps smoothly Left-to-Right every 2s)
+          _SteppedInfiniteServiceRow(
+            key: const ValueKey('upper_stream_all'),
+            items: _upperServices,
+            direction: MarqueeDirection.leftToRight,
+            cardWidth: cardWidth,
+            cardSpacing: cardSpacing,
+            height: rowHeight,
+            onCardTap: _showServiceDetails,
           ),
-        ),
+
+          SizedBox(height: isMobile ? 12 : 16),
+
+          // Line 2: Lower Row (Steps smoothly Right-to-Left every 2s)
+          _SteppedInfiniteServiceRow(
+            key: const ValueKey('lower_stream_all'),
+            items: _lowerServices,
+            direction: MarqueeDirection.rightToLeft,
+            cardWidth: cardWidth,
+            cardSpacing: cardSpacing,
+            height: rowHeight,
+            onCardTap: _showServiceDetails,
+          ),
+        ],
       ),
     );
   }
