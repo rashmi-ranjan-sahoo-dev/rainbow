@@ -855,12 +855,12 @@ class _InteractiveContactFormState extends State<_InteractiveContactForm> {
   }
 }
 
-/// Interactive Live Google Map View without any intrusive cards or popup overlays.
+/// Interactive Live Google Map View with hospital info bar and "See Direction in Google Map" action.
 class _HospitalMapCard extends StatelessWidget {
   const _HospitalMapCard();
 
   static const String _embedMapUrl =
-      'https://maps.google.com/maps?q=17.7455424,83.2715274&hl=en&z=17&iwloc=near&output=embed';
+      'https://maps.google.com/maps?q=17.7455424,83.2715274&hl=en&z=17&output=embed';
 
   @override
   Widget build(BuildContext context) {
@@ -869,8 +869,8 @@ class _HospitalMapCard extends StatelessWidget {
     final isTablet = screenWidth >= 700 && screenWidth < 1080;
 
     // Desktop matches the full height of the left contact column (~540px)
-    // Tablet ~440px, Mobile ~360px
-    final double mapCardHeight = isMobile ? 360.0 : (isTablet ? 440.0 : 540.0);
+    // Tablet ~460px, Mobile ~400px
+    final double mapCardHeight = isMobile ? 400.0 : (isTablet ? 460.0 : 540.0);
 
     return Container(
       width: double.infinity,
@@ -890,10 +890,166 @@ class _HospitalMapCard extends StatelessWidget {
           ),
         ],
       ),
-      child: const ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        child: GoogleMapEmbedView(
-          embedUrl: _embedMapUrl,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        child: Column(
+          children: [
+            // ── Top Header / Direction Bar ──
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 14 : 18,
+                vertical: isMobile ? 10 : 12,
+              ),
+              decoration: const BoxDecoration(
+                color: Color(0xFF0F172A),
+                border: Border(
+                  bottom: BorderSide(color: Color(0xFF1E293B)),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(7),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.20),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const FaIcon(
+                      FontAwesomeIcons.locationDot,
+                      size: 13,
+                      color: AppColors.primaryLight,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'Rainbow Eye Hospital',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'Madhavadhara, Visakhapatnam – 530018',
+                          style: TextStyle(
+                            fontSize: isMobile ? 10.5 : 11.5,
+                            color: const Color(0xFF94A3B8),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // "See Direction in Google Map" Button
+                  _SeeDirectionButton(
+                    isMobile: isMobile,
+                    onTap: () => _ContactSectionState._launchUrlString(
+                      _ContactSectionState._googleMapsUrl,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // ── Real Google Map Embed ──
+            const Expanded(
+              child: GoogleMapEmbedView(
+                embedUrl: _embedMapUrl,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Interactive button for launching directions in Google Maps.
+class _SeeDirectionButton extends StatefulWidget {
+  final bool isMobile;
+  final VoidCallback onTap;
+
+  const _SeeDirectionButton({
+    required this.isMobile,
+    required this.onTap,
+  });
+
+  @override
+  State<_SeeDirectionButton> createState() => _SeeDirectionButtonState();
+}
+
+class _SeeDirectionButtonState extends State<_SeeDirectionButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          padding: EdgeInsets.symmetric(
+            horizontal: widget.isMobile ? 10 : 14,
+            vertical: widget.isMobile ? 7 : 8,
+          ),
+          decoration: BoxDecoration(
+            gradient: _isHovered
+                ? const LinearGradient(
+                    colors: [Color(0xFF06B6D4), Color(0xFF0891B2)],
+                  )
+                : const LinearGradient(
+                    colors: [Color(0xFF0891B2), Color(0xFF0E7490)],
+                  ),
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: _isHovered
+                ? [
+                    BoxShadow(
+                      color: const Color(0xFF0891B2).withValues(alpha: 0.5),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
+                  ]
+                : [],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const FaIcon(
+                FontAwesomeIcons.diamondTurnRight,
+                size: 11,
+                color: Colors.white,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                widget.isMobile ? 'See Direction' : 'See Direction in Google Map',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: widget.isMobile ? 11 : 12,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 4),
+              const Icon(
+                Icons.arrow_outward_rounded,
+                size: 13,
+                color: Colors.white,
+              ),
+            ],
+          ),
         ),
       ),
     );

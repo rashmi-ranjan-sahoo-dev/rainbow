@@ -48,6 +48,9 @@ void main() {
       expect(find.text('Send Consultation Enquiry'), findsOneWidget);
       expect(find.text('Submit Enquiry & Request Call Back'), findsOneWidget);
 
+      // Verify Map Card & See Direction in Google Map button
+      expect(find.text('See Direction in Google Map'), findsOneWidget);
+
       // Verify Footer
       expect(find.textContaining('Rainbow Eye Hospital © 2026 All Right Reserved'), findsOneWidget);
       expect(find.text('Contacts'), findsOneWidget);

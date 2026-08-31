@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             ),
 
             // ── 3. Sticky Floating WhatsApp Widget (Bottom-Right) ──
-            const FloatingWhatsAppButton(),
+            FloatingWhatsAppButton(scrollController: _scrollController),
           ],
         ),
       ),

@@ -8,7 +8,12 @@ import '../../core/utils/section_navigator.dart';
 /// Sticky Floating Action Buttons Overlay (WhatsApp CTA + Beautiful Animated Scroll-To-Top Button)
 /// positioned at the bottom-right corner of the viewport across all devices.
 class FloatingWhatsAppButton extends StatefulWidget {
-  const FloatingWhatsAppButton({super.key});
+  final ScrollController? scrollController;
+
+  const FloatingWhatsAppButton({
+    super.key,
+    this.scrollController,
+  });
 
   @override
   State<FloatingWhatsAppButton> createState() => _FloatingWhatsAppButtonState();
@@ -19,6 +24,7 @@ class _FloatingWhatsAppButtonState extends State<FloatingWhatsAppButton>
   late final AnimationController _pulseController;
   late final Animation<double> _pulseAnimation;
   bool _isWhatsAppHovered = false;
+  bool _showScrollToTop = false;
 
   static const String _directWhatsAppUrl =
       'https://wa.me/918341104525?text=Hi%20Sir%2C%20Is%20appointment%20available%20for%20eye%20checkup%3F';
@@ -26,6 +32,8 @@ class _FloatingWhatsAppButtonState extends State<FloatingWhatsAppButton>
   @override
   void initState() {
     super.initState();
+    widget.scrollController?.addListener(_onScroll);
+
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2200),
@@ -37,9 +45,28 @@ class _FloatingWhatsAppButtonState extends State<FloatingWhatsAppButton>
   }
 
   @override
+  void didUpdateWidget(FloatingWhatsAppButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.scrollController != widget.scrollController) {
+      oldWidget.scrollController?.removeListener(_onScroll);
+      widget.scrollController?.addListener(_onScroll);
+    }
+  }
+
+  @override
   void dispose() {
+    widget.scrollController?.removeListener(_onScroll);
     _pulseController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (widget.scrollController == null || !widget.scrollController!.hasClients) return;
+    // Show only after scrolling past the Hero section (e.g. 500px down)
+    final shouldShow = widget.scrollController!.offset > 500;
+    if (shouldShow != _showScrollToTop) {
+      setState(() => _showScrollToTop = shouldShow);
+    }
   }
 
   Future<void> _handleWhatsAppTap() async {
@@ -63,10 +90,21 @@ class _FloatingWhatsAppButtonState extends State<FloatingWhatsAppButton>
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          // ── 1. Beautiful Animated Scroll-To-Top Button (Upper / Above WhatsApp CTA) ──
-          _BeautifulScrollToTopButton(isMobile: isMobile),
+          // ── 1. Beautiful Animated Scroll-To-Top Button (Shows only after scrolling past Hero) ──
+          AnimatedScale(
+            scale: _showScrollToTop ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOutBack,
+            child: AnimatedOpacity(
+              opacity: _showScrollToTop ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 200),
+              child: _showScrollToTop
+                  ? _BeautifulScrollToTopButton(isMobile: isMobile)
+                  : const SizedBox.shrink(),
+            ),
+          ),
 
-          SizedBox(height: isMobile ? 12 : 14),
+          if (_showScrollToTop) SizedBox(height: isMobile ? 12 : 14),
 
           // ── 2. Floating WhatsApp CTA Button (Below Up Button) ──
           MouseRegion(
