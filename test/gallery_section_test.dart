@@ -13,7 +13,7 @@ void main() {
     VisibilityDetectorController.instance.updateInterval = Duration.zero;
   });
 
-  testWidgets('GallerySection renders 5 category showcase cards with See More button', (tester) async {
+  testWidgets('GallerySection renders 6 category showcase cards with See More button and Free Eye Camps', (tester) async {
     await tester.runAsync(() async {
       tester.view.physicalSize = const Size(1280, 900);
       tester.view.devicePixelRatio = 1.0;
@@ -35,6 +35,9 @@ void main() {
       // Verify Eyebrow & Title
       expect(find.text('OUR INFRASTRUCTURE & FACILITIES'), findsOneWidget);
       expect(find.text('Take A Tour Of Rainbow Eye Hospital'), findsOneWidget);
+
+      // Verify Free Eye Camps is present in filter chips and showcase cards
+      expect(find.text('Free Eye Camps'), findsWidgets);
 
       // Verify "See More" button
       expect(find.text('See More'), findsOneWidget);

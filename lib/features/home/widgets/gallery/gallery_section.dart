@@ -13,12 +13,13 @@ import 'gallery_modal.dart';
 /// Section 9 — Hospital Infrastructure, Clinical OT Suites & Optical Plaza Gallery.
 ///
 /// Features:
-/// - One photo for each category (5 photos total by default) representing all infrastructure areas:
+/// - One photo for each category (6 photos total by default) representing all infrastructure & community outreach areas:
 ///   1. Surgical & OT
 ///   2. Diagnostics
 ///   3. Patient Recovery
 ///   4. Campus & Lounge
 ///   5. Optical & Pharmacy
+///   6. Free Eye Camps
 /// - Responsive card layouts:
 ///   * Mobile (< 600px): 1 card per row, scrolling down displays all 5 follow-up category cards
 ///   * Tablet (600px - 1023px): 2 cards per row

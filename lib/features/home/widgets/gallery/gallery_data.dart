@@ -32,6 +32,11 @@ enum GalleryCategory {
     title: 'Optical & Pharmacy',
     icon: FontAwesomeIcons.glasses,
     color: Color(0xFFEC4899),
+  ),
+  medicalCamps(
+    title: 'Free Eye Camps',
+    icon: FontAwesomeIcons.handHoldingHeart,
+    color: Color(0xFF059669),
   );
 
   final String title;
@@ -277,6 +282,32 @@ class HospitalGalleryData {
       description:
           'Community awareness program for elderly patients offering painless 10-minute laser procedures and premium intraocular lenses.',
       aspectRatio: 1.77,
+    ),
+
+    // 17. Free Eye Screening Camp
+    HospitalPhotoItem(
+      id: 'medical_camp_vision_screening',
+      title: 'Free Eye Screening & Diagnosis Camp',
+      subtitle: 'Rural Vision Health Outreach & Slit-Lamp Examinations',
+      category: GalleryCategory.medicalCamps,
+      imageAsset: 'assets/images/gallery/medical_camp_1.jpg',
+      tag: 'Free Eye Camp',
+      description:
+          'Community eye health screening camp offering free cataract detection, refractive error examination, intraocular pressure checks, and specialist consultations.',
+      aspectRatio: 1.33,
+    ),
+
+    // 18. Community Spectacles Distribution
+    HospitalPhotoItem(
+      id: 'medical_camp_glasses_distribution',
+      title: 'Community Spectacles & Cataract Outreach',
+      subtitle: 'Free Vision Testing & Glasses Distribution',
+      category: GalleryCategory.medicalCamps,
+      imageAsset: 'assets/images/gallery/medical_camp_2.jpg',
+      tag: 'Outreach Camp',
+      description:
+          'Charitable eye screening program providing free vision aids, reading glasses, and surgical referrals for underprivileged rural patients across Andhra Pradesh.',
+      aspectRatio: 1.33,
     ),
   ];
 }

@@ -219,7 +219,7 @@ class _ServicesSectionState extends State<ServicesSection> {
       cardWidth = ((effectiveWidth - 2 * ResponsiveHelper.horizontalPadding(context) - 32) / 3).clamp(280.0, 370.0);
     }
 
-    final double rowHeight = isMobile ? 324.0 : 316.0;
+    final double rowHeight = isMobile ? 340.0 : 330.0;
     const double cardSpacing = 16.0;
 
     return Container(
@@ -667,7 +667,6 @@ class _CompactServiceCardState extends State<_CompactServiceCard> {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // ── 1. Top Section: Category Pill + Specialty Badge + Title + Excerpt ──
               Column(
@@ -769,88 +768,95 @@ class _CompactServiceCardState extends State<_CompactServiceCard> {
                 ],
               ),
 
-              // ── 2. Middle Section: Featured Clinical Image ──
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    height: 100,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: s.accentColor.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        Image.asset(
-                          s.imagePath,
-                          fit: BoxFit.cover,
-                          errorBuilder: (ctx, error, stackTrace) => Container(
-                            color: s.accentColor.withValues(alpha: 0.12),
-                            child: Center(
-                              child: FaIcon(
-                                s.icon,
-                                size: 32,
-                                color: s.accentColor,
+              // ── 2. Middle Section: Featured Clinical Image (Expanded & Responsive) ──
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: s.accentColor.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          AnimatedScale(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeOutCubic,
+                            scale: _isHovered ? 1.06 : 1.0,
+                            child: Image.asset(
+                              s.imagePath,
+                              fit: BoxFit.cover,
+                              errorBuilder: (ctx, error, stackTrace) => Container(
+                                color: s.accentColor.withValues(alpha: 0.12),
+                                child: Center(
+                                  child: FaIcon(
+                                    s.icon,
+                                    size: 32,
+                                    color: s.accentColor,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
 
-                        // Gradient Overlay
-                        Positioned.fill(
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.black.withValues(alpha: 0.35),
+                          // Gradient Overlay
+                          Positioned.fill(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.black.withValues(alpha: 0.38),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // Bottom-right Clinical Badge
+                          Positioned(
+                            right: 8,
+                            bottom: 6,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.58),
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.28),
+                                  width: 0.6,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.verified_rounded,
+                                    size: 9,
+                                    color: Colors.white,
+                                  ),
+                                  const SizedBox(width: 3),
+                                  Text(
+                                    s.hospitalBadge,
+                                    style: const TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
                           ),
-                        ),
-
-                        // Bottom-right Clinical Badge
-                        Positioned(
-                          right: 8,
-                          bottom: 6,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha: 0.55),
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.25),
-                                width: 0.6,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(
-                                  Icons.verified_rounded,
-                                  size: 9,
-                                  color: Colors.white,
-                                ),
-                                const SizedBox(width: 3),
-                                Text(
-                                  s.hospitalBadge,
-                                  style: const TextStyle(
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

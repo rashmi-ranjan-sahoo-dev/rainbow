@@ -556,7 +556,33 @@ class _InteractiveContactFormState extends State<_InteractiveContactForm> {
       _isSuccess = false;
     });
 
-    await Future.delayed(const Duration(milliseconds: 1200));
+    final name = _nameController.text.trim();
+    final phone = _phoneController.text.trim();
+    final email = _emailController.text.trim();
+    final department = _selectedDepartment;
+    final message = _messageController.text.trim();
+
+    final buffer = StringBuffer();
+    buffer.writeln('Hi Rainbow Eye Hospital, I would like to send a consultation enquiry.');
+    buffer.writeln('• Name: $name');
+    buffer.writeln('• Mobile: $phone');
+    if (email.isNotEmpty) {
+      buffer.writeln('• Email: $email');
+    }
+    buffer.writeln('• Department / Specialty: $department');
+    if (message.isNotEmpty) {
+      buffer.writeln('• Symptoms / Notes: $message');
+    }
+
+    final encodedText = Uri.encodeComponent(buffer.toString());
+    final whatsappUrl = 'https://wa.me/918341104525?text=$encodedText';
+    final uri = Uri.parse(whatsappUrl);
+
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      await launchUrl(uri);
+    }
 
     if (mounted) {
       setState(() {
@@ -797,7 +823,7 @@ class _InteractiveContactFormState extends State<_InteractiveContactForm> {
                     : const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          FaIcon(FontAwesomeIcons.paperPlane, size: 13, color: Colors.white),
+                          FaIcon(FontAwesomeIcons.whatsapp, size: 16, color: Colors.white),
                           SizedBox(width: 8),
                           Text(
                             'Submit Enquiry & Request Call Back',
@@ -939,13 +965,6 @@ class _HospitalMapCardState extends State<_HospitalMapCard>
 
   void _zoomOut() {
     setState(() => _zoomLevel = (_zoomLevel - 0.25).clamp(0.75, 2.5));
-  }
-
-  void _resetView() {
-    setState(() {
-      _zoomLevel = 1.0;
-      _panOffset = Offset.zero;
-    });
   }
 
   @override
@@ -1122,83 +1141,7 @@ class _HospitalMapCardState extends State<_HospitalMapCard>
               ),
             ),
 
-            // ── 3. Map Header Controls (Top Left & Top Right) ──
-            Positioned(
-              top: 14,
-              left: 14,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.94),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.divider),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
-                      blurRadius: 6,
-                    ),
-                  ],
-                ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.location_on_rounded, size: 13, color: AppColors.primary),
-                    SizedBox(width: 5),
-                    Text(
-                      'NGGO\'s Colony Rd, Madhavadhara',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Top Right Live Satellite Tag + Reset Button
-            Positioned(
-              top: 14,
-              right: 14,
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.94),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.divider),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.satellite_alt_rounded, size: 12, color: AppColors.primary),
-                        SizedBox(width: 4),
-                        Text(
-                          'Satellite HD',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  _buildControlIconButton(
-                    icon: Icons.refresh_rounded,
-                    tooltip: 'Reset View',
-                    onTap: _resetView,
-                  ),
-                ],
-              ),
-            ),
-
-            // ── 4. Zoom Buttons (Bottom Right) ──
+            // ── 3. Zoom Buttons (+ and -) ──
             Positioned(
               right: 14,
               bottom: 74,
@@ -1219,7 +1162,7 @@ class _HospitalMapCardState extends State<_HospitalMapCard>
               ),
             ),
 
-            // ── 5. Bottom Floating Action Bar with GPS Directions ──
+            // ── 4. Bottom Floating Action Bar with GPS Directions ──
             Positioned(
               bottom: 12,
               left: 12,
