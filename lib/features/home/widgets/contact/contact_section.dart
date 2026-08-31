@@ -21,7 +21,7 @@ class ContactSection extends StatefulWidget {
 
 class _ContactSectionState extends State<ContactSection> {
   static const _googleMapsUrl =
-      'https://maps.google.com/?q=Rainbow+Eye+Hospital+Madhavadhara+Visakhapatnam+530018';
+      'https://www.google.com/maps/place/Rainbow+Eye+Hospital/@17.7455424,83.2689525,991m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3a395d4e918c50ff:0xd0c0e734f92923a0!8m2!3d17.7455424!4d83.2715274!16s%2Fg%2F11yd7vl0w7?entry=ttu';
 
   static Future<void> _launchUrlString(String urlStr) async {
     final uri = Uri.parse(urlStr);
@@ -860,7 +860,7 @@ class _HospitalMapCard extends StatelessWidget {
   const _HospitalMapCard();
 
   static const String _embedMapUrl =
-      'https://maps.google.com/maps?q=17.7449,83.2646&hl=en&z=16&iwloc=near&output=embed';
+      'https://maps.google.com/maps?q=17.7455424,83.2715274&hl=en&z=17&iwloc=near&output=embed';
 
   @override
   Widget build(BuildContext context) {

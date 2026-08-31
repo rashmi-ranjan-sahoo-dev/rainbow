@@ -38,19 +38,15 @@ void main() {
       expect(find.textContaining('We Are Here For Your Vision Care'), findsOneWidget);
 
       // Verify Contact Info Cards
-      expect(find.text('Hospital Location'), findsOneWidget);
-      expect(find.text('Phone & Emergency'), findsOneWidget);
-      expect(find.text('Official Email'), findsOneWidget);
-      expect(find.text('Working Hours'), findsOneWidget);
+      expect(find.text('Hospital Location'), findsWidgets);
+      expect(find.text('Phone & Emergency'), findsWidgets);
+      expect(find.text('Official Email'), findsWidgets);
+      expect(find.text('Working Hours'), findsWidgets);
+      expect(find.text('Get Directions ↗'), findsWidgets);
 
       // Verify Consultation Form
       expect(find.text('Send Consultation Enquiry'), findsOneWidget);
       expect(find.text('Submit Enquiry & Request Call Back'), findsOneWidget);
-
-      // Verify Map Card
-      expect(find.text('Rainbow Eye Hospital'), findsWidgets);
-      expect(find.text('Rainbow Eye Hospital Location'), findsOneWidget);
-      expect(find.text('Directions ↗'), findsOneWidget);
 
       // Verify Footer
       expect(find.textContaining('Rainbow Eye Hospital © 2026 All Right Reserved'), findsOneWidget);

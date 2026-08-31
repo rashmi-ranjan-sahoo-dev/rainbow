@@ -31,7 +31,8 @@ class HospitalFooter extends StatelessWidget {
   }
 
   static Future<void> _launchMaps() async {
-    const url = 'https://maps.google.com/?q=Rainbow+Eye+Hospital+Madhavadhara+Visakhapatnam+530018';
+    const url =
+        'https://www.google.com/maps/place/Rainbow+Eye+Hospital/@17.7455424,83.2689525,991m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3a395d4e918c50ff:0xd0c0e734f92923a0!8m2!3d17.7455424!4d83.2715274!16s%2Fg%2F11yd7vl0w7?entry=ttu';
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);

@@ -143,12 +143,12 @@ class _GoogleMapEmbedViewState extends State<GoogleMapEmbedView> {
 <body>
   <div id="map"></div>
   <script>
-    var lat = 17.7449;
-    var lng = 83.2646;
+    var lat = 17.7455424;
+    var lng = 83.2715274;
     var map = L.map('map', {
       zoomControl: true,
       scrollWheelZoom: true
-    }).setView([lat, lng], 16);
+    }).setView([lat, lng], 17);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -168,7 +168,7 @@ class _GoogleMapEmbedViewState extends State<GoogleMapEmbedView> {
       '<div class="popup-card">' +
       '<div class="popup-title">Rainbow Eye Hospital</div>' +
       '<div class="popup-desc">Opp. SVBN EM School, Kapparada, Madhavadhara, Visakhapatnam – 530018</div>' +
-      '<a class="popup-btn" href="https://www.google.com/maps/dir/?api=1&destination=Rainbow+Eye+Hospital+Madhavadhara+Visakhapatnam" target="_blank">Get Directions on Google Maps ↗</a>' +
+      '<a class="popup-btn" href="https://www.google.com/maps/place/Rainbow+Eye+Hospital/@17.7455424,83.2689525,991m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3a395d4e918c50ff:0xd0c0e734f92923a0!8m2!3d17.7455424!4d83.2715274!16s%2Fg%2F11yd7vl0w7?entry=ttu" target="_blank">Get Directions on Google Maps ↗</a>' +
       '</div>'
     );
   </script>
