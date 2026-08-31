@@ -91,7 +91,7 @@ class _GallerySectionState extends State<GallerySection> {
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: ResponsiveHelper.horizontalPadding(context),
-              vertical: isMobile ? 48 : 64,
+              vertical: isMobile ? 36 : 52,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

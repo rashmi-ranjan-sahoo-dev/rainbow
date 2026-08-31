@@ -7,6 +7,7 @@ import '../../../../core/utils/responsive_helper.dart';
 import '../../../../core/utils/section_navigator.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/scroll_reveal.dart';
+import '../booking/booking_modal.dart';
 
 /// Data model for an About Us core value pillar with animated stats.
 class _PillarData {
@@ -105,7 +106,7 @@ class AboutSection extends StatelessWidget {
               constraints: const BoxConstraints(maxWidth: 1320),
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  vertical: isMobile ? 52 : 88,
+                  vertical: isMobile ? 32 : 56,
                   horizontal: ResponsiveHelper.horizontalPadding(context),
                 ),
                 child: isDesktop
@@ -117,7 +118,7 @@ class AboutSection extends StatelessWidget {
                             flex: 5,
                             child: _AboutVisualShowcase(),
                           ),
-                          SizedBox(width: 60),
+                          SizedBox(width: 48),
 
                           // Right: Brand Narrative, Staggered Pillars & Actions
                           Expanded(
@@ -131,7 +132,7 @@ class AboutSection extends StatelessWidget {
                         children: [
                           // Visual Showcase on Top for Mobile/Tablet
                           _AboutVisualShowcase(),
-                          SizedBox(height: 52),
+                          SizedBox(height: 28),
 
                           // Narrative & Value Cards Below
                           _AboutContentBlock(pillars: _pillars),
@@ -545,11 +546,11 @@ class _AboutContentBlock extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 28),
+        const SizedBox(height: 20),
 
         // ── 4. Core Pillars (Staggered 2x2 Interactive Grid) ──
         _PillarsGrid(pillars: pillars),
-        const SizedBox(height: 32),
+        const SizedBox(height: 20),
 
         // ── 5. Action CTA Row (Scroll-triggered) ──
         ScrollReveal(
@@ -563,16 +564,17 @@ class _AboutContentBlock extends StatelessWidget {
             children: [
               AppButton(
                 label: 'Book Consultation',
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                onPressed: () => SectionNavigator.scrollTo(SectionNavigator.aboutKey),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 13),
+                onPressed: () => showBookingDialog(context),
               ),
               AppButton(
                 label: 'Meet Our Specialists',
                 isOutlined: true,
+                outlinedColor: AppColors.primary,
                 showArrow: false,
                 icon: FontAwesomeIcons.userDoctor,
-                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
-                onPressed: () => SectionNavigator.scrollTo(SectionNavigator.aboutKey),
+                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 13),
+                onPressed: () => SectionNavigator.scrollTo(SectionNavigator.doctorsKey),
               ),
             ],
           ),
@@ -602,7 +604,7 @@ class _PillarsGrid extends StatelessWidget {
             delay: Duration(milliseconds: 320 + (index * 80)),
             duration: const Duration(milliseconds: 700),
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.only(bottom: 10),
               child: _InteractivePillarCard(data: pillars[index]),
             ),
           ),

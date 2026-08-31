@@ -8,6 +8,7 @@ class AppButton extends StatefulWidget {
   final String label;
   final VoidCallback? onPressed;
   final bool isOutlined;
+  final Color? outlinedColor;
   final double? width;
   final EdgeInsets? padding;
   final FaIconData? icon;
@@ -18,6 +19,7 @@ class AppButton extends StatefulWidget {
     required this.label,
     this.onPressed,
     this.isOutlined = false,
+    this.outlinedColor,
     this.width,
     this.padding,
     this.icon,
@@ -58,6 +60,8 @@ class _AppButtonState extends State<AppButton>
 
   @override
   Widget build(BuildContext context) {
+    final effectiveOutlinedColor = widget.outlinedColor ?? AppColors.textWhite;
+
     return MouseRegion(
       onEnter: (_) {
         setState(() => _isHovered = true);
@@ -92,11 +96,11 @@ class _AppButtonState extends State<AppButton>
               ? OutlinedButton(
                   onPressed: widget.onPressed ?? () {},
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.textWhite,
+                    foregroundColor: effectiveOutlinedColor,
                     backgroundColor: _isHovered
-                        ? Colors.white.withValues(alpha: 0.15)
+                        ? effectiveOutlinedColor.withValues(alpha: 0.12)
                         : Colors.transparent,
-                    side: const BorderSide(color: AppColors.textWhite, width: 1.5),
+                    side: BorderSide(color: effectiveOutlinedColor, width: 1.5),
                     padding: widget.padding ??
                         const EdgeInsets.symmetric(horizontal: 26, vertical: 14),
                     shape: RoundedRectangleBorder(
@@ -108,10 +112,15 @@ class _AppButtonState extends State<AppButton>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (widget.icon != null) ...[
-                        FaIcon(widget.icon, size: 14, color: AppColors.textWhite),
+                        FaIcon(widget.icon, size: 14, color: effectiveOutlinedColor),
                         const SizedBox(width: 8),
                       ],
-                      Text(widget.label, style: AppTypography.buttonOutlined),
+                      Text(
+                        widget.label,
+                        style: AppTypography.buttonOutlined.copyWith(
+                          color: effectiveOutlinedColor,
+                        ),
+                      ),
                     ],
                   ),
                 )
