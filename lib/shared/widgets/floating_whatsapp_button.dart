@@ -382,51 +382,33 @@ class _BeautifulScrollToTopButtonState extends State<_BeautifulScrollToTopButton
                         ),
                       ],
                     ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Glass specular highlight on top rim
-                        Positioned(
-                          top: 2,
-                          left: buttonSize * 0.20,
-                          right: buttonSize * 0.20,
-                          child: Container(
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.35),
-                              borderRadius: BorderRadius.circular(10),
+                    child: Center(
+                      child: AnimatedBuilder(
+                        animation: _arrowBobAnimation,
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset: Offset(
+                              0,
+                              _isHovered
+                                  ? _arrowBobAnimation.value - 2.0
+                                  : _arrowBobAnimation.value,
                             ),
-                          ),
+                            child: child,
+                          );
+                        },
+                        child: Icon(
+                          Icons.keyboard_arrow_up_rounded,
+                          size: widget.isMobile ? 28 : 32,
+                          color: Colors.white,
+                          shadows: const [
+                            Shadow(
+                              color: Colors.black26,
+                              blurRadius: 4,
+                              offset: Offset(0, 1.5),
+                            ),
+                          ],
                         ),
-
-                        // Animated Up Arrow with continuous vertical bobbing motion
-                        AnimatedBuilder(
-                          animation: _arrowBobAnimation,
-                          builder: (context, child) {
-                            return Transform.translate(
-                              offset: Offset(
-                                0,
-                                _isHovered
-                                    ? _arrowBobAnimation.value - 2.0
-                                    : _arrowBobAnimation.value,
-                              ),
-                              child: child,
-                            );
-                          },
-                          child: Icon(
-                            Icons.keyboard_arrow_up_rounded,
-                            size: widget.isMobile ? 28 : 32,
-                            color: Colors.white,
-                            shadows: const [
-                              Shadow(
-                                color: Colors.black26,
-                                blurRadius: 4,
-                                offset: Offset(0, 1.5),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ],
