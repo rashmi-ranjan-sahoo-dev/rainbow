@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/utils/responsive_helper.dart';
+import '../../shared/widgets/eye_animation_loader.dart';
 import '../../shared/widgets/floating_whatsapp_button.dart';
 import '../../shared/widgets/scroll_aware_header.dart';
 import '../../shared/widgets/scroll_reveal.dart';
@@ -38,6 +39,28 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   final _scrollController = ScrollController();
+  bool _isLoading = true;
+  bool _showSplash = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Allow the Eye Animation Loader to play on initial launch, then smoothly fade out
+    Future.delayed(const Duration(milliseconds: 1800), () {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        Future.delayed(const Duration(milliseconds: 450), () {
+          if (mounted) {
+            setState(() {
+              _showSplash = false;
+            });
+          }
+        });
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -137,6 +160,27 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
             // ── 3. Sticky Floating WhatsApp Widget (Bottom-Right) ──
             FloatingWhatsAppButton(scrollController: _scrollController),
+
+            // ── 4. Initial Eye Animation Splash Loader Overlay ──
+            if (_showSplash)
+              Positioned.fill(
+                child: IgnorePointer(
+                  ignoring: !_isLoading,
+                  child: AnimatedOpacity(
+                    opacity: _isLoading ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 450),
+                    curve: Curves.easeInOut,
+                    child: Container(
+                      color: AppColors.background,
+                      child: const EyeAnimationLoader(
+                        isFullScreen: true,
+                        size: 130,
+                        loadingText: 'Calibrating Precision Vision Care...',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
