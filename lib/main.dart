@@ -3,7 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'core/constants/app_colors.dart';
 import 'features/home/home_screen.dart';
 import 'screens/blogs_screen.dart';
+import 'screens/privacy_policy_screen.dart';
 import 'screens/symptom_checker_screen.dart';
+import 'screens/terms_and_conditions_screen.dart';
 
 import 'dart:ui';
 
@@ -32,6 +34,10 @@ class RainbowApp extends StatelessWidget {
         '/': (context) => const HomeScreen(),
         '/symptom-checker': (context) => const SymptomCheckerScreen(),
         '/blogs': (context) => const BlogsScreen(),
+        '/terms': (context) => const TermsAndConditionsScreen(),
+        '/terms-and-conditions': (context) => const TermsAndConditionsScreen(),
+        '/privacy': (context) => const PrivacyPolicyScreen(),
+        '/privacy-policy': (context) => const PrivacyPolicyScreen(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/symptom-checker') {
@@ -43,6 +49,18 @@ class RainbowApp extends StatelessWidget {
         if (settings.name == '/blogs') {
           return MaterialPageRoute(
             builder: (_) => const BlogsScreen(),
+            settings: settings,
+          );
+        }
+        if (settings.name == '/terms' || settings.name == '/terms-and-conditions') {
+          return MaterialPageRoute(
+            builder: (_) => const TermsAndConditionsScreen(),
+            settings: settings,
+          );
+        }
+        if (settings.name == '/privacy' || settings.name == '/privacy-policy') {
+          return MaterialPageRoute(
+            builder: (_) => const PrivacyPolicyScreen(),
             settings: settings,
           );
         }

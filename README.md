@@ -70,7 +70,7 @@ A state-of-the-art, fully responsive Eye Hospital web and mobile application bui
 - **Ambient Glowing Orbs**: Soft floating background effects.
 
 ### 4. Trust Stats & Numerical Ticker Bar
-- **Count-Up Tickers**: `25+ Years`, `50+ AIIMS Surgeons`, `1,00,000+ Procedures`, `4.9 Rating`.
+- **Count-Up Tickers**: `25+ Years`, `50+ AIIMS Surgeons`, `100k+ Procedures`, `4.9 Rating`.
 - **Interactive Hover Cards**: Floating card lift (`translateY(-6px)`) and glowing borders.
 
 ---

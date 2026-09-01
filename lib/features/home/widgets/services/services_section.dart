@@ -55,7 +55,7 @@ class _ServicesSectionState extends State<ServicesSection> {
           '100% Blade-Free German Carl Zeiss SMILE & Contoura lasers for permanent spectacle removal.',
       fullDetails:
           'Experience the gold standard in laser vision correction with German Carl Zeiss SMILE Pro and Topography-Guided Contoura Vision. Our blade-free femtosecond technology gently reshapes the cornea in under 10 seconds per eye, offering quick next-day visual recovery with maximum corneal biomechanical stability.',
-      imagePath: 'assets/images/service_lasik.jpg',
+      imagePath: 'assets/images/lasik_surgery_suite.jpg',
       icon: FontAwesomeIcons.bolt,
       accentColor: AppColors.accent,
       badge: 'Popular',
@@ -1245,11 +1245,11 @@ class _ServiceDetailsModal extends StatelessWidget {
                           const FaIcon(FontAwesomeIcons.calendarCheck, size: 14, color: Colors.white),
                           const SizedBox(width: 8),
                           Text(
-                            'Book Appointment for ${s.title}',
+                            'Book Appointment',
                             style: const TextStyle(
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w600,
-                              fontSize: 13.5,
+                              fontSize: 14,
                             ),
                           ),
                         ],

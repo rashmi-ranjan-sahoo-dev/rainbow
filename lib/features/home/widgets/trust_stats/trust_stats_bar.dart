@@ -51,8 +51,8 @@ class _TrustStatsBarState extends State<TrustStatsBar>
     ),
     StatData(
       icon: FontAwesomeIcons.eye,
-      targetNumber: 100000,
-      suffix: '+',
+      targetNumber: 100,
+      suffix: 'k+',
       label: 'Successful Eye\nProcedures',
     ),
     StatData(
@@ -157,13 +157,18 @@ class _TrustStatsBarState extends State<TrustStatsBar>
   }
 
   Widget _buildMobileGrid() {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final cardWidth = screenWidth < 360
+        ? (screenWidth - 40) / 2
+        : (screenWidth * 0.42).clamp(140.0, 260.0);
+
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: 12,
-      runSpacing: 24,
+      runSpacing: 16,
       children: _stats.asMap().entries.map((entry) {
         return SizedBox(
-          width: MediaQuery.sizeOf(context).width * 0.42,
+          width: cardWidth,
           child: ScrollReveal(
             delay: Duration(milliseconds: entry.key * 95),
             duration: const Duration(milliseconds: 750),
@@ -205,15 +210,6 @@ class _AnimatedStatCardState extends State<_AnimatedStatCard> {
       return current.toStringAsFixed(1);
     } else {
       final current = (widget.data.targetNumber * progress).round();
-      if (widget.data.targetNumber >= 100000) {
-        if (current >= 100000) {
-          return '1,00,000';
-        }
-        return current.toString().replaceAllMapped(
-              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-              (Match m) => '${m[1]},',
-            );
-      }
       return current.toString();
     }
   }
@@ -221,9 +217,10 @@ class _AnimatedStatCardState extends State<_AnimatedStatCard> {
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveHelper.isMobile(context);
-    final numberSize = isMobile ? 28.0 : 38.0;
-    final labelSize = isMobile ? 12.0 : 13.5;
-    final iconSize = isMobile ? 20.0 : 24.0;
+    final isTablet = ResponsiveHelper.isTablet(context);
+    final numberSize = isMobile ? 26.0 : (isTablet ? 30.0 : 36.0);
+    final labelSize = isMobile ? 11.5 : (isTablet ? 12.5 : 13.5);
+    final iconSize = isMobile ? 20.0 : (isTablet ? 22.0 : 24.0);
 
     final delayedAnimation = CurvedAnimation(
       parent: widget.animation,
@@ -241,47 +238,56 @@ class _AnimatedStatCardState extends State<_AnimatedStatCard> {
       child: FadeTransition(
         opacity: delayedAnimation,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
           transform: Matrix4.translationValues(0, _isHovered ? -6 : 0, 0),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 10 : 14,
+            vertical: isMobile ? 12 : 16,
+          ),
           decoration: BoxDecoration(
-            color: _isHovered
-                ? Colors.white.withValues(alpha: 0.12)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(16),
+            color: Colors.white.withValues(alpha: _isHovered ? 0.15 : 0.08),
+            borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: _isHovered
-                  ? Colors.white.withValues(alpha: 0.25)
-                  : Colors.transparent,
+              color: Colors.white.withValues(alpha: _isHovered ? 0.35 : 0.18),
+              width: 1.2,
             ),
+            boxShadow: _isHovered
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.15),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
+                    ),
+                  ]
+                : [],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Icon Circle with smooth hover bounce/glow
+              // Icon Circle with smooth hover glow
               AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
                 width: iconSize + 24,
                 height: iconSize + 24,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: _isHovered
-                      ? Colors.white.withValues(alpha: 0.25)
-                      : Colors.white.withValues(alpha: 0.12),
-                  boxShadow: _isHovered
-                      ? [
-                          BoxShadow(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            blurRadius: 12,
-                          ),
-                        ]
-                      : [],
+                      ? Colors.white.withValues(alpha: 0.28)
+                      : Colors.white.withValues(alpha: 0.14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.accentLight.withValues(alpha: _isHovered ? 0.35 : 0.15),
+                      blurRadius: _isHovered ? 14 : 8,
+                    ),
+                  ],
                 ),
                 child: Center(
                   child: FaIcon(
                     widget.data.icon,
                     size: iconSize,
-                    color: _isHovered ? AppColors.accentLight : Colors.white,
+                    color: AppColors.accentLight,
                   ),
                 ),
               ),

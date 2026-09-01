@@ -11,8 +11,8 @@
 //     - Odd indices slide smoothly from Right to Left (slideX: +0.32 -> 0)
 //     - Hand-tuned elastic curve Cubic(0.16, 1.0, 0.3, 1.0) with scale 0.90 -> 1.0
 //   • Mobile Adaptive Pagination:
-//     - Displays 2 specialists initially with an interactive "See More" button.
-//     - Clicking "See More" reveals the next 2 specialists with staggered entrance.
+//     - Displays 4 specialists initially with an interactive "See More" button.
+//     - Clicking "See More" reveals the remaining specialists with staggered entrance.
 //   • Hover Lift & Glow:
 //     - -6px translateY, dual-layer border highlight, and soft glowing drop shadow.
 //   • Live OPD Radar Beacon:
@@ -356,15 +356,15 @@ class _ResponsiveDoctorsGrid extends StatefulWidget {
 }
 
 class _ResponsiveDoctorsGridState extends State<_ResponsiveDoctorsGrid> {
-  /// Mobile pagination count: Starts at 2 doctors, expands when clicking See More
-  int _mobileVisibleCount = 2;
+  /// Mobile pagination count: Starts at 4 doctors, expands when clicking See More
+  int _mobileVisibleCount = 4;
 
   void _handleSeeMore(int totalDoctors) {
     setState(() {
       if (_mobileVisibleCount < totalDoctors) {
         _mobileVisibleCount = totalDoctors;
       } else {
-        _mobileVisibleCount = 2;
+        _mobileVisibleCount = 4;
       }
     });
   }
@@ -377,7 +377,7 @@ class _ResponsiveDoctorsGridState extends State<_ResponsiveDoctorsGrid> {
 
     final totalDoctors = widget.doctors.length;
 
-    // Mobile: Show only _mobileVisibleCount doctors (initially 2, then all)
+    // Mobile: Show only _mobileVisibleCount doctors (initially 4, then all)
     final displayDoctors = isMobile
         ? widget.doctors.take(_mobileVisibleCount).toList()
         : widget.doctors;
@@ -462,7 +462,7 @@ class _ResponsiveDoctorsGridState extends State<_ResponsiveDoctorsGrid> {
             ),
 
             // ── Mobile "See More" Button ──
-            if (isMobile && totalDoctors > 2) ...[
+            if (isMobile && totalDoctors > 4) ...[
               const SizedBox(height: 20),
               _SeeMorePaginationButton(
                 isExpanded: _mobileVisibleCount >= totalDoctors,

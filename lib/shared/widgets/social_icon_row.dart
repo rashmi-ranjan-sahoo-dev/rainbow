@@ -16,11 +16,9 @@ class SocialIconRow extends StatelessWidget {
   });
 
   static final _socials = [
-    _SocialItem(FontAwesomeIcons.facebookF, 'https://facebook.com'),
-    _SocialItem(FontAwesomeIcons.instagram, 'https://instagram.com'),
-    _SocialItem(FontAwesomeIcons.youtube, 'https://youtube.com'),
-    _SocialItem(FontAwesomeIcons.linkedinIn, 'https://linkedin.com'),
-    _SocialItem(FontAwesomeIcons.xTwitter, 'https://twitter.com'),
+    _SocialItem(FontAwesomeIcons.facebookF, 'https://www.facebook.com/p/Rainbow-Eye-Hospital-61578127094818/'),
+    _SocialItem(FontAwesomeIcons.instagram, 'https://www.instagram.com/rainboweyehospital/'),
+    _SocialItem(FontAwesomeIcons.youtube, 'https://www.youtube.com/@Rainboweyehospitalvizag/shorts'),
   ];
 
   Future<void> _launch(String url) async {

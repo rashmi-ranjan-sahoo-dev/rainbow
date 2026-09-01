@@ -82,11 +82,11 @@ class HospitalGalleryData {
       title: 'Modular Eye Operation Theatre',
       subtitle: 'Carl Zeiss Surgical Microscope & Motorized Surgical Bed',
       category: GalleryCategory.surgical,
-      imageAsset: 'assets/images/gallery/ot_suite_1.jpg',
+      imageAsset: 'assets/images/lasik_surgery_suite.jpg',
       tag: 'Zeiss OT Suite',
       description:
           'NABH-accredited laminar airflow sterile OT suite designed for micro-incision cataract, retina interventions, and stitch-less laser surgeries.',
-      aspectRatio: 0.75, // Vertical
+      aspectRatio: 1.77, // Landscape wide
     ),
 
     // 2. OT Suite Wide
@@ -284,30 +284,56 @@ class HospitalGalleryData {
       aspectRatio: 1.77,
     ),
 
-    // 17. Free Eye Screening Camp
+    // 17. Free Eye Screening Camp - Autorefractometer
     HospitalPhotoItem(
-      id: 'medical_camp_vision_screening',
-      title: 'Free Eye Screening & Diagnosis Camp',
-      subtitle: 'Rural Vision Health Outreach & Slit-Lamp Examinations',
+      id: 'medical_camp_autorefraction',
+      title: 'Computerized Vision Screening',
+      subtitle: 'Precision Autorefractometer Power Check',
       category: GalleryCategory.medicalCamps,
       imageAsset: 'assets/images/gallery/medical_camp_1.jpg',
-      tag: 'Free Eye Camp',
+      tag: 'Vision Screening',
       description:
-          'Community eye health screening camp offering free cataract detection, refractive error examination, intraocular pressure checks, and specialist consultations.',
-      aspectRatio: 1.33,
+          'Specialist optometrist conducting automated digital autorefractor eye examinations for elderly community members at a rural free eye camp.',
+      aspectRatio: 0.75,
     ),
 
-    // 18. Community Spectacles Distribution
+    // 18. Mega Community Eye Health Screening Camp
     HospitalPhotoItem(
-      id: 'medical_camp_glasses_distribution',
-      title: 'Community Spectacles & Cataract Outreach',
-      subtitle: 'Free Vision Testing & Glasses Distribution',
+      id: 'medical_camp_community_hall',
+      title: 'Mega Community Eye Camp',
+      subtitle: 'Multi-Station Comprehensive Eye Diagnostics',
       category: GalleryCategory.medicalCamps,
       imageAsset: 'assets/images/gallery/medical_camp_2.jpg',
-      tag: 'Outreach Camp',
+      tag: 'Mega Eye Camp',
       description:
-          'Charitable eye screening program providing free vision aids, reading glasses, and surgical referrals for underprivileged rural patients across Andhra Pradesh.',
-      aspectRatio: 1.33,
+          'Large-scale community health screening camp organized by Rainbow Eye Hospital with multi-desk optical testing, refraction trial lenses, and specialist doctor consultations.',
+      aspectRatio: 1.77,
+    ),
+
+    // 19. Free Eye Checkup & Trial Frame Refraction
+    HospitalPhotoItem(
+      id: 'medical_camp_trial_lenses',
+      title: 'Specialist Refraction & Diagnosis',
+      subtitle: 'Free Eye Checkup Camp with Trial Frame Assessment',
+      category: GalleryCategory.medicalCamps,
+      imageAsset: 'assets/images/gallery/medical_camp_3.jpg',
+      tag: 'Free Eye Camp',
+      description:
+          'Comprehensive refractive error assessment and vision testing conducted by ophthalmologists with trial lens sets at the community outreach camp.',
+      aspectRatio: 1.0,
+    ),
+
+    // 20. Rural Village Outreach & Screening
+    HospitalPhotoItem(
+      id: 'medical_camp_village_outreach',
+      title: 'Rural Community Eye Screening',
+      subtitle: 'Grassroots Vision Care & Cataract Detection',
+      category: GalleryCategory.medicalCamps,
+      imageAsset: 'assets/images/gallery/medical_camp_4.jpg',
+      tag: 'Rural Outreach',
+      description:
+          'Dedicated community eye care camp providing free vision screening, pressure checks, early cataract detection, and eye health guidance in rural areas.',
+      aspectRatio: 1.77,
     ),
   ];
 }

@@ -35,6 +35,20 @@ class SectionNavigator {
     }
   }
 
+  /// Navigates to the home page if not already there, then scrolls to [key].
+  static void navigateTo(BuildContext context, GlobalKey key) {
+    if (key.currentContext != null) {
+      scrollTo(key);
+    } else {
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(const Duration(milliseconds: 300), () {
+          scrollTo(key);
+        });
+      });
+    }
+  }
+
   /// Smoothly scrolls to the very top of the page.
   static void scrollToTop(ScrollController scrollController) {
     if (scrollController.hasClients) {

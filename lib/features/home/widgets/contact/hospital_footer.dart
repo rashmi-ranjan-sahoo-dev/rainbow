@@ -23,6 +23,15 @@ class HospitalFooter extends StatelessWidget {
     }
   }
 
+  static Future<void> _openWhatsApp(String phoneNumber) async {
+    final clean = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
+    final uri = Uri.parse(
+        'https://wa.me/$clean?text=Hello%20Rainbow%20Eye%20Hospital,%20I%20would%20like%20to%20inquire%20about%20your%20services.');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
   static Future<void> _sendEmail(String email) async {
     final uri = Uri.parse('mailto:$email?subject=Enquiry%20to%20Rainbow%20Eye%20Hospital');
     if (await canLaunchUrl(uri)) {
@@ -128,7 +137,7 @@ class HospitalFooter extends StatelessWidget {
                                   child: _LinksColumn(),
                                 ),
                               ),
-                              SizedBox(width: 20),
+                              SizedBox(width: 16),
                               Expanded(
                                 child: ScrollReveal(
                                   delay: Duration(milliseconds: 300),
@@ -200,18 +209,18 @@ class HospitalFooter extends StatelessWidget {
                         children: [
                           // Column 1: About
                           Expanded(
-                            flex: 9,
+                            flex: 8,
                             child: ScrollReveal(
                               delay: Duration(milliseconds: 100),
                               slideOffset: 0.08,
                               child: _AboutColumn(),
                             ),
                           ),
-                          SizedBox(width: 36),
+                          SizedBox(width: 32),
 
                           // Column 2: Links
                           Expanded(
-                            flex: 5,
+                            flex: 6,
                             child: ScrollReveal(
                               delay: Duration(milliseconds: 200),
                               slideOffset: 0.08,
@@ -229,11 +238,11 @@ class HospitalFooter extends StatelessWidget {
                               child: _ServicesColumn(),
                             ),
                           ),
-                          SizedBox(width: 36),
+                          SizedBox(width: 32),
 
                           // Column 4: Contacts
                           Expanded(
-                            flex: 10,
+                            flex: 9,
                             child: ScrollReveal(
                               delay: Duration(milliseconds: 400),
                               slideOffset: 0.08,
@@ -296,7 +305,7 @@ class _AboutColumn extends StatelessWidget {
   }
 }
 
-/// Column 2: Quick Links
+/// Column 2: Quick Links (Fully aligned with Header Navigation + Standalone Policy Pages)
 class _LinksColumn extends StatelessWidget {
   const _LinksColumn();
 
@@ -317,28 +326,44 @@ class _LinksColumn extends StatelessWidget {
         ),
         const SizedBox(height: 14),
         _FooterLinkItem(
+          title: 'Home',
+          onTap: () => SectionNavigator.navigateTo(context, SectionNavigator.heroKey),
+        ),
+        _FooterLinkItem(
           title: 'About',
-          onTap: () => SectionNavigator.scrollTo(SectionNavigator.aboutKey),
+          onTap: () => SectionNavigator.navigateTo(context, SectionNavigator.aboutKey),
         ),
         _FooterLinkItem(
-          title: 'Surgical',
-          onTap: () => SectionNavigator.scrollTo(SectionNavigator.servicesKey),
+          title: 'Services',
+          onTap: () => SectionNavigator.navigateTo(context, SectionNavigator.servicesKey),
         ),
         _FooterLinkItem(
-          title: 'Ophthalmology',
-          onTap: () => SectionNavigator.scrollTo(SectionNavigator.servicesKey),
+          title: 'Doctors',
+          onTap: () => SectionNavigator.navigateTo(context, SectionNavigator.doctorsKey),
         ),
         _FooterLinkItem(
-          title: 'Lenses',
-          onTap: () => SectionNavigator.scrollTo(SectionNavigator.servicesKey),
+          title: 'Gallery',
+          onTap: () => SectionNavigator.navigateTo(context, SectionNavigator.galleryKey),
         ),
         _FooterLinkItem(
-          title: 'Laser Eye',
-          onTap: () => SectionNavigator.scrollTo(SectionNavigator.servicesKey),
+          title: 'Testimonials',
+          onTap: () => SectionNavigator.navigateTo(context, SectionNavigator.testimonialsKey),
         ),
         _FooterLinkItem(
-          title: 'Vision Correction',
-          onTap: () => SectionNavigator.scrollTo(SectionNavigator.servicesKey),
+          title: 'Blogs',
+          onTap: () => Navigator.pushNamed(context, '/blogs'),
+        ),
+        _FooterLinkItem(
+          title: 'Contact',
+          onTap: () => SectionNavigator.navigateTo(context, SectionNavigator.contactKey),
+        ),
+        _FooterLinkItem(
+          title: 'Terms & Conditions',
+          onTap: () => Navigator.pushNamed(context, '/terms'),
+        ),
+        _FooterLinkItem(
+          title: 'Privacy Policy',
+          onTap: () => Navigator.pushNamed(context, '/privacy'),
         ),
       ],
     );
@@ -366,35 +391,35 @@ class _ServicesColumn extends StatelessWidget {
         ),
         const SizedBox(height: 14),
         _FooterLinkItem(
-          title: 'Contact Lens',
-          onTap: () => SectionNavigator.scrollTo(SectionNavigator.servicesKey),
+          title: 'Cataract Surgery (MICS)',
+          onTap: () => SectionNavigator.navigateTo(context, SectionNavigator.servicesKey),
         ),
         _FooterLinkItem(
-          title: 'Retinopathy',
-          onTap: () => SectionNavigator.scrollTo(SectionNavigator.servicesKey),
+          title: 'LASIK & SMILE Pro',
+          onTap: () => SectionNavigator.navigateTo(context, SectionNavigator.servicesKey),
         ),
         _FooterLinkItem(
-          title: 'Qualified Doctors',
-          onTap: () => SectionNavigator.scrollTo(SectionNavigator.doctorsKey),
+          title: 'Retina & Diabetic Eye Care',
+          onTap: () => SectionNavigator.navigateTo(context, SectionNavigator.servicesKey),
         ),
         _FooterLinkItem(
-          title: 'Modern Equipment',
-          onTap: () => SectionNavigator.scrollTo(SectionNavigator.aboutKey),
+          title: 'Glaucoma Laser Therapy',
+          onTap: () => SectionNavigator.navigateTo(context, SectionNavigator.servicesKey),
         ),
         _FooterLinkItem(
-          title: 'Emergency Help',
-          onTap: () => HospitalFooter._makeCall('+918341104525'),
+          title: 'Pediatric & Squint',
+          onTap: () => SectionNavigator.navigateTo(context, SectionNavigator.servicesKey),
         ),
         _FooterLinkItem(
-          title: 'Individual Approach',
-          onTap: () => SectionNavigator.scrollTo(SectionNavigator.aboutKey),
+          title: 'Optical & Pharmacy',
+          onTap: () => SectionNavigator.navigateTo(context, SectionNavigator.servicesKey),
         ),
       ],
     );
   }
 }
 
-/// Column 4: Contact details with icons
+/// Column 4: Contact details with icons & WhatsApp deep-link
 class _ContactsColumn extends StatelessWidget {
   const _ContactsColumn();
 
@@ -415,29 +440,31 @@ class _ContactsColumn extends StatelessWidget {
         ),
         const SizedBox(height: 14),
 
-        // Address
+        // Address (Google Maps)
         _ContactRow(
           icon: FontAwesomeIcons.locationDot,
           text: 'Opp. SVBN EM School, Kapparada,\nNGGO Colony, P.R Gardens,\nMadhavadhara, Visakhapatnam - 530018',
           onTap: HospitalFooter._launchMaps,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 14),
 
-        // Landline Phone
+        // WhatsApp Helpline (Pre-filled instant WhatsApp deep link)
         _ContactRow(
-          icon: FontAwesomeIcons.phone,
-          text: '0891 - 2554525 / 2704525',
-          onTap: () => HospitalFooter._makeCall('08912554525'),
+          icon: FontAwesomeIcons.whatsapp,
+          iconColor: const Color(0xFF25D366),
+          text: '+91 83411 04525',
+          onTap: () => HospitalFooter._openWhatsApp('918341104525'),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 14),
 
-        // Mobile / Emergency Phone
+        // Phone Dialer (Direct click-to-call redirection to mobile dialer)
         _ContactRow(
           icon: FontAwesomeIcons.phoneFlip,
-          text: '+91 - 8341104525',
+          iconColor: const Color(0xFF00E5FF),
+          text: '+91 83411 04525',
           onTap: () => HospitalFooter._makeCall('+918341104525'),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 14),
 
         // Official Email
         _ContactRow(
@@ -453,11 +480,13 @@ class _ContactsColumn extends StatelessWidget {
 /// Contact row with crisp white/aqua icon and interactive link
 class _ContactRow extends StatefulWidget {
   final FaIconData icon;
+  final Color? iconColor;
   final String text;
   final VoidCallback onTap;
 
   const _ContactRow({
     required this.icon,
+    this.iconColor,
     required this.text,
     required this.onTap,
   });
@@ -471,38 +500,44 @@ class _ContactRowState extends State<_ContactRow> {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveIconColor = widget.iconColor ?? const Color(0xFF00E5FF);
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: widget.onTap,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 2),
-              child: FaIcon(
-                widget.icon,
-                size: 13,
-                color: _isHovered ? Colors.white : const Color(0xFF00E5FF),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                widget.text,
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 12.5,
-                  color: _isHovered ? Colors.white : Colors.white.withValues(alpha: 0.90),
-                  height: 1.45,
-                  decoration: _isHovered ? TextDecoration.underline : TextDecoration.none,
-                  decorationColor: Colors.white,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 2),
+                child: FaIcon(
+                  widget.icon,
+                  size: 15,
+                  color: _isHovered ? Colors.white : effectiveIconColor,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  widget.text,
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 13,
+                    color: _isHovered ? Colors.white : Colors.white.withValues(alpha: 0.92),
+                    height: 1.45,
+                    decoration: _isHovered ? TextDecoration.underline : TextDecoration.none,
+                    decorationColor: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -535,23 +570,36 @@ class _FooterLinkItemState extends State<_FooterLinkItem> {
       child: GestureDetector(
         onTap: widget.onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5),
-          child: AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 150),
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 13,
-              color: _isHovered ? const Color(0xFF00E5FF) : Colors.white.withValues(alpha: 0.85),
-              fontWeight: _isHovered ? FontWeight.w600 : FontWeight.w400,
-            ),
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOutCubic,
+            transform: Matrix4.translationValues(_isHovered ? 4 : 0, 0, 0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (_isHovered) ...[
-                  const Icon(Icons.arrow_right_rounded, size: 14, color: Color(0xFF00E5FF)),
-                  const SizedBox(width: 2),
-                ],
-                Text(widget.title),
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 150),
+                  opacity: _isHovered ? 1.0 : 0.0,
+                  child: const Icon(
+                    Icons.arrow_right_rounded,
+                    size: 16,
+                    color: Color(0xFF00E5FF),
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    widget.title,
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      color: _isHovered
+                          ? const Color(0xFF00E5FF)
+                          : Colors.white.withValues(alpha: 0.85),
+                      fontWeight: _isHovered ? FontWeight.w600 : FontWeight.w400,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -561,16 +609,26 @@ class _FooterLinkItemState extends State<_FooterLinkItem> {
   }
 }
 
-/// Social media circular buttons row
+/// Social media circular buttons row with verified channels only (FB, Insta, YT)
 class _SocialMediaButtonsRow extends StatelessWidget {
   const _SocialMediaButtonsRow();
 
   static const _socials = [
-    {'icon': FontAwesomeIcons.facebookF, 'url': 'https://facebook.com'},
-    {'icon': FontAwesomeIcons.instagram, 'url': 'https://instagram.com'},
-    {'icon': FontAwesomeIcons.youtube, 'url': 'https://youtube.com'},
-    {'icon': FontAwesomeIcons.linkedinIn, 'url': 'https://linkedin.com'},
-    {'icon': FontAwesomeIcons.xTwitter, 'url': 'https://twitter.com'},
+    {
+      'icon': FontAwesomeIcons.facebookF,
+      'url': 'https://www.facebook.com/p/Rainbow-Eye-Hospital-61578127094818/',
+      'label': 'Facebook',
+    },
+    {
+      'icon': FontAwesomeIcons.instagram,
+      'url': 'https://www.instagram.com/rainboweyehospital/',
+      'label': 'Instagram',
+    },
+    {
+      'icon': FontAwesomeIcons.youtube,
+      'url': 'https://www.youtube.com/@Rainboweyehospitalvizag/shorts',
+      'label': 'YouTube',
+    },
   ];
 
   @override
@@ -582,6 +640,7 @@ class _SocialMediaButtonsRow extends StatelessWidget {
         return _SocialIconButton(
           icon: item['icon'] as FaIconData,
           url: item['url'] as String,
+          label: item['label'] as String,
         );
       }).toList(),
     );
@@ -591,10 +650,12 @@ class _SocialMediaButtonsRow extends StatelessWidget {
 class _SocialIconButton extends StatefulWidget {
   final FaIconData icon;
   final String url;
+  final String label;
 
   const _SocialIconButton({
     required this.icon,
     required this.url,
+    required this.label,
   });
 
   @override
@@ -610,41 +671,45 @@ class _SocialIconButtonState extends State<_SocialIconButton> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () async {
-          final uri = Uri.parse(widget.url);
-          if (await canLaunchUrl(uri)) {
-            await launchUrl(uri, mode: LaunchMode.externalApplication);
-          }
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: _isHovered
-                ? Colors.white
-                : Colors.white.withValues(alpha: 0.15),
-            border: Border.all(
-              color: _isHovered ? Colors.white : Colors.white.withValues(alpha: 0.35),
-              width: 1.2,
+      child: Tooltip(
+        message: widget.label,
+        child: GestureDetector(
+          onTap: () async {
+            final uri = Uri.parse(widget.url);
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+            }
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutCubic,
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _isHovered
+                  ? Colors.white
+                  : Colors.white.withValues(alpha: 0.15),
+              border: Border.all(
+                color: _isHovered ? Colors.white : Colors.white.withValues(alpha: 0.35),
+                width: 1.2,
+              ),
+              boxShadow: _isHovered
+                  ? [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.20),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ]
+                  : [],
             ),
-            boxShadow: _isHovered
-                ? [
-                    BoxShadow(
-                      color: Colors.white.withValues(alpha: 0.40),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                : [],
-          ),
-          child: Center(
-            child: FaIcon(
-              widget.icon,
-              size: 13,
-              color: _isHovered ? AppColors.primary : Colors.white,
+            child: Center(
+              child: FaIcon(
+                widget.icon,
+                size: 14,
+                color: _isHovered ? AppColors.primary : Colors.white,
+              ),
             ),
           ),
         ),

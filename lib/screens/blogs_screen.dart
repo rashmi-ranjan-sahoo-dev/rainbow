@@ -6,6 +6,7 @@ import '../core/constants/app_colors.dart';
 import '../core/utils/responsive_helper.dart';
 import '../features/home/widgets/blogs/blogs_section.dart';
 import '../features/home/widgets/booking/booking_modal.dart';
+import '../features/home/widgets/contact/hospital_footer.dart';
 import '../shared/widgets/floating_whatsapp_button.dart';
 import '../shared/widgets/rainbow_logo.dart';
 
@@ -204,7 +205,10 @@ class _BlogsScreenState extends State<BlogsScreen> {
                 // ── 3. Consultation CTA Banner ──
                 _buildBottomBanner(context, isMobile),
 
-                const SizedBox(height: 48),
+                SizedBox(height: isMobile ? 32 : 48),
+
+                // ── 4. Full Hospital Footer ──
+                const HospitalFooter(),
               ],
             ),
           ),

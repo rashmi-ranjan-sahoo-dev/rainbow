@@ -12,12 +12,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/responsive_helper.dart';
 import '../../../../core/utils/section_navigator.dart';
 import '../../../../shared/widgets/scroll_reveal.dart';
 import '../booking/booking_modal.dart';
+import 'google_reviews_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 1. DATA MODEL FOR PATIENT TESTIMONIALS
@@ -36,6 +38,7 @@ class Testimonial {
   final String dateAgo;
   final String avatarInitials;
   final String imageAsset;
+  final String? profilePhotoUrl;
   final Color categoryColor;
   final String procedureTag;
   final bool isVerifiedGoogle;
@@ -53,6 +56,7 @@ class Testimonial {
     required this.dateAgo,
     required this.avatarInitials,
     required this.imageAsset,
+    this.profilePhotoUrl,
     required this.categoryColor,
     required this.procedureTag,
     this.isVerifiedGoogle = true,
@@ -66,6 +70,171 @@ class Testimonial {
 class TestimonialsSection extends StatefulWidget {
   const TestimonialsSection({super.key});
 
+  static const List<Testimonial> curatedTestimonials = [
+    Testimonial(
+      id: 'google_rev_1',
+      patientName: 'sai ligiberi',
+      ageAndLocation: '3 reviews',
+      treatment: 'Consultation & Eye Care',
+      doctorTreated: 'Dr. Sukesh',
+      outcomeMetric: 'Patient Consultation & Best Advice',
+      rating: 5.0,
+      highlightSnippet: '“Dr sukesh sir is soft spoken human being and highly qualified doctor. He always listens to problems very patiently.”',
+      fullQuote:
+          'Dr sukesh sir is soft spoken human being and highly qualified doctor.He always listens to problems very patiently,gives best advice,explains everything in clean manner Practically,one of the best ophthalmologist i highly recommend him',
+      dateAgo: '4 months ago',
+      avatarInitials: 'SL',
+      imageAsset: '',
+      categoryColor: Color(0xFF0284C7),
+      procedureTag: 'Google Review',
+      isVerifiedGoogle: true,
+    ),
+    Testimonial(
+      id: 'google_rev_2',
+      patientName: 'Tirupathi Rao Ganta',
+      ageAndLocation: 'Local Guide • 16 reviews',
+      treatment: 'Comprehensive Eye Treatment',
+      doctorTreated: 'Rainbow Clinical Team',
+      outcomeMetric: 'Smooth & Professional Treatment',
+      rating: 5.0,
+      highlightSnippet: '“Very good experience at RAINBOW EYE HOSPITAL.. The Doctors and staff were very caring and professional.”',
+      fullQuote:
+          'Very good experience at RAINBOW EYE HOSPITAL.. The Doctors and staff were very caring and professional. The hospital was clean and treatment was also smooth&Good.Highly recommended for your eye releted problems.',
+      dateAgo: '3 months ago',
+      avatarInitials: 'TG',
+      imageAsset: '',
+      categoryColor: Color(0xFF0D9488),
+      procedureTag: 'Google Review',
+      isVerifiedGoogle: true,
+    ),
+    Testimonial(
+      id: 'google_rev_3',
+      patientName: 'sumitra kasireddi',
+      ageAndLocation: '8 reviews',
+      treatment: 'LASIK Surgery Opinion',
+      doctorTreated: 'Refractive Specialists',
+      outcomeMetric: 'Quick Checkup & Best LASIK Guidance',
+      rating: 5.0,
+      highlightSnippet: '“I came for lasik surgery opinion. Doctors here are well experienced and suggested the best option for me.”',
+      fullQuote:
+          'I came for lasik surgery opinion. Doctors here are well experienced and suggested the best option for me. Polite staff, checkup and overall consultation was quick and very good.',
+      dateAgo: '6 months ago',
+      avatarInitials: 'SK',
+      imageAsset: '',
+      categoryColor: Color(0xFFD97706),
+      procedureTag: 'Google Review',
+      isVerifiedGoogle: true,
+    ),
+    Testimonial(
+      id: 'google_rev_4',
+      patientName: 'Kalla Tharun',
+      ageAndLocation: '2 reviews',
+      treatment: 'Inpatient & Clinical Care',
+      doctorTreated: 'Floor Nursing & Surgical Team',
+      outcomeMetric: 'Spotless Facility & Attentive Care',
+      rating: 5.0,
+      highlightSnippet: '“From the moment I checked in, the staff was professional, kind, and attentive. The facility was spotless.”',
+      fullQuote:
+          'I had a wonderful experience at Rainbow eye Hospital. From the moment I checked in, the staff was professional, kind, and attentive. A special thank you to the nursing team on the Floor they made me feel comfortable and well-cared for during a stressful time. The facility was spotless, and the level of communication regarding my treatment was excellent.',
+      dateAgo: '7 months ago',
+      avatarInitials: 'KT',
+      imageAsset: '',
+      categoryColor: Color(0xFF8B5CF6),
+      procedureTag: 'Google Review',
+      isVerifiedGoogle: true,
+    ),
+    Testimonial(
+      id: 'google_rev_5',
+      patientName: 'Venkatesh Kumar',
+      ageAndLocation: '2 reviews',
+      treatment: 'Cataract Surgery',
+      doctorTreated: 'Cataract Specialists',
+      outcomeMetric: 'Cataract Surgery • 100% Satisfaction',
+      rating: 5.0,
+      highlightSnippet: '“My father have under gone with cataract surgery they have treated us very well and taken very good care.”',
+      fullQuote:
+          'A very well experienced with this hospital my father have under gone with cataract surgery they have treated us very well and also taken a very good care of us .. recommend for best eye care',
+      dateAgo: '3 months ago',
+      avatarInitials: 'VK',
+      imageAsset: '',
+      categoryColor: Color(0xFFE11D48),
+      procedureTag: 'Google Review',
+      isVerifiedGoogle: true,
+    ),
+    Testimonial(
+      id: 'google_rev_6',
+      patientName: 'Shaik Akbar',
+      ageAndLocation: 'Local Guide • 8 reviews',
+      treatment: 'Clinical Treatment & Counseling',
+      doctorTreated: 'Rainbow Medical Team',
+      outcomeMetric: 'Clear Guidance & Curing Process',
+      rating: 5.0,
+      highlightSnippet: '“Staff and Doctors are so helpful in making us understand the situation and curing process. Very friendly!”',
+      fullQuote:
+          'Staff and Doctors are so helpful in making understand us about the situation and what is the curing process. They are so friendly and elaborate each and every point to make us understand.',
+      dateAgo: '5 months ago',
+      avatarInitials: 'SA',
+      imageAsset: '',
+      categoryColor: Color(0xFF0284C7),
+      procedureTag: 'Google Review',
+      isVerifiedGoogle: true,
+    ),
+    Testimonial(
+      id: 'google_rev_7',
+      patientName: 'Ganga Yerraiah',
+      ageAndLocation: '6 reviews',
+      treatment: 'General Eye Examination',
+      doctorTreated: 'Clinical Specialists',
+      outcomeMetric: 'Trained Staff • Quality Treatment',
+      rating: 5.0,
+      highlightSnippet: '“Way of behaviour and treatment is good. Well trained staff.”',
+      fullQuote:
+          'Way of behaviour and treatment is good. Well trained staff',
+      dateAgo: '1 month ago',
+      avatarInitials: 'GY',
+      imageAsset: '',
+      categoryColor: Color(0xFF0D9488),
+      procedureTag: 'Google Review',
+      isVerifiedGoogle: true,
+    ),
+    Testimonial(
+      id: 'google_rev_8',
+      patientName: 'srujan kumar',
+      ageAndLocation: '5 reviews',
+      treatment: 'Eye Checkup & Diagnosis',
+      doctorTreated: 'Ophthalmic Team',
+      outcomeMetric: 'Knowledgeable Doctors & Polite Staff',
+      rating: 5.0,
+      highlightSnippet: '“Very politest staff and well maintained hospital and well knowledge Doctors and helpful.”',
+      fullQuote:
+          'Very politest staff and well maintained hospital and well knowledge Doctors and helpful',
+      dateAgo: '3 months ago',
+      avatarInitials: 'SK',
+      imageAsset: '',
+      categoryColor: Color(0xFFD97706),
+      procedureTag: 'Google Review',
+      isVerifiedGoogle: true,
+    ),
+    Testimonial(
+      id: 'google_rev_9',
+      patientName: 'kalla satish kumar',
+      ageAndLocation: '8 reviews',
+      treatment: 'Doctor Consultation & Counseling',
+      doctorTreated: 'Consultation & Diagnostics',
+      outcomeMetric: 'Excellent Consultation & Quick Response',
+      rating: 5.0,
+      highlightSnippet: '“Doctor consultation and counseling is excellent... Staff behaviour and response is also good...”',
+      fullQuote:
+          'Doctor consultation and counseling is excellent... Staff behaviour and response is also good...',
+      dateAgo: '4 months ago',
+      avatarInitials: 'KS',
+      imageAsset: '',
+      categoryColor: Color(0xFF8B5CF6),
+      procedureTag: 'Google Review',
+      isVerifiedGoogle: true,
+    ),
+  ];
+
   @override
   State<TestimonialsSection> createState() => _TestimonialsSectionState();
 }
@@ -75,152 +244,38 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
   int _currentPageIndex = 0;
   Timer? _autoPlayTimer;
   bool _isUserInteracting = false;
-
-  static const List<Testimonial> _allTestimonials = [
-    Testimonial(
-      id: 'test_1',
-      patientName: 'Ravi Kumar S.',
-      ageAndLocation: '32 Yrs • Visakhapatnam',
-      treatment: 'Contoura Vision LASIK',
-      doctorTreated: 'Dr. Rajesh Varma',
-      outcomeMetric: '6/6 Vision Restored in 24 Hrs',
-      rating: 5.0,
-      highlightSnippet: '“Zero pain during the laser. Next morning I had 6/6 crystal clarity without glasses!”',
-      fullQuote:
-          'I wore -5.5D thick spectacles for over 14 years. Dr. Rajesh Varma and the counseling team explained the entire Contoura Vision procedure with extreme patience. The laser took barely 10 minutes for both eyes with zero blade or pain. The very next morning I woke up and could read the smallest wall clock numbers. Truly life-changing care!',
-      dateAgo: '2 weeks ago',
-      avatarInitials: 'RK',
-      imageAsset: 'assets/images/patient_ravi_kumar.jpg',
-      categoryColor: Color(0xFF0284C7),
-      procedureTag: 'LASIK & SMILE',
-    ),
-    Testimonial(
-      id: 'test_2',
-      patientName: 'Lakshmi Prasanna',
-      ageAndLocation: '62 Yrs • Gajuwaka',
-      treatment: 'Micro-Incision Cataract',
-      doctorTreated: 'Dr. Rajesh Varma',
-      outcomeMetric: 'Painless • Same Day Discharge',
-      rating: 5.0,
-      highlightSnippet: '“I was terrified of surgery due to my diabetes, but topical drop method was 100% painless.”',
-      fullQuote:
-          'Being diabetic, I postponed my cataract surgery for two years out of sheer fear. Dr. Rajesh used topical eye drops without any injection needles. The robotic phaco surgery was done in 12 minutes. I was home having lunch the same afternoon. All colors look bright and sharp again!',
-      dateAgo: '1 month ago',
-      avatarInitials: 'LP',
-      imageAsset: 'assets/images/patient_lakshmi_prasanna.jpg',
-      categoryColor: AppColors.primary,
-      procedureTag: 'Cataract',
-    ),
-    Testimonial(
-      id: 'test_3',
-      patientName: 'Venkat Rao M.',
-      ageAndLocation: '54 Yrs • MVP Colony',
-      treatment: 'Emergency Retina Laser',
-      doctorTreated: 'Dr. Ananya Iyer',
-      outcomeMetric: 'Retina Saved • 100% Sight Preserved',
-      rating: 5.0,
-      highlightSnippet: '“Sunday emergency retina triage caught my retinal tear just in time and saved my eye.”',
-      fullQuote:
-          'I noticed sudden black curtain floaters and severe flashes on a Sunday evening. Rainbow Eye Hospital’s emergency retina team attended to me immediately. Dr. Ananya Iyer performed a precision green barrage laser within 2 hours, preventing permanent retinal detachment. Her surgical expertise is second to none.',
-      dateAgo: '3 weeks ago',
-      avatarInitials: 'VR',
-      imageAsset: 'assets/images/patient_venkat_rao.jpg',
-      categoryColor: Color(0xFFE11D48),
-      procedureTag: 'Retina',
-    ),
-    Testimonial(
-      id: 'test_4',
-      patientName: 'Sneha & Rahul K.',
-      ageAndLocation: 'Parents of Aarav (7) • Siripuram',
-      treatment: 'Pediatric Squint Correction',
-      doctorTreated: 'Dr. Priya Sharma',
-      outcomeMetric: 'Perfect Alignment • 100% Restored',
-      rating: 5.0,
-      highlightSnippet: '“Dr. Priya handled our 7-year-old with so much love. His squint is completely gone.”',
-      fullQuote:
-          'Finding a doctor who can keep a 7-year-old calm during surgery is rare. Dr. Priya Sharma is a blessing. Aarav’s squint was completely corrected with microscopic precision. His eye alignment is flawless, and his confidence at school has returned completely.',
-      dateAgo: '2 months ago',
-      avatarInitials: 'SK',
-      imageAsset: 'assets/images/patient_sneha_aarav.jpg',
-      categoryColor: Color(0xFF8B5CF6),
-      procedureTag: 'Pediatric',
-    ),
-    Testimonial(
-      id: 'test_5',
-      patientName: 'K. Srinivas Murthy',
-      ageAndLocation: '68 Yrs • Seethammadhara',
-      treatment: 'Advanced Glaucoma Valve',
-      doctorTreated: 'Dr. Suresh Nair',
-      outcomeMetric: 'Pressure Stabilized: 34 ➔ 14 mmHg',
-      rating: 5.0,
-      highlightSnippet: '“My eye pressure was dangerously high at 34 mmHg. Dr. Suresh saved my optic nerve.”',
-      fullQuote:
-          'I was losing peripheral vision silently due to chronic open-angle glaucoma. Dr. Suresh Nair performed an advanced Ahmed valve implant. My intraocular pressure dropped from 34 mmHg to a safe 14 mmHg. The entire clinical nursing staff treated me like family.',
-      dateAgo: '1 month ago',
-      avatarInitials: 'SM',
-      imageAsset: 'assets/images/patient_srinivas_murthy.jpg',
-      categoryColor: Color(0xFF0D9488),
-      procedureTag: 'Glaucoma',
-    ),
-    Testimonial(
-      id: 'test_6',
-      patientName: 'Divya Madhavan',
-      ageAndLocation: '28 Yrs • Madhurawada',
-      treatment: 'SMILE Pro Blade-Free Laser',
-      doctorTreated: 'Dr. Arjun Mehta',
-      outcomeMetric: '6/5 Ultra-HD Vision • 0 Dry Eyes',
-      rating: 5.0,
-      highlightSnippet: '“As a coder working 10+ hours on screen, SMILE Pro was the best investment of my life.”',
-      fullQuote:
-          'I was worried about flap dislodgement and chronic dry eyes from coding all day. Dr. Arjun Mehta recommended keyhole SMILE laser. It was done in under 8 seconds per eye! I had zero dry eye irritation and was back coding on Monday with sharper than 6/6 vision.',
-      dateAgo: '3 weeks ago',
-      avatarInitials: 'DM',
-      imageAsset: 'assets/images/patient_divya_madhavan.jpg',
-      categoryColor: Color(0xFFD97706),
-      procedureTag: 'LASIK & SMILE',
-    ),
-    Testimonial(
-      id: 'test_7',
-      patientName: 'Pooja Hegde',
-      ageAndLocation: '34 Yrs • Lawsons Bay',
-      treatment: 'Ptosis Eyelid Reconstruction',
-      doctorTreated: 'Dr. Kavitha Reddy',
-      outcomeMetric: '100% Symmetrical Eyelid Lift',
-      rating: 5.0,
-      highlightSnippet: '“Severe drooping eyelid was blocking my sight. Dr. Kavitha restored natural symmetry with zero scar!”',
-      fullQuote:
-          'I suffered from congenital ptosis on my left eye which worsened over years. Dr. Kavitha Reddy performed precision oculoplastic surgery. The incision is completely invisible within the eyelid crease, and my visual field has opened up completely.',
-      dateAgo: '1 month ago',
-      avatarInitials: 'PH',
-      imageAsset: 'assets/images/patient_pooja_hegde.jpg',
-      categoryColor: Color(0xFFDB2777),
-      procedureTag: 'Cornea & Oculoplasty',
-    ),
-    Testimonial(
-      id: 'test_8',
-      patientName: 'Anand Varma',
-      ageAndLocation: '45 Yrs • MVP Colony',
-      treatment: 'C3R Corneal Cross-Linking',
-      doctorTreated: 'Dr. Suresh Nair',
-      outcomeMetric: 'Keratoconus Halted • Vision Saved',
-      rating: 5.0,
-      highlightSnippet: '“Progressive keratoconus was blurring my sight. Custom C3R stopped the disease completely.”',
-      fullQuote:
-          'I was terrified of losing my vision from progressive keratoconus. Dr. Suresh Nair evaluated my corneal topography and performed customized riboflavin UV cross-linking. 6 months post-op, my cornea is rock solid and vision remains crisp with scleral lenses.',
-      dateAgo: '2 weeks ago',
-      avatarInitials: 'AV',
-      imageAsset: 'assets/images/patient_anand_varma.jpg',
-      categoryColor: Color(0xFF059669),
-      procedureTag: 'Cornea & Oculoplasty',
-    ),
-  ];
-
-  List<Testimonial> get _filteredTestimonials => _allTestimonials;
+  bool _isLoading = true;
+  double _googleRating = 4.9;
+  int _googleTotalReviews = 248;
+  String _googleMapsUrl = GoogleReviewsService.officialGoogleMapsUrl;
+  List<Testimonial> _testimonials = TestimonialsSection.curatedTestimonials;
+  bool _isLiveGoogle = false;
 
   @override
   void initState() {
     super.initState();
+    _loadLiveGoogleReviews();
     _startAutoPlay();
+  }
+
+  Future<void> _loadLiveGoogleReviews() async {
+    try {
+      final res = await GoogleReviewsService.fetchReviews();
+      if (!mounted) return;
+      setState(() {
+        _testimonials = res.testimonials;
+        _googleRating = res.rating;
+        _googleTotalReviews = res.totalReviews;
+        _googleMapsUrl = res.googleMapsUrl;
+        _isLiveGoogle = res.isLiveFromGoogle;
+        _isLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void _startAutoPlay() {
@@ -249,6 +304,8 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
     _pageController.dispose();
     super.dispose();
   }
+
+  List<Testimonial> get _filteredTestimonials => _testimonials;
 
   int _getCardsPerView(double width) {
     if (width >= 1080) return 3;
@@ -321,30 +378,49 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
               ScrollReveal(
                 duration: const Duration(milliseconds: 600),
                 slideOffset: 0.06,
-                child: _TestimonialsHeader(isMobile: isMobile),
+                child: _TestimonialsHeader(
+                  isMobile: isMobile,
+                  rating: _googleRating,
+                  totalReviews: _googleTotalReviews,
+                  isLive: _isLiveGoogle,
+                ),
               ),
 
               SizedBox(height: isMobile ? 24 : 36),
 
               // ── 2. Responsive PageView Showcase ──
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  return _buildResponsiveShowcase(
-                    containerWidth: constraints.maxWidth,
-                    isMobile: isMobile,
-                    cardsPerView: cardsPerView,
-                  );
-                },
+              AnimatedOpacity(
+                duration: const Duration(milliseconds: 350),
+                opacity: _isLoading ? 0.7 : 1.0,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return _buildResponsiveShowcase(
+                      containerWidth: constraints.maxWidth,
+                      isMobile: isMobile,
+                      cardsPerView: cardsPerView,
+                    );
+                  },
+                ),
               ),
 
               const SizedBox(height: 24),
 
-              // ── 4. Interactive Bottom Controls (Arrows + Page Indicators) ──
+              // ── 3. Interactive Bottom Controls (Arrows + Page Indicators) ──
               if (totalPages > 1)
                 _buildBottomControls(
                   totalPages: totalPages,
                   isMobile: isMobile,
                 ),
+
+              const SizedBox(height: 28),
+
+              // ── 4. "See More Reviews on Google" CTA Button ──
+              _GoogleReviewsCtaButton(
+                googleMapsUrl: _googleMapsUrl,
+                rating: _googleRating,
+                totalReviews: _googleTotalReviews,
+                isMobile: isMobile,
+              ),
             ],
           ),
         ),
@@ -506,39 +582,55 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
 
 class _TestimonialsHeader extends StatelessWidget {
   final bool isMobile;
-  const _TestimonialsHeader({required this.isMobile});
+  final double rating;
+  final int totalReviews;
+  final bool isLive;
+
+  const _TestimonialsHeader({
+    required this.isMobile,
+    required this.rating,
+    required this.totalReviews,
+    required this.isLive,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Clean Eyebrow Badge
+        // Google Verified Badge
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.08),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(30),
             border: Border.all(
-              color: AppColors.primary.withValues(alpha: 0.20),
+              color: const Color(0xFFE2E8F0),
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               const FaIcon(
-                FontAwesomeIcons.heartPulse,
-                size: 11,
-                color: AppColors.primary,
+                FontAwesomeIcons.google,
+                size: 13,
+                color: Color(0xFFEA4335),
               ),
               const SizedBox(width: 8),
               Text(
-                'PATIENT STORIES & EXPERIENCES',
+                '★ ${rating.toStringAsFixed(1)} RATING • $totalReviews+ VERIFIED REVIEWS',
                 style: TextStyle(
                   fontFamily: 'Poppins',
-                  color: AppColors.primary,
-                  fontSize: isMobile ? 11 : 12,
+                  color: const Color(0xFF0F172A),
+                  fontSize: isMobile ? 10.5 : 11.5,
                   fontWeight: FontWeight.w700,
-                  letterSpacing: 1.1,
+                  letterSpacing: 0.8,
                 ),
               ),
             ],
@@ -630,29 +722,44 @@ class _TestimonialCardState extends State<_TestimonialCard> {
                         // Stars
                         Row(
                           mainAxisSize: MainAxisSize.min,
-                          children: List.generate(5, (_) {
-                            return const Padding(
-                              padding: EdgeInsets.only(right: 1.5),
+                          children: List.generate(5, (index) {
+                            final filled = index < t.rating.floor();
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 1.5),
                               child: Icon(
-                                Icons.star_rounded,
+                                filled ? Icons.star_rounded : Icons.star_half_rounded,
                                 size: 16,
-                                color: Color(0xFFF59E0B),
+                                color: const Color(0xFFF59E0B),
                               ),
                             );
                           }),
                         ),
                         const SizedBox(height: 3),
-                        Text(
-                          t.patientName,
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF0F172A),
-                          ),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                t.patientName,
+                                style: const TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF0F172A),
+                                ),
+                              ),
+                            ),
+                            if (t.isVerifiedGoogle) ...[
+                              const SizedBox(width: 6),
+                              const Icon(
+                                Icons.verified_rounded,
+                                size: 15,
+                                color: Color(0xFF0284C7),
+                              ),
+                            ],
+                          ],
                         ),
                         Text(
-                          '${t.ageAndLocation} • ${t.treatment}',
+                          '${t.ageAndLocation} • ${t.dateAgo}',
                           style: const TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 12,
@@ -692,7 +799,7 @@ class _TestimonialCardState extends State<_TestimonialCard> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Verified Clinical Outcome: ${t.outcomeMetric}',
+                        'Verified Patient Review • ${t.outcomeMetric}',
                         style: const TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 12,
@@ -802,13 +909,14 @@ class _TestimonialCardState extends State<_TestimonialCard> {
                         // 5 Stars
                         Row(
                           mainAxisSize: MainAxisSize.min,
-                          children: List.generate(5, (_) {
-                            return const Padding(
-                              padding: EdgeInsets.only(right: 1.5),
+                          children: List.generate(5, (index) {
+                            final filled = index < t.rating.floor();
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 1.5),
                               child: Icon(
-                                Icons.star_rounded,
+                                filled ? Icons.star_rounded : Icons.star_half_rounded,
                                 size: 15,
-                                color: Color(0xFFF59E0B),
+                                color: const Color(0xFFF59E0B),
                               ),
                             );
                           }),
@@ -816,23 +924,39 @@ class _TestimonialCardState extends State<_TestimonialCard> {
                         const SizedBox(height: 2),
 
                         // Patient Name
-                        Text(
-                          t.patientName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: widget.isMobile ? 14 : 14.5,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF0F172A),
-                            height: 1.2,
-                          ),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                t.patientName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: widget.isMobile ? 14 : 14.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color(0xFF0F172A),
+                                  height: 1.2,
+                                ),
+                              ),
+                            ),
+                            if (t.isVerifiedGoogle) ...[
+                              const SizedBox(width: 4),
+                              const Icon(
+                                Icons.verified_rounded,
+                                size: 13,
+                                color: Color(0xFF0284C7),
+                              ),
+                            ],
+                          ],
                         ),
                         const SizedBox(height: 1.5),
 
                         // Subtitle / Location / Treatment
                         Text(
-                          '${t.ageAndLocation.split('•').last.trim()} • ${t.treatment}',
+                          t.ageAndLocation.contains('review')
+                              ? '${t.ageAndLocation} • ${t.dateAgo}'
+                              : '${t.ageAndLocation.split('•').last.trim()} • ${t.dateAgo}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -865,6 +989,126 @@ class _TestimonialCardState extends State<_TestimonialCard> {
                     height: 1.45,
                   ),
                 ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. "SEE MORE REVIEWS ON GOOGLE" CTA BUTTON
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _GoogleReviewsCtaButton extends StatefulWidget {
+  final String googleMapsUrl;
+  final double rating;
+  final int totalReviews;
+  final bool isMobile;
+
+  const _GoogleReviewsCtaButton({
+    required this.googleMapsUrl,
+    required this.rating,
+    required this.totalReviews,
+    required this.isMobile,
+  });
+
+  @override
+  State<_GoogleReviewsCtaButton> createState() => _GoogleReviewsCtaButtonState();
+}
+
+class _GoogleReviewsCtaButtonState extends State<_GoogleReviewsCtaButton> {
+  bool _isHovered = false;
+
+  Future<void> _launchGoogleReviews() async {
+    final uri = Uri.parse(widget.googleMapsUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: _launchGoogleReviews,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+          transform: Matrix4.translationValues(0, _isHovered ? -2 : 0, 0),
+          padding: EdgeInsets.symmetric(
+            horizontal: widget.isMobile ? 18 : 24,
+            vertical: widget.isMobile ? 11 : 13,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(
+              color: _isHovered ? AppColors.primary : const Color(0xFFE2E8F0),
+              width: _isHovered ? 1.5 : 1.0,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: _isHovered
+                    ? AppColors.primary.withValues(alpha: 0.15)
+                    : Colors.black.withValues(alpha: 0.04),
+                blurRadius: _isHovered ? 16 : 8,
+                offset: Offset(0, _isHovered ? 5 : 2),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const FaIcon(
+                FontAwesomeIcons.google,
+                size: 15,
+                color: Color(0xFFEA4335),
+              ),
+              const SizedBox(width: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFEF3C7),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.star_rounded, size: 14, color: Color(0xFFF59E0B)),
+                    const SizedBox(width: 3),
+                    Text(
+                      widget.rating.toStringAsFixed(1),
+                      style: const TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFFB45309),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'See More Reviews on Google',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: widget.isMobile ? 12.5 : 14,
+                  fontWeight: FontWeight.w600,
+                  color: _isHovered ? AppColors.primary : const Color(0xFF0F172A),
+                ),
+              ),
+              const SizedBox(width: 6),
+              Icon(
+                Icons.open_in_new_rounded,
+                size: 14,
+                color: _isHovered ? AppColors.primary : const Color(0xFF64748B),
               ),
             ],
           ),
@@ -942,7 +1186,7 @@ class _NavigationArrowButtonState extends State<_NavigationArrowButton> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 7. PATIENT PHOTO AVATAR WITH INITIALS FALLBACK
+// 7. PATIENT PHOTO AVATAR WITH INITIALS / NETWORK IMAGE FALLBACK
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _PatientAvatar extends StatelessWidget {
@@ -974,28 +1218,61 @@ class _PatientAvatar extends StatelessWidget {
         ],
       ),
       child: ClipOval(
-        child: Image.asset(
-          testimonial.imageAsset,
-          width: radius * 2,
-          height: radius * 2,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: AppColors.primary.withValues(alpha: 0.12),
-              alignment: Alignment.center,
-              child: Text(
-                testimonial.avatarInitials,
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: radius * 0.7,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.primary,
-                ),
-              ),
-            );
-          },
+        child: _buildAvatarImage(),
+      ),
+    );
+  }
+
+  Widget _buildAvatarImage() {
+    // 1. Google Profile Photo URL
+    if (testimonial.profilePhotoUrl != null && testimonial.profilePhotoUrl!.isNotEmpty) {
+      return Image.network(
+        testimonial.profilePhotoUrl!,
+        width: radius * 2,
+        height: radius * 2,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => _buildInitials(),
+      );
+    }
+
+    // 2. Local Asset Image
+    if (testimonial.imageAsset.isNotEmpty) {
+      return Image.asset(
+        testimonial.imageAsset,
+        width: radius * 2,
+        height: radius * 2,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => _buildInitials(),
+      );
+    }
+
+    // 3. Fallback Initials Avatar with branded category color gradient
+    return _buildInitials();
+  }
+
+  Widget _buildInitials() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            testimonial.categoryColor.withValues(alpha: 0.18),
+            testimonial.categoryColor.withValues(alpha: 0.32),
+          ],
+        ),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        testimonial.avatarInitials,
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: radius * 0.68,
+          fontWeight: FontWeight.w800,
+          color: testimonial.categoryColor,
         ),
       ),
     );
   }
 }
+

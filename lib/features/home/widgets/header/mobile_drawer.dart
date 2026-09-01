@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_typography.dart';
 import '../../../../core/utils/section_navigator.dart';
@@ -42,6 +43,14 @@ void openSmoothDrawer(BuildContext context) {
 /// Full-screen slide-in navigation drawer for mobile / tablet screens with direct section navigation.
 class MobileDrawer extends StatelessWidget {
   const MobileDrawer({super.key});
+
+  static Future<void> _makeCall(String phoneNumber) async {
+    final clean = phoneNumber.replaceAll(RegExp(r'[^0-9+]'), '');
+    final uri = Uri.parse('tel:$clean');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,43 +188,57 @@ class MobileDrawer extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    // Phone chip
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.primary.withValues(alpha: 0.12),
+                    // Phone chip (Clickable to dial directly)
+                    Material(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                      child: InkWell(
+                        onTap: () => _makeCall('+91 83411 04525'),
+                        borderRadius: BorderRadius.circular(10),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 6,
                           ),
-                          child: const FaIcon(
-                            FontAwesomeIcons.phone,
-                            size: 13,
-                            color: AppColors.primary,
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.primary.withValues(alpha: 0.12),
+                                ),
+                                child: const FaIcon(
+                                  FontAwesomeIcons.phone,
+                                  size: 13,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Emergency Helpline',
+                                    style: AppTypography.navLink.copyWith(
+                                      fontSize: 11,
+                                      color: AppColors.textSecondary,
+                                    ),
+                                  ),
+                                  Text(
+                                    '+91 83411 04525',
+                                    style: AppTypography.navLink.copyWith(
+                                      fontSize: 13.5,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Emergency Helpline',
-                              style: AppTypography.navLink.copyWith(
-                                fontSize: 11,
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                            Text(
-                              '+91 83411 04525',
-                              style: AppTypography.navLink.copyWith(
-                                fontSize: 13.5,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.textPrimary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                     const SizedBox(height: 14),
 
