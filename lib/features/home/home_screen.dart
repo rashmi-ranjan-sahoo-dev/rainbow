@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     // Allow the Eye Animation Loader to play on initial launch, then smoothly fade out
-    Future.delayed(const Duration(milliseconds: 1800), () {
+    Future.delayed(const Duration(milliseconds: 5000), () {
       if (mounted) {
         setState(() {
           _isLoading = false;

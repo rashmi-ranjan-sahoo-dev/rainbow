@@ -866,11 +866,19 @@ class _HospitalMapCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final isMobile = screenWidth < 700;
-    final isTablet = screenWidth >= 700 && screenWidth < 1080;
 
-    // Desktop matches the full height of the left contact column (~540px)
-    // Tablet ~460px, Mobile ~400px
-    final double mapCardHeight = isMobile ? 400.0 : (isTablet ? 460.0 : 540.0);
+    // Responsive map card height that scales fluidly across all breakpoints:
+    // Mobile (<700px): fluid 320–420px based on screen width
+    // Tablet (700–1080px): fluid 400–480px
+    // Desktop (1080px+): fluid 500–600px to match left column height
+    final double mapCardHeight;
+    if (screenWidth < 700) {
+      mapCardHeight = (screenWidth * 0.9).clamp(320.0, 420.0);
+    } else if (screenWidth < 1080) {
+      mapCardHeight = (screenWidth * 0.52).clamp(400.0, 480.0);
+    } else {
+      mapCardHeight = (screenWidth * 0.38).clamp(500.0, 600.0);
+    }
 
     return Container(
       width: double.infinity,

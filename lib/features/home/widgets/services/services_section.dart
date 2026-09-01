@@ -37,10 +37,7 @@ class ServiceItem {
   });
 }
 
-/// Direction for stepped infinite auto-scroll tracks.
-enum MarqueeDirection { leftToRight, rightToLeft }
-
-/// Section 5 — Specialized Departments & Clinical Specialities.
+/// Section 5 — Specialized Departments & Clinical Specialities (Interactive 3D Carousel Swiper).
 class ServicesSection extends StatefulWidget {
   const ServicesSection({super.key});
 
@@ -168,12 +165,6 @@ class _ServicesSectionState extends State<ServicesSection> {
     ),
   ];
 
-  /// Upper row services (Laser, Cataract, Retina, Glaucoma)
-  List<ServiceItem> get _upperServices => _allServices.sublist(0, 4);
-
-  /// Lower row services (Pediatric, Cornea, Dry Eye, Oculoplasty)
-  List<ServiceItem> get _lowerServices => _allServices.sublist(4, 8);
-
   void _showServiceDetails(ServiceItem service) {
     showModalBottomSheet(
       context: context,
@@ -187,31 +178,12 @@ class _ServicesSectionState extends State<ServicesSection> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final isMobile = screenWidth < 650;
-    final isTablet = screenWidth >= 650 && screenWidth < 1100;
-
-    // Card width calculation matching Blogs section:
-    // - Mobile: 1 card visible (84% width, clamped 275-330)
-    // - Tablet: 2 cards visible ((width - 48) / 2, clamped 275-350)
-    // - PC/Laptop: 3 cards visible ((containerWidth - 32) / 3, clamped 280-370)
-    final double cardWidth;
-    if (isMobile) {
-      cardWidth = (screenWidth * 0.84).clamp(275.0, 330.0);
-    } else if (isTablet) {
-      cardWidth = ((screenWidth - 48) / 2).clamp(275.0, 350.0);
-    } else {
-      const containerWidth = 1320.0;
-      final effectiveWidth = screenWidth.clamp(1100.0, containerWidth);
-      cardWidth = ((effectiveWidth - 2 * ResponsiveHelper.horizontalPadding(context) - 32) / 3).clamp(280.0, 370.0);
-    }
-
-    final double rowHeight = isMobile ? 340.0 : 330.0;
-    const double cardSpacing = 16.0;
 
     return Container(
       key: SectionNavigator.servicesKey,
       width: double.infinity,
       decoration: const BoxDecoration(
-        color: Color(0xFFF3F5FC), // Soft purple-tinted backdrop
+        color: Color(0xFFF3F5FC), // Soft lavender-gray background
       ),
       padding: EdgeInsets.symmetric(
         vertical: isMobile ? 40 : 64,
@@ -220,7 +192,7 @@ class _ServicesSectionState extends State<ServicesSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // ── 1. Section Header (Clean & Centered) ──
+          // ── 1. Section Header ──
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: ResponsiveHelper.horizontalPadding(context),
@@ -282,30 +254,11 @@ class _ServicesSectionState extends State<ServicesSection> {
             ),
           ),
 
-          SizedBox(height: isMobile ? 24 : 32),
+          SizedBox(height: isMobile ? 24 : 36),
 
-          // ── 2. Dual Stepped Infinite Scroll Rows (2s Auto-Step) ──
-          // Line 1: Upper Row (Steps smoothly Left-to-Right every 2s)
-          _SteppedInfiniteServiceRow(
-            key: const ValueKey('upper_stream_all'),
-            items: _upperServices,
-            direction: MarqueeDirection.leftToRight,
-            cardWidth: cardWidth,
-            cardSpacing: cardSpacing,
-            height: rowHeight,
-            onCardTap: _showServiceDetails,
-          ),
-
-          SizedBox(height: isMobile ? 12 : 16),
-
-          // Line 2: Lower Row (Steps smoothly Right-to-Left every 2s)
-          _SteppedInfiniteServiceRow(
-            key: const ValueKey('lower_stream_all'),
-            items: _lowerServices,
-            direction: MarqueeDirection.rightToLeft,
-            cardWidth: cardWidth,
-            cardSpacing: cardSpacing,
-            height: rowHeight,
+          // ── 2. Interactive 3D Carousel Swiper with Parallax Depth ──
+          _InteractiveServiceCarousel(
+            services: _allServices,
             onCardTap: _showServiceDetails,
           ),
         ],
@@ -314,399 +267,381 @@ class _ServicesSectionState extends State<ServicesSection> {
   }
 }
 
-/// A stepped infinite auto-scrolling row that smoothly advances by 1 card every 2 seconds.
-class _SteppedInfiniteServiceRow extends StatefulWidget {
-  final List<ServiceItem> items;
-  final MarqueeDirection direction;
-  final double cardWidth;
-  final double cardSpacing;
-  final double height;
+/// Interactive 3D Carousel Swiper showing 3 cards side-by-side with depth parallax,
+/// sleek circular arrows, 8 interactive dot indicators, and automatic rotation.
+class _InteractiveServiceCarousel extends StatefulWidget {
+  final List<ServiceItem> services;
   final ValueChanged<ServiceItem> onCardTap;
 
-  static const Duration _stepInterval = Duration(seconds: 2);
-  static const Duration _stepDuration = Duration(milliseconds: 850);
-
-  const _SteppedInfiniteServiceRow({
-    super.key,
-    required this.items,
-    required this.direction,
-    required this.cardWidth,
-    required this.cardSpacing,
-    required this.height,
+  const _InteractiveServiceCarousel({
+    required this.services,
     required this.onCardTap,
   });
 
   @override
-  State<_SteppedInfiniteServiceRow> createState() => _SteppedInfiniteServiceRowState();
+  State<_InteractiveServiceCarousel> createState() => _InteractiveServiceCarouselState();
 }
 
-class _SteppedInfiniteServiceRowState extends State<_SteppedInfiniteServiceRow> {
-  late final ScrollController _scrollController;
-  Timer? _timer;
-  bool _isHovered = false;
-  bool _isAnimating = false;
+class _InteractiveServiceCarouselState extends State<_InteractiveServiceCarousel> {
+  int _currentServiceIndex = 0;
 
-  static const int _bufferMultiplier = 16;
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final String screenCategory = screenWidth < 650
+        ? 'mobile'
+        : (screenWidth < 1100 ? 'tablet' : 'desktop');
+    
+    // Fraction tuning:
+    // - Mobile (< 650px): 0.70 gives prominent center card + left peek + right peek simultaneously (exactly like screenshot)
+    // - Tablet (650px - 1100px): 0.50 gives 2+ cards preview
+    // - Desktop (1100px+): 0.35 gives 3 cards preview
+    final double fraction = screenWidth < 650
+        ? 0.70
+        : (screenWidth < 1100 ? 0.50 : 0.35);
 
-  double get _stride => widget.cardWidth + widget.cardSpacing;
-  double get _singleSetWidth => widget.items.length * _stride;
-
-  List<ServiceItem> get _bufferedItems {
-    if (widget.items.isEmpty) return [];
-    final list = <ServiceItem>[];
-    for (int i = 0; i < _bufferMultiplier; i++) {
-      list.addAll(widget.items);
-    }
-    return list;
+    return _CarouselViewportTrack(
+      key: ValueKey('carousel_$screenCategory'),
+      services: widget.services,
+      viewportFraction: fraction,
+      initialServiceIndex: _currentServiceIndex,
+      onCardTap: widget.onCardTap,
+      onIndexChanged: (idx) {
+        _currentServiceIndex = idx;
+      },
+    );
   }
+}
+
+class _CarouselViewportTrack extends StatefulWidget {
+  final List<ServiceItem> services;
+  final double viewportFraction;
+  final int initialServiceIndex;
+  final ValueChanged<ServiceItem> onCardTap;
+  final ValueChanged<int> onIndexChanged;
+
+  const _CarouselViewportTrack({
+    super.key,
+    required this.services,
+    required this.viewportFraction,
+    required this.initialServiceIndex,
+    required this.onCardTap,
+    required this.onIndexChanged,
+  });
+
+  @override
+  State<_CarouselViewportTrack> createState() => _CarouselViewportTrackState();
+}
+
+class _CarouselViewportTrackState extends State<_CarouselViewportTrack> {
+  late final PageController _pageController;
+  late int _currentPage;
+  bool _isHovered = false;
+  Timer? _autoScrollTimer;
+
+  static const int _loopMultiplier = 100;
+  late final int _baseIndex;
 
   @override
   void initState() {
     super.initState();
-    final initialOffset = _singleSetWidth * 6;
-    _scrollController = ScrollController(initialScrollOffset: initialOffset);
-    _startTimer();
+    _currentPage = widget.initialServiceIndex;
+    final middleCycle = _loopMultiplier ~/ 2;
+    _baseIndex = (middleCycle * widget.services.length) + _currentPage;
+
+    _pageController = PageController(
+      initialPage: _baseIndex,
+      viewportFraction: widget.viewportFraction,
+    );
+
+    _startAutoScroll();
   }
 
-  void _startTimer() {
-    _timer?.cancel();
-    _timer = Timer.periodic(_SteppedInfiniteServiceRow._stepInterval, (timer) {
-      if (!_isHovered && mounted && _scrollController.hasClients && !_isAnimating) {
-        _stepNext();
+  void _startAutoScroll() {
+    _autoScrollTimer?.cancel();
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 4), (_) {
+      if (!_isHovered && mounted && _pageController.hasClients) {
+        _pageController.nextPage(
+          duration: const Duration(milliseconds: 650),
+          curve: Curves.easeInOutCubic,
+        );
       }
     });
   }
 
-  void _pauseTimer() => _isHovered = true;
-  void _resumeTimer() => _isHovered = false;
+  void _pauseAutoScroll() => _isHovered = true;
+  void _resumeAutoScroll() => _isHovered = false;
 
-  Future<void> _stepNext() async {
-    if (!_scrollController.hasClients || !mounted) return;
+  void _goToIndex(int targetServiceIndex) {
+    if (!_pageController.hasClients) return;
+    final currentRealIndex = _pageController.page?.round() ?? _baseIndex;
+    final currentServiceIndex = currentRealIndex % widget.services.length;
+    final difference = targetServiceIndex - currentServiceIndex;
+    final targetPage = currentRealIndex + difference;
 
-    _isAnimating = true;
-    final currentOffset = _scrollController.offset;
-    final double targetOffset;
+    _pageController.animateToPage(
+      targetPage,
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeInOutCubic,
+    );
+    _startAutoScroll();
+  }
 
-    if (widget.direction == MarqueeDirection.rightToLeft) {
-      targetOffset = currentOffset + _stride;
-    } else {
-      targetOffset = currentOffset - _stride;
-    }
+  void _prevPage() {
+    if (!_pageController.hasClients) return;
+    _pageController.previousPage(
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeInOutCubic,
+    );
+    _startAutoScroll();
+  }
 
-    try {
-      await _scrollController.animateTo(
-        targetOffset,
-        duration: _SteppedInfiniteServiceRow._stepDuration,
-        curve: Curves.easeInOutCubic,
-      );
-
-      if (mounted && _scrollController.hasClients) {
-        final newOffset = _scrollController.offset;
-        if (newOffset >= _singleSetWidth * 10) {
-          _scrollController.jumpTo(newOffset - (_singleSetWidth * 4));
-        } else if (newOffset <= _singleSetWidth * 2) {
-          _scrollController.jumpTo(newOffset + (_singleSetWidth * 4));
-        }
-      }
-    } catch (_) {
-    } finally {
-      if (mounted) {
-        _isAnimating = false;
-      }
-    }
+  void _nextPage() {
+    if (!_pageController.hasClients) return;
+    _pageController.nextPage(
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeInOutCubic,
+    );
+    _startAutoScroll();
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
-    _scrollController.dispose();
+    _autoScrollTimer?.cancel();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.items.isEmpty) return const SizedBox.shrink();
-
-    final items = _bufferedItems;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final isMobile = screenWidth < 650;
+    final double carouselHeight = isMobile ? 395.0 : 430.0;
+    final totalItems = widget.services.length * _loopMultiplier;
 
     return MouseRegion(
-      onEnter: (_) => _pauseTimer(),
-      onExit: (_) => _resumeTimer(),
-      child: SizedBox(
-        height: widget.height,
-        child: ListView.separated(
-          controller: _scrollController,
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(
-            horizontal: widget.cardSpacing,
-            vertical: 4,
+      onEnter: (_) => _pauseAutoScroll(),
+      onExit: (_) => _resumeAutoScroll(),
+      child: Column(
+        children: [
+          // ── 1. The 3D Parallax Swiper Track with Side Arrows ──
+          SizedBox(
+            height: carouselHeight,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Swiper PageView
+                PageView.builder(
+                  controller: _pageController,
+                  itemCount: totalItems,
+                  physics: const BouncingScrollPhysics(),
+                  onPageChanged: (page) {
+                    final normalized = page % widget.services.length;
+                    setState(() {
+                      _currentPage = normalized;
+                    });
+                    widget.onIndexChanged(normalized);
+                  },
+                  itemBuilder: (context, index) {
+                    final serviceIndex = index % widget.services.length;
+                    final service = widget.services[serviceIndex];
+
+                    return AnimatedBuilder(
+                      animation: _pageController,
+                      builder: (context, child) {
+                        double pageOffset = index.toDouble();
+                        if (_pageController.position.haveDimensions) {
+                          pageOffset = (_pageController.page ?? index.toDouble()) - index;
+                        } else {
+                          pageOffset = (_baseIndex - index).toDouble();
+                        }
+
+                        // Parallax calculation
+                        final distance = pageOffset.abs().clamp(0.0, 2.0);
+                        final isCenter = distance < 0.5;
+
+                        final scale = (1.0 - (distance * 0.10)).clamp(0.85, 1.05);
+                        final translateY = (distance * 12.0);
+                        final opacity = (1.0 - (distance * 0.25)).clamp(0.60, 1.0);
+                        final rotateY = (-pageOffset * 0.10).clamp(-0.22, 0.22);
+
+                        return Center(
+                          child: Transform(
+                            alignment: Alignment.center,
+                            transform: Matrix4.identity()
+                              ..setEntry(3, 2, 0.001) // 3D Perspective
+                              ..translateByDouble(0.0, translateY, 0.0, 1.0)
+                              ..scaleByDouble(scale, scale, 1.0, 1.0)
+                              ..rotateY(rotateY),
+                            child: Opacity(
+                              opacity: opacity,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: isMobile ? 6 : 10,
+                                  vertical: 8,
+                                ),
+                                child: _CarouselServiceCard(
+                                  service: service,
+                                  isCenter: isCenter,
+                                  isMobile: isMobile,
+                                  onTap: () {
+                                    if (!isCenter) {
+                                      _pageController.animateToPage(
+                                        index,
+                                        duration: const Duration(milliseconds: 500),
+                                        curve: Curves.easeInOutCubic,
+                                      );
+                                    } else {
+                                      widget.onCardTap(service);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+
+                // Sleek Circular Left Navigation Arrow (Desktop & Tablet)
+                if (!isMobile)
+                  Positioned(
+                    left: (screenWidth > 1320 ? (screenWidth - 1320) / 2 + 10 : 20),
+                    child: _CarouselArrowButton(
+                      icon: Icons.chevron_left_rounded,
+                      onTap: _prevPage,
+                      tooltip: 'Previous Service',
+                    ),
+                  ),
+
+                // Sleek Circular Right Navigation Arrow (Desktop & Tablet)
+                if (!isMobile)
+                  Positioned(
+                    right: (screenWidth > 1320 ? (screenWidth - 1320) / 2 + 10 : 20),
+                    child: _CarouselArrowButton(
+                      icon: Icons.chevron_right_rounded,
+                      onTap: _nextPage,
+                      tooltip: 'Next Service',
+                    ),
+                  ),
+              ],
+            ),
           ),
-          itemCount: items.length,
-          separatorBuilder: (_, _) => SizedBox(width: widget.cardSpacing),
-          itemBuilder: (context, index) {
-            final item = items[index];
-            return SizedBox(
-              width: widget.cardWidth,
-              height: widget.height - 8,
-              child: _CompactServiceCard(
-                item: item,
-                onTap: () => widget.onCardTap(item),
-              ),
-            );
-          },
-        ),
+
+          SizedBox(height: isMobile ? 16 : 24),
+
+          // ── 2. 8 Interactive Dot Indicators ──
+          _CarouselDotIndicators(
+            itemCount: widget.services.length,
+            currentIndex: _currentPage,
+            onDotTap: _goToIndex,
+          ),
+        ],
       ),
     );
   }
 }
 
-/// Compact sleek Service Card modeled after the Blog Card design system.
-class _CompactServiceCard extends StatefulWidget {
-  final ServiceItem item;
+/// A premium, responsive Service Card designed for the Carousel Swiper.
+class _CarouselServiceCard extends StatefulWidget {
+  final ServiceItem service;
+  final bool isCenter;
+  final bool isMobile;
   final VoidCallback onTap;
 
-  const _CompactServiceCard({
-    required this.item,
+  const _CarouselServiceCard({
+    required this.service,
+    required this.isCenter,
+    this.isMobile = false,
     required this.onTap,
   });
 
   @override
-  State<_CompactServiceCard> createState() => _CompactServiceCardState();
+  State<_CarouselServiceCard> createState() => _CarouselServiceCardState();
 }
 
-class _CompactServiceCardState extends State<_CompactServiceCard> {
+class _CarouselServiceCardState extends State<_CarouselServiceCard> {
   bool _isHovered = false;
-  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
-    final s = widget.item;
-    final isActive = _isHovered || _isPressed;
-    final yOffset = _isPressed ? 0.0 : (_isHovered ? -4.0 : 0.0);
+    final s = widget.service;
+    final isCenter = widget.isCenter;
+    final isMobile = widget.isMobile;
+    final isHighlighted = isCenter || _isHovered;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) {
-          setState(() => _isPressed = false);
-          widget.onTap();
-        },
-        onTapCancel: () => setState(() => _isPressed = false),
+        onTap: widget.onTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: const Cubic(0.16, 1.0, 0.3, 1.0),
-          transform: Matrix4.translationValues(0.0, yOffset, 0.0),
-          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 11),
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(isMobile ? 18 : 20),
             border: Border.all(
-              color: isActive
-                  ? s.accentColor.withValues(alpha: 0.65)
+              color: isHighlighted
+                  ? s.accentColor.withValues(alpha: isCenter ? 0.60 : 0.35)
                   : const Color(0xFFE2E8F0),
-              width: isActive ? 1.5 : 1,
+              width: isCenter ? 1.6 : 1.0,
             ),
             boxShadow: [
               BoxShadow(
-                color: isActive
-                    ? s.accentColor.withValues(alpha: 0.12)
-                    : Colors.black.withValues(alpha: 0.03),
-                blurRadius: isActive ? 14 : 6,
-                offset: Offset(0, isActive ? 5 : 2),
+                color: isHighlighted
+                    ? s.accentColor.withValues(alpha: isCenter ? 0.16 : 0.08)
+                    : Colors.black.withValues(alpha: 0.04),
+                blurRadius: isCenter ? 24 : 10,
+                offset: Offset(0, isCenter ? 8 : 4),
               ),
             ],
           ),
+          padding: EdgeInsets.all(isMobile ? 12 : 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── 1. Top Section: Category Pill + Specialty Badge + Title + Excerpt ──
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              // ── Top Bar: Category Tag Pill + Specialty Badge ──
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Category Tag Pill
-                      Flexible(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: s.accentColor.withValues(alpha: 0.09),
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(
-                              color: s.accentColor.withValues(alpha: 0.22),
-                              width: 0.8,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              FaIcon(
-                                s.icon,
-                                size: 10,
-                                color: s.accentColor,
-                              ),
-                              const SizedBox(width: 4),
-                              Flexible(
-                                child: Text(
-                                  s.category,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 9.5,
-                                    fontWeight: FontWeight.w700,
-                                    color: s.accentColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // Optional Specialty Badge
-                      if (s.badge != null) ...[
-                        const SizedBox(width: 6),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
-                          decoration: BoxDecoration(
-                            color: s.accentColor.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Text(
-                            s.badge!,
-                            style: TextStyle(
-                              fontSize: 9,
-                              fontWeight: FontWeight.w700,
-                              color: s.accentColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-
-                  // Service Title (2 lines max)
-                  Text(
-                    s.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF0F172A),
-                      height: 1.28,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-
-                  // Service Summary Excerpt (2 lines max)
-                  Text(
-                    s.description,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF64748B),
-                      height: 1.36,
-                    ),
-                  ),
-                ],
-              ),
-
-              // ── 2. Middle Section: Featured Clinical Image (Expanded & Responsive) ──
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
+                  // Category Tag Pill
+                  Flexible(
                     child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: s.accentColor.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(10),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isMobile ? 7 : 8,
+                        vertical: isMobile ? 3 : 4,
                       ),
-                      child: Stack(
-                        fit: StackFit.expand,
+                      decoration: BoxDecoration(
+                        color: s.accentColor.withValues(alpha: 0.10),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                          color: s.accentColor.withValues(alpha: 0.25),
+                          width: 0.8,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          AnimatedScale(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeOutCubic,
-                            scale: _isHovered ? 1.06 : 1.0,
-                            child: Image.asset(
-                              s.imagePath,
-                              fit: BoxFit.cover,
-                              errorBuilder: (ctx, error, stackTrace) => Container(
-                                color: s.accentColor.withValues(alpha: 0.12),
-                                child: Center(
-                                  child: FaIcon(
-                                    s.icon,
-                                    size: 32,
-                                    color: s.accentColor,
-                                  ),
-                                ),
-                              ),
-                            ),
+                          FaIcon(
+                            s.icon,
+                            size: isMobile ? 9 : 10,
+                            color: s.accentColor,
                           ),
-
-                          // Gradient Overlay
-                          Positioned.fill(
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.black.withValues(alpha: 0.38),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          // Bottom-right Clinical Badge
-                          Positioned(
-                            right: 8,
-                            bottom: 6,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.58),
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.28),
-                                  width: 0.6,
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.verified_rounded,
-                                    size: 9,
-                                    color: Colors.white,
-                                  ),
-                                  const SizedBox(width: 3),
-                                  Text(
-                                    s.hospitalBadge,
-                                    style: const TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 8,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              s.category,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: isMobile ? 9 : 10,
+                                fontWeight: FontWeight.w700,
+                                color: s.accentColor,
                               ),
                             ),
                           ),
@@ -714,76 +649,228 @@ class _CompactServiceCardState extends State<_CompactServiceCard> {
                       ),
                     ),
                   ),
-                ),
-              ),
 
-              // ── 3. Bottom Section: Highlight Feature + Book CTA ──
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(height: 1, color: const Color(0xFFF1F5F9)),
-                  const SizedBox(height: 6),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // First Highlight feature chip
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.check_circle_outline_rounded,
-                              size: 13,
-                              color: s.accentColor,
-                            ),
-                            const SizedBox(width: 5),
-                            Expanded(
-                              child: Text(
-                                s.highlights.isNotEmpty ? s.highlights.first : 'Specialist Eye Care',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 9.5,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF334155),
-                                ),
-                              ),
-                            ),
-                          ],
+                  // Optional Specialty Badge
+                  if (s.badge != null) ...[
+                    const SizedBox(width: 6),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isMobile ? 6 : 7,
+                        vertical: isMobile ? 2.5 : 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: s.accentColor.withValues(alpha: 0.14),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Text(
+                        s.badge!,
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: isMobile ? 8.5 : 9.5,
+                          fontWeight: FontWeight.w700,
+                          color: s.accentColor,
                         ),
                       ),
+                    ),
+                  ],
+                ],
+              ),
+              SizedBox(height: isMobile ? 8 : 10),
 
-                      const SizedBox(width: 8),
+              // ── Service Title ──
+              Text(
+                s.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: isMobile ? 13 : 14.5,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF0F172A),
+                  height: 1.25,
+                ),
+              ),
+              const SizedBox(height: 3),
 
-                      // Book Appointment CTA Button
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: s.accentColor.withValues(alpha: isActive ? 0.18 : 0.08),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Book',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
+              // ── Short Description Excerpt ──
+              Text(
+                s.description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: isMobile ? 10 : 11,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xFF64748B),
+                  height: 1.35,
+                ),
+              ),
+              SizedBox(height: isMobile ? 8 : 10),
+
+              // ── Clinical Photo with Overlay + Hospital Verified Tag ──
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: s.accentColor.withValues(alpha: 0.08),
+                    ),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        AnimatedScale(
+                          duration: const Duration(milliseconds: 300),
+                          scale: _isHovered ? 1.06 : 1.0,
+                          child: Image.asset(
+                            s.imagePath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (ctx, error, stackTrace) => Center(
+                              child: FaIcon(
+                                s.icon,
+                                size: isMobile ? 30 : 36,
                                 color: s.accentColor,
                               ),
                             ),
-                            const SizedBox(width: 2.5),
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: 8,
-                              color: s.accentColor,
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ],
+
+                        // Gradient Shade
+                        Positioned.fill(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black.withValues(alpha: 0.40),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // Verified Hospital Unit Badge
+                        Positioned(
+                          right: 8,
+                          bottom: 8,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.65),
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.30),
+                                width: 0.6,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.verified_rounded,
+                                  size: 10,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(width: 3),
+                                Text(
+                                  s.hospitalBadge,
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: isMobile ? 8 : 8.5,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: isMobile ? 8 : 10),
+
+              // ── Bottom Feature Highlight & Book Action Button ──
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Feature highlight chip
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle_outline_rounded,
+                          size: isMobile ? 12 : 14,
+                          color: s.accentColor,
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            s.highlights.isNotEmpty ? s.highlights.first : 'Precision Care',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: isMobile ? 9.5 : 10.5,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF334155),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(width: 6),
+
+                  // Sleek "Book" Button
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isMobile ? 8 : 10,
+                      vertical: isMobile ? 4.5 : 5.5,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: isCenter
+                          ? LinearGradient(
+                              colors: [s.accentColor, s.accentColor.withValues(alpha: 0.85)],
+                            )
+                          : null,
+                      color: isCenter ? null : s.accentColor.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: isCenter
+                          ? [
+                              BoxShadow(
+                                color: s.accentColor.withValues(alpha: 0.30),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ]
+                          : [],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Book',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: isMobile ? 10 : 11,
+                            fontWeight: FontWeight.w700,
+                            color: isCenter ? Colors.white : s.accentColor,
+                          ),
+                        ),
+                        const SizedBox(width: 2.5),
+                        Icon(
+                          Icons.arrow_forward_rounded,
+                          size: isMobile ? 10 : 11,
+                          color: isCenter ? Colors.white : s.accentColor,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -791,6 +878,126 @@ class _CompactServiceCardState extends State<_CompactServiceCard> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Sleek circular arrow navigation button with hover shadow.
+class _CarouselArrowButton extends StatefulWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  final String? tooltip;
+  static const double size = 46;
+
+  const _CarouselArrowButton({
+    required this.icon,
+    required this.onTap,
+    this.tooltip,
+  });
+
+  @override
+  State<_CarouselArrowButton> createState() => _CarouselArrowButtonState();
+}
+
+class _CarouselArrowButtonState extends State<_CarouselArrowButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: Tooltip(
+        message: widget.tooltip ?? '',
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOutCubic,
+            width: _CarouselArrowButton.size,
+            height: _CarouselArrowButton.size,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _isHovered ? AppColors.primary : Colors.white,
+              border: Border.all(
+                color: _isHovered
+                    ? AppColors.primary
+                    : const Color(0xFFCBD5E1).withValues(alpha: 0.8),
+                width: 1.2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: _isHovered
+                    ? AppColors.primary.withValues(alpha: 0.35)
+                    : Colors.black.withValues(alpha: 0.08),
+                  blurRadius: _isHovered ? 14 : 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Icon(
+                widget.icon,
+                size: _CarouselArrowButton.size * 0.58,
+                color: _isHovered ? Colors.white : const Color(0xFF334155),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 8 Interactive Dot Indicators with animated active pill expander.
+class _CarouselDotIndicators extends StatelessWidget {
+  final int itemCount;
+  final int currentIndex;
+  final ValueChanged<int> onDotTap;
+
+  const _CarouselDotIndicators({
+    required this.itemCount,
+    required this.currentIndex,
+    required this.onDotTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(itemCount, (index) {
+        final isActive = index == currentIndex;
+
+        return MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () => onDotTap(index),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 260),
+              curve: Curves.easeOutCubic,
+              margin: const EdgeInsets.symmetric(horizontal: 4.5),
+              width: isActive ? 26 : 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: isActive
+                    ? AppColors.primary
+                    : const Color(0xFFCBD5E1),
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: isActive
+                    ? [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.35),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ]
+                    : [],
+              ),
+            ),
+          ),
+        );
+      }),
     );
   }
 }
