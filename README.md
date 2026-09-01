@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🏥 Rainbow Eye Hospital
 
 A state-of-the-art, fully responsive Eye Hospital web and mobile application built with **Flutter 3.x** and **Material 3**. Designed for maximum visual impact, accessibility, and high performance across all screen sizes (PC, Laptop, Tablet, and Mobile).
@@ -134,3 +135,6 @@ flutter pub get
 # 3. Run on Chrome
 flutter run -d chrome
 ```
+=======
+# rainboweyehospital
+>>>>>>> office/main
