@@ -9,7 +9,7 @@ class RainbowLogoIcon extends StatelessWidget {
 
   const RainbowLogoIcon({
     super.key,
-    this.size = 40,
+    this.size = 32,
     this.gradient,
   });
 
@@ -46,27 +46,27 @@ class _RainbowLogoPainter extends CustomPainter {
 
     // ── 1. Outer "R" Outline with Eye Cutout (EvenOdd Fill) ──
     final rPath = Path()..fillType = PathFillType.evenOdd;
-    final stemW = w * 0.23;
+    final stemW = w * 0.24;
 
     // Outer R boundary
     rPath.moveTo(0, 0);
     rPath.lineTo(w * 0.62, 0);
-    rPath.cubicTo(w * 0.94, 0, w * 1.0, h * 0.16, w * 1.0, h * 0.36);
-    rPath.cubicTo(w * 1.0, h * 0.54, w * 0.88, h * 0.63, w * 0.65, h * 0.65);
+    rPath.cubicTo(w * 0.96, 0, w * 1.00, h * 0.16, w * 1.00, h * 0.36);
+    rPath.cubicTo(w * 1.00, h * 0.54, w * 0.88, h * 0.63, w * 0.64, h * 0.64);
     // Diagonal leg
     rPath.lineTo(w * 0.98, h);
-    rPath.lineTo(w * 0.69, h);
-    rPath.lineTo(w * 0.45, h * 0.65);
-    rPath.lineTo(stemW, h * 0.65);
+    rPath.lineTo(w * 0.68, h);
+    rPath.lineTo(w * 0.44, h * 0.64);
+    rPath.lineTo(stemW, h * 0.64);
     rPath.lineTo(stemW, h);
     rPath.lineTo(0, h);
     rPath.close();
 
-    // ── 2. Eye Cutout inside upper loop of R ──
+    // ── 2. Eye Cutout aperture inside upper loop of R ──
     final eyeCenterX = w * 0.53;
-    final eyeCenterY = h * 0.325;
-    final eyeRadiusX = w * 0.30;
-    final eyeRadiusY = h * 0.18;
+    final eyeCenterY = h * 0.32;
+    final eyeRadiusX = w * 0.29;
+    final eyeRadiusY = h * 0.175;
 
     final eyeHolePath = Path();
     eyeHolePath.moveTo(eyeCenterX - eyeRadiusX, eyeCenterY);
@@ -130,12 +130,13 @@ class _RainbowLogoPainter extends CustomPainter {
       eyeCenterX + pupilRadius * 0.72,
       eyeCenterY - pupilRadius * 0.44,
     );
+    final bubbleRadius = pupilRadius * 0.34;
     final bubblePath = Path()
-      ..addOval(Rect.fromCircle(center: bubbleOffset, radius: pupilRadius * 0.34));
+      ..addOval(Rect.fromCircle(center: bubbleOffset, radius: bubbleRadius));
 
     final bubblePaint = Paint()
       ..style = PaintingStyle.fill
-      ..shader = rGradient.createShader(Rect.fromCircle(center: bubbleOffset, radius: pupilRadius * 0.34));
+      ..shader = rGradient.createShader(Rect.fromCircle(center: bubbleOffset, radius: bubbleRadius));
 
     // Draw highlight bubble
     canvas.drawPath(bubblePath, bubblePaint);
@@ -154,7 +155,7 @@ class RainbowLetterO extends StatelessWidget {
   const RainbowLetterO({
     super.key,
     required this.size,
-    this.strokeWidthRatio = 0.32,
+    this.strokeWidthRatio = 0.30,
   });
 
   @override
@@ -209,27 +210,38 @@ class _RainbowOPainter extends CustomPainter {
       oldDelegate.strokeWidthRatio != strokeWidthRatio;
 }
 
-/// Official Rainbow Eye Hospital Logo with Emblem and Stylized 3D Signage Typography.
-/// - Base letters: Medical cyan-teal gradient.
-/// - Letters 'O' and 'R' Eye Iris: Radiant spectral rainbow gradient ring.
-class RainbowLogo extends StatelessWidget {
+/// Official Rainbow Eye Hospital Logo with:
+/// - Top: Signature "R with Rainbow Eye" emblem icon
+/// - Bottom: Centered Hospital Name ("RAINBOW" and "EYE HOSPITAL") with Orbitron font & Rainbow 'O's
+/// - Original colors preserved (Spectral Rainbow Iris & Rainbow 'O's)
+/// - Smooth interactive hover animations & responsive scaling
+class RainbowLogo extends StatefulWidget {
   final double iconSize;
   final bool isDark;
+  final bool isVertical;
   final VoidCallback? onTap;
 
   const RainbowLogo({
     super.key,
-    this.iconSize = 38,
+    this.iconSize = 28,
     this.isDark = false,
+    this.isVertical = true,
     this.onTap,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final titleSize = iconSize * 0.52;
-    final subtitleSize = iconSize * 0.28;
+  State<RainbowLogo> createState() => _RainbowLogoState();
+}
 
-    final logoGradient = isDark
+class _RainbowLogoState extends State<RainbowLogo> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final titleSize = widget.iconSize * 0.42;
+    final subtitleSize = widget.iconSize * 0.25;
+
+    final logoGradient = widget.isDark
         ? const LinearGradient(
             colors: [Color(0xFF38BDF8), Colors.white],
           )
@@ -237,21 +249,21 @@ class RainbowLogo extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF06B6D4), // Light Cyan / Teal
+              Color(0xFF06B6D4), // Light Cyan
               Color(0xFF0891B2), // Vibrant Brand Teal
               Color(0xFF0E7490), // Deep Medical Teal
             ],
           );
 
-    final titleStyle = GoogleFonts.montserrat(
+    final titleStyle = GoogleFonts.orbitron(
       fontSize: titleSize,
       fontWeight: FontWeight.w900,
       letterSpacing: 1.6,
       color: Colors.white,
-      height: 1.05,
+      height: 1.02,
     );
 
-    final subtitleStyle = GoogleFonts.montserrat(
+    final subtitleStyle = GoogleFonts.orbitron(
       fontSize: subtitleSize,
       fontWeight: FontWeight.w800,
       letterSpacing: 2.2,
@@ -259,75 +271,119 @@ class RainbowLogo extends StatelessWidget {
       height: 1.05,
     );
 
+    Widget textColumn({required bool isCentered}) {
+      return Column(
+        crossAxisAlignment:
+            isCentered ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Line 1: RAINB + [Rainbow O] + W
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment:
+                isCentered ? MainAxisAlignment.center : MainAxisAlignment.start,
+            children: [
+              ShaderMask(
+                shaderCallback: (bounds) => logoGradient.createShader(bounds),
+                child: Text('RAINB', style: titleStyle),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0.8),
+                child: RainbowLetterO(
+                  size: titleSize * 0.82,
+                  strokeWidthRatio: 0.32,
+                ),
+              ),
+              ShaderMask(
+                shaderCallback: (bounds) => logoGradient.createShader(bounds),
+                child: Text('W', style: titleStyle),
+              ),
+            ],
+          ),
+          const SizedBox(height: 1.2),
+
+          // Line 2: EYE H + [Rainbow O] + SPITAL
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment:
+                isCentered ? MainAxisAlignment.center : MainAxisAlignment.start,
+            children: [
+              ShaderMask(
+                shaderCallback: (bounds) => logoGradient.createShader(bounds),
+                child: Text('EYE H', style: subtitleStyle),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0.6),
+                child: RainbowLetterO(
+                  size: subtitleSize * 0.82,
+                  strokeWidthRatio: 0.34,
+                ),
+              ),
+              ShaderMask(
+                shaderCallback: (bounds) => logoGradient.createShader(bounds),
+                child: Text('SPITAL', style: subtitleStyle),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
+
+    final Widget content = widget.isVertical
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              RainbowLogoIcon(
+                size: widget.iconSize,
+                gradient: logoGradient,
+              ),
+              const SizedBox(height: 2.5),
+              textColumn(isCentered: true),
+            ],
+          )
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              RainbowLogoIcon(
+                size: widget.iconSize,
+                gradient: logoGradient,
+              ),
+              const SizedBox(width: 8),
+              textColumn(isCentered: false),
+            ],
+          );
+
     return MouseRegion(
-      cursor: onTap != null ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: widget.onTap != null ? SystemMouseCursors.click : SystemMouseCursors.basic,
       child: GestureDetector(
-        onTap: onTap,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // ── 1. Signature "R with Rainbow Eye" Emblem ──
-            RainbowLogoIcon(
-              size: iconSize,
-              gradient: logoGradient,
-            ),
-            const SizedBox(width: 10),
-
-            // ── 2. Exact 3D Signage Typography with Rainbow 'O's & Teal Gradient Letters ──
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Line 1: RAINB + [Rainbow O] + W
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ShaderMask(
-                      shaderCallback: (bounds) => logoGradient.createShader(bounds),
-                      child: Text('RAINB', style: titleStyle),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 1.0),
-                      child: RainbowLetterO(
-                        size: titleSize * 0.84,
-                        strokeWidthRatio: 0.32,
-                      ),
-                    ),
-                    ShaderMask(
-                      shaderCallback: (bounds) => logoGradient.createShader(bounds),
-                      child: Text('W', style: titleStyle),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
-
-                // Line 2: EYE H + [Rainbow O] + SPITAL
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ShaderMask(
-                      shaderCallback: (bounds) => logoGradient.createShader(bounds),
-                      child: Text('EYE H', style: subtitleStyle),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 1.0),
-                      child: RainbowLetterO(
-                        size: subtitleSize * 0.84,
-                        strokeWidthRatio: 0.34,
-                      ),
-                    ),
-                    ShaderMask(
-                      shaderCallback: (bounds) => logoGradient.createShader(bounds),
-                      child: Text('SPITAL', style: subtitleStyle),
-                    ),
-                  ],
-                ),
+        onTap: widget.onTap,
+        child: AnimatedScale(
+          scale: _isHovered ? 1.035 : 1.0,
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 220),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                if (_isHovered)
+                  BoxShadow(
+                    color: const Color(0xFF06B6D4).withValues(alpha: 0.18),
+                    blurRadius: 14,
+                    spreadRadius: 1,
+                    offset: const Offset(0, 2),
+                  ),
               ],
             ),
-          ],
+            child: content,
+          ),
         ),
       ),
     );

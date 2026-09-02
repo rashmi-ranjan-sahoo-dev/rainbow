@@ -2,42 +2,43 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_typography.dart';
 import '../../../../core/utils/responsive_helper.dart';
 import '../../../../core/utils/section_navigator.dart';
-import '../../../../shared/widgets/app_button.dart';
 import '../../../symptom_checker/widgets/vision_deck_modal.dart';
 import '../booking/booking_modal.dart';
 
-/// Data model for a single hero slide.
+/// Data model for each Hero Slide.
 class HeroSlideData {
   final String eyebrow;
   final String headline;
+  final String? headlineHighlight;
+  final Color? headlineHighlightColor;
   final String subtext;
-  final String cta1;
-  final String cta2;
-  final String highlightBadge;
-  final FaIconData highlightIcon;
-  final String imageAsset;
-  final Color gradientStart;
-  final Color gradientEnd;
+  final String? subtextHighlight;
+  final Color? subtextHighlightColor;
+  final String photoAsset;
+  final List<String>? featureTags;
+  final String cta2Text;
+  final IconData cta2Icon;
 
   const HeroSlideData({
     required this.eyebrow,
     required this.headline,
+    this.headlineHighlight,
+    this.headlineHighlightColor,
     required this.subtext,
-    required this.cta1,
-    required this.cta2,
-    required this.highlightBadge,
-    required this.highlightIcon,
-    required this.imageAsset,
-    this.gradientStart = const Color(0xFF0E7490),
-    this.gradientEnd = const Color(0xFF1A1F36),
+    this.subtextHighlight,
+    this.subtextHighlightColor,
+    required this.photoAsset,
+    this.featureTags,
+    this.cta2Text = 'Book Appointment',
+    this.cta2Icon = Icons.calendar_month_rounded,
   });
 }
 
 /// Section 3 — Infinite forward-scrolling hero carousel with auto-play,
-/// interactive dots, ambient orbs, and staggered entrance animations.
+/// full-width background images, right-aligned people, left-aligned ultra-crisp white text,
+/// clean cards without extra tags (except Health Insurance), and 2 CTA buttons.
 class HeroSlider extends StatefulWidget {
   const HeroSlider({super.key});
 
@@ -47,45 +48,68 @@ class HeroSlider extends StatefulWidget {
 
 class _HeroSliderState extends State<HeroSlider> {
   static const int _virtualMultiplier = 1000;
+
   static const _slides = [
+    // Slide 1 — Cataract Awareness (Elderly Couple)
     HeroSlideData(
-      eyebrow: 'ADVANCED VISION CARE',
-      headline: 'Your Vision Is\nOur Highest Mission',
-      subtext:
-          'Experience world-class eye care with state-of-the-art German technology\nand compassionate AIIMS-trained ophthalmologists.',
-      cta1: 'Instant Symptom Checker',
-      cta2: 'Book Appointment',
-      highlightBadge: '100% Blade-Free Contoura LASIK',
-      highlightIcon: FontAwesomeIcons.bolt,
-      imageAsset: 'assets/images/hero_slide_1.jpg',
-      gradientStart: Color(0xFF083344),
-      gradientEnd: Color(0xFF0F172A),
+      eyebrow: 'CATARACT CARE & PREVENTION',
+      headline: "Your Parents gave you the best, now it's your turn.",
+      subtext: "Don't let Cataracts slow them down.",
+      subtextHighlight: 'Cataracts',
+      subtextHighlightColor: Color(0xFFF87171), // Bright Coral Red
+      photoAsset: 'assets/images/hero_slide_1.jpg',
+      featureTags: null,
     ),
+    // Slide 2 — Services Overview (Woman with Heart Hands)
     HeroSlideData(
-      eyebrow: 'FELLOWSHIP SPECIALISTS',
-      headline: 'Trusted By Thousands\nFor Clearer Vision',
-      subtext:
-          'Our multidisciplinary team of 50+ eye surgeons delivers tailored\nprecision care for every patient, every single day.',
-      cta1: 'Instant Symptom Checker',
-      cta2: 'Meet Our Doctors',
-      highlightBadge: '99.8% Surgical Success Rate',
-      highlightIcon: FontAwesomeIcons.award,
-      imageAsset: 'assets/images/hero_slide_2.jpg',
-      gradientStart: Color(0xFF1E293B),
-      gradientEnd: Color(0xFF0E7490),
+      eyebrow: 'EXPERT OPHTHALMOLOGY',
+      headline: 'Clear Vision.\nBright Future.',
+      headlineHighlight: 'Bright Future.',
+      headlineHighlightColor: Color(0xFF38BDF8), // Vibrant Sky Cyan
+      subtext: 'Advanced eye care for a better tomorrow.',
+      photoAsset: 'assets/images/hero_slide_2.jpg',
+      featureTags: null,
     ),
+    // Slide 3 — Comprehensive Eye Care (Elderly Man in Park)
     HeroSlideData(
-      eyebrow: 'PRECISION EYE SURGERY',
-      headline: 'State-of-the-Art\nMicro-Cataract & Lasers',
+      eyebrow: 'COMPREHENSIVE EYE CARE',
+      headline: 'Better Vision,\nBetter Life.',
+      headlineHighlight: 'Better Life.',
+      headlineHighlightColor: Color(0xFF34D399), // Radiant Mint Emerald
       subtext:
-          'Painless, stitch-less 10-minute laser procedures for rapid recovery\nand crystal clear vision restoration.',
-      cta1: 'Instant Symptom Checker',
-      cta2: 'Book Consultation',
-      highlightBadge: 'Same-Day Walk-in Surgery',
-      highlightIcon: FontAwesomeIcons.eye,
-      imageAsset: 'assets/images/hero_slide_3.jpg',
-      gradientStart: Color(0xFF134E4A),
-      gradientEnd: Color(0xFF0B192C),
+          'From routine check-ups to advanced treatments, we care for your eyes.',
+      photoAsset: 'assets/images/hero_slide_3.jpg',
+      featureTags: null,
+    ),
+    // Slide 4 — Family Eye Care (Multi-generational Family on Couch)
+    HeroSlideData(
+      eyebrow: 'FAMILY VISION CARE',
+      headline: 'Protect Your Vision.\nCherish Every Moment.',
+      headlineHighlight: 'Every Moment.',
+      headlineHighlightColor: Color(0xFFC084FC), // Radiant Lilac Purple
+      subtext: 'Trusted eye care for you and your family.',
+      photoAsset: 'assets/images/hero_slide_4.jpg',
+      featureTags: null,
+    ),
+    // Slide 5 — Health Insurance & Cashless Treatment (Insurance Desk)
+    HeroSlideData(
+      eyebrow: 'HEALTH INSURANCE',
+      headline: 'Your Vision,\nFully Covered.',
+      headlineHighlight: 'Fully Covered.',
+      headlineHighlightColor: Color(0xFF38BDF8), // Vibrant Sky Cyan
+      subtext:
+          'Cashless hospitalization & hassle-free claims with all major insurance providers.',
+      photoAsset: 'assets/images/hero_slide_5.jpg',
+      cta2Text: 'Check Insurance Coverage',
+      cta2Icon: Icons.verified_user_rounded,
+      featureTags: [
+        'Star Health',
+        'HDFC ERGO',
+        'ICICI Lombard',
+        'Care Health',
+        'Niva Bupa',
+        'Bajaj Allianz',
+      ],
     ),
   ];
 
@@ -133,21 +157,23 @@ class _HeroSliderState extends State<HeroSlider> {
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
 
+    // Responsive container height
     double heroHeight;
     if (isMobile) {
-      heroHeight = 610;
+      heroHeight = 620;
     } else if (isTablet) {
-      heroHeight = 580;
+      heroHeight = 540;
     } else {
-      heroHeight = 630;
+      heroHeight = 520;
     }
 
     final activeSlideIndex = _currentRealPage % _slides.length;
 
-    return SizedBox(
+    return Container(
       key: SectionNavigator.heroKey,
       width: screenWidth,
       height: heroHeight,
+      color: Colors.black, // Sleek dark baseline
       child: MouseRegion(
         onEnter: (_) => _stopAutoPlay(),
         onExit: (_) => _startAutoPlay(),
@@ -157,7 +183,7 @@ class _HeroSliderState extends State<HeroSlider> {
           onPanCancel: () => _startAutoPlay(),
           child: Stack(
             children: [
-              // ── Infinite Slides ──
+              // ── Main Slide Carousel (5 Slides Dynamic Loop) ──
               PageView.builder(
                 controller: _pageController,
                 itemCount: null, // Infinite loop
@@ -166,15 +192,15 @@ class _HeroSliderState extends State<HeroSlider> {
                 },
                 itemBuilder: (context, index) {
                   final slideData = _slides[index % _slides.length];
-                  return _HeroSlide(
+                  return _HeroSeamlessSlide(
                     data: slideData,
                     isActive: (index % _slides.length) == activeSlideIndex,
                   );
                 },
               ),
 
-              // ── Left / Right Arrow Controls (Desktop only) ──
-              if (screenWidth >= 1024) ...[
+              // ── Left Arrow Control (Desktop only) ──
+              if (screenWidth >= 1024)
                 Positioned(
                   left: 20,
                   top: 0,
@@ -193,6 +219,9 @@ class _HeroSliderState extends State<HeroSlider> {
                     ),
                   ),
                 ),
+
+              // ── Right Arrow Control (Desktop only) ──
+              if (screenWidth >= 1024)
                 Positioned(
                   right: 20,
                   top: 0,
@@ -211,52 +240,63 @@ class _HeroSliderState extends State<HeroSlider> {
                     ),
                   ),
                 ),
-              ],
 
-              // ── Infinite Synced Dot Indicators ──
+              // ── Synchronized 5-Dot Dynamic Indicators ──
               Positioned(
-                bottom: isMobile ? 20 : 30,
+                bottom: isMobile ? 10 : 20,
                 left: 0,
                 right: 0,
                 child: Center(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: List.generate(_slides.length, (dotIndex) {
-                      final isActive = dotIndex == activeSlideIndex;
-                      return GestureDetector(
-                        onTap: () {
-                          final currentVirtual = _currentRealPage % _slides.length;
-                          final diff = dotIndex - currentVirtual;
-                          _currentRealPage += diff;
-                          _pageController.animateToPage(
-                            _currentRealPage,
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.easeInOutCubic,
-                          );
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.easeOutCubic,
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          height: 8,
-                          width: isActive ? 28 : 8,
-                          decoration: BoxDecoration(
-                            color: isActive
-                                ? AppColors.primaryLight
-                                : Colors.white.withValues(alpha: 0.35),
-                            borderRadius: BorderRadius.circular(4),
-                            boxShadow: isActive
-                                ? [
-                                    BoxShadow(
-                                      color: AppColors.primaryLight.withValues(alpha: 0.5),
-                                      blurRadius: 6,
-                                    ),
-                                  ]
-                                : [],
-                          ),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0F172A).withValues(alpha: 0.85),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black45,
+                          blurRadius: 10,
+                          offset: Offset(0, 2),
                         ),
-                      );
-                    }),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(_slides.length, (dotIndex) {
+                        final isActive = dotIndex == activeSlideIndex;
+                        return GestureDetector(
+                          onTap: () {
+                            final currentVirtual =
+                                _currentRealPage % _slides.length;
+                            final diff = dotIndex - currentVirtual;
+                            _currentRealPage += diff;
+                            _pageController.animateToPage(
+                              _currentRealPage,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeInOutCubic,
+                            );
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.easeOutCubic,
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                            ),
+                            height: 7,
+                            width: isActive ? 26 : 7,
+                            decoration: BoxDecoration(
+                              color: isActive
+                                  ? AppColors.primaryLight
+                                  : Colors.white38,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
                   ),
                 ),
               ),
@@ -268,50 +308,48 @@ class _HeroSliderState extends State<HeroSlider> {
   }
 }
 
-/// A single hero slide with gradient background, floating animations, text, and CTA buttons.
-class _HeroSlide extends StatefulWidget {
+/// A seamless full-background hero slide:
+/// Full background image across the entire slide with people on the right,
+/// 100% pure photographic contrast, and left-aligned ultra-crisp white text & 2 CTA buttons.
+class _HeroSeamlessSlide extends StatefulWidget {
   final HeroSlideData data;
   final bool isActive;
 
-  const _HeroSlide({required this.data, required this.isActive});
+  const _HeroSeamlessSlide({required this.data, required this.isActive});
 
   @override
-  State<_HeroSlide> createState() => _HeroSlideState();
+  State<_HeroSeamlessSlide> createState() => _HeroSeamlessSlideState();
 }
 
-class _HeroSlideState extends State<_HeroSlide>
+class _HeroSeamlessSlideState extends State<_HeroSeamlessSlide>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
-  late Animation<double> _badgeScaleAnimation;
 
   @override
   void initState() {
     super.initState();
     _animController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 650),
     );
     _fadeAnimation = CurvedAnimation(
       parent: _animController,
       curve: Curves.easeOutCubic,
     );
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.08),
+      begin: const Offset(0, 0.05),
       end: Offset.zero,
     ).animate(
       CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
-    );
-    _badgeScaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeOutBack),
     );
 
     if (widget.isActive) _animController.forward();
   }
 
   @override
-  void didUpdateWidget(covariant _HeroSlide oldWidget) {
+  void didUpdateWidget(covariant _HeroSeamlessSlide oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isActive && !oldWidget.isActive) {
       _animController.reset();
@@ -325,248 +363,274 @@ class _HeroSlideState extends State<_HeroSlide>
     super.dispose();
   }
 
+  /// Builds high-contrast highlighted headline text with vibrant colored keywords and deep shadow definition
+  Widget _buildHighlightedText({
+    required String text,
+    String? highlight,
+    Color? highlightColor,
+    required TextStyle baseStyle,
+    TextAlign textAlign = TextAlign.start,
+  }) {
+    if (highlight == null || !text.contains(highlight)) {
+      return Text(text, style: baseStyle, textAlign: textAlign);
+    }
+
+    final parts = text.split(highlight);
+    final spans = <InlineSpan>[];
+    for (int i = 0; i < parts.length; i++) {
+      if (parts[i].isNotEmpty) {
+        spans.add(TextSpan(text: parts[i]));
+      }
+      if (i < parts.length - 1) {
+        spans.add(
+          TextSpan(
+            text: highlight,
+            style: TextStyle(
+              color: highlightColor ?? AppColors.primaryLight,
+              fontWeight: FontWeight.w900,
+              shadows: baseStyle.shadows,
+            ),
+          ),
+        );
+      }
+    }
+
+    return Text.rich(
+      TextSpan(style: baseStyle, children: spans),
+      textAlign: textAlign,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
-    final isDesktop = ResponsiveHelper.isDesktop(context);
 
-    // Responsive headline sizes
-    double headlineSize;
-    double subtextSize;
-    if (isMobile) {
-      headlineSize = 26;
-      subtextSize = 13.5;
-    } else if (isTablet) {
-      headlineSize = 34;
-      subtextSize = 15.5;
-    } else {
-      headlineSize = 44;
-      subtextSize = 16.5;
-    }
+    // Responsive Typography Sizes
+    final double headlineSize = isMobile ? 24 : (isTablet ? 32 : 40);
+    final double subtextSize = isMobile ? 14 : (isTablet ? 15.5 : 17);
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [widget.data.gradientStart, widget.data.gradientEnd],
-        ),
-      ),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // ── Background Hospital Environment Image with 0.80 Opacity ──
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.80,
-              child: Image.asset(
-                widget.data.imageAsset,
-                fit: BoxFit.cover,
-                alignment: Alignment.center,
-              ),
-            ),
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        // ── 1. Full-Width Background Image (100% Pure, Zero Background Blur/Fog) ──
+        Positioned.fill(
+          child: Image.asset(
+            widget.data.photoAsset,
+            fit: BoxFit.cover,
+            alignment: isMobile ? Alignment.topCenter : Alignment.centerRight,
           ),
+        ),
 
-          // ── Floating Decorative Ambient Orbs ──
-          const _AnimatedAmbientOrbs(),
-
-          // ── Content ──
-          Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1320),
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: ResponsiveHelper.horizontalPadding(context) + (isDesktop ? 20 : 0),
-                  right: ResponsiveHelper.horizontalPadding(context) + (isDesktop ? 20 : 0),
-                  top: isMobile ? 85 : (isTablet ? 85 : 90),
-                  bottom: isMobile ? 25 : 30,
-                ),
-                child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: isDesktop
-                          ? CrossAxisAlignment.start
-                          : CrossAxisAlignment.center,
-                      children: [
-                        // Eyebrow & Badge row
-                        Wrap(
-                          spacing: 12,
-                          runSpacing: 8,
-                          alignment: isDesktop
-                              ? WrapAlignment.start
-                              : WrapAlignment.center,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            // Eyebrow Tag
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.primary.withValues(alpha: 0.35),
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: AppColors.primaryLight.withValues(alpha: 0.65),
-                                  width: 1.2,
-                                ),
-                              ),
-                              child: Text(
-                                widget.data.eyebrow,
-                                style: AppTypography.heroEyebrow.copyWith(
-                                  fontSize: isMobile ? 11 : 12.5,
-                                  color: AppColors.primaryLight,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
+        // ── 2. Foreground Content (Ultra-Crisp White Text & 2 CTA Buttons on Left) ──
+        Align(
+          alignment: isMobile ? Alignment.bottomLeft : Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: isMobile ? 20 : (isTablet ? 36 : 56),
+              right: isMobile ? 20 : 32,
+              top: isMobile ? 20 : 28,
+              bottom: isMobile ? 24 : 28,
+            ),
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Brand Tag / Eyebrow Badge (Dark frosted pill with teal icon for 100% clarity)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0F172A).withValues(alpha: 0.88),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: AppColors.primaryLight.withValues(alpha: 0.50),
+                          width: 1.0,
+                        ),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black45,
+                            blurRadius: 8,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const FaIcon(
+                            FontAwesomeIcons.eye,
+                            size: 12,
+                            color: AppColors.primaryLight,
+                          ),
+                          const SizedBox(width: 7),
+                          Text(
+                            widget.data.eyebrow,
+                            style: TextStyle(
+                              fontFamily: 'Orbitron',
+                              fontWeight: FontWeight.w900,
+                              fontSize: isMobile ? 11.5 : 13,
+                              letterSpacing: 1.1,
+                              color: Colors.white,
                             ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: isMobile ? 12 : 16),
 
-                            // Floating Highlight Badge
-                            ScaleTransition(
-                              scale: _badgeScaleAnimation,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withValues(alpha: 0.45),
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.35),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    FaIcon(
-                                      widget.data.highlightIcon,
-                                      size: 11,
-                                      color: AppColors.accentLight,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      widget.data.highlightBadge,
-                                      style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: isMobile ? 11 : 12,
-                                        shadows: [
-                                          Shadow(
-                                            color: Colors.black.withValues(alpha: 0.60),
-                                            offset: const Offset(0, 1),
-                                            blurRadius: 4,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                    // Headline (Brilliant pure white with deep dark drop-shadows for 100% readability)
+                    SizedBox(
+                      width: isMobile
+                          ? double.infinity
+                          : MediaQuery.sizeOf(context).width * 0.48,
+                      child: _buildHighlightedText(
+                        text: widget.data.headline,
+                        highlight: widget.data.headlineHighlight,
+                        highlightColor: widget.data.headlineHighlightColor,
+                        baseStyle: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w900,
+                          fontSize: headlineSize,
+                          height: 1.16,
+                          color: Colors.white, // Brilliant pure white
+                          letterSpacing: -0.6,
+                          shadows: const [
+                            Shadow(
+                              color: Color(0xFF09111E),
+                              blurRadius: 8,
+                              offset: Offset(0, 2),
+                            ),
+                            Shadow(
+                              color: Color(0xFF09111E),
+                              blurRadius: 20,
                             ),
                           ],
                         ),
-                        SizedBox(height: isMobile ? 14 : 20),
-
-                        // Headline
-                        SizedBox(
-                          width: isDesktop
-                              ? MediaQuery.sizeOf(context).width * 0.52
-                              : null,
-                          child: Text(
-                            widget.data.headline,
-                            textAlign:
-                                isDesktop ? TextAlign.left : TextAlign.center,
-                            style: AppTypography.heroHeadline(headlineSize),
-                          ),
-                        ),
-                        SizedBox(height: isMobile ? 12 : 18),
-
-                        // Subtext
-                        SizedBox(
-                          width: isDesktop
-                              ? MediaQuery.sizeOf(context).width * 0.46
-                              : null,
-                          child: Text(
-                            widget.data.subtext,
-                            textAlign:
-                                isDesktop ? TextAlign.left : TextAlign.center,
-                            style: AppTypography.heroSubtext(subtextSize),
-                          ),
-                        ),
-                        SizedBox(height: isMobile ? 20 : 28),
-
-                        // CTA Buttons: Exactly 2 buttons (Instant Symptom Checker + Secondary Action)
-                        if (isMobile)
-                          Column(
-                            children: [
-                              _PulsatingSymptomCheckerButton(
-                                isFullWidth: true,
-                                onTap: () => showVisionDeckModal(context),
-                              ),
-                              const SizedBox(height: 10),
-                              AppButton(
-                                label: widget.data.cta2,
-                                isOutlined: true,
-                                width: double.infinity,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 14,
-                                  vertical: 13,
-                                ),
-                                onPressed: () => _handleSecondaryCta(context, widget.data.cta2),
-                              ),
-                            ],
-                          )
-                        else
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: isDesktop
-                                ? MainAxisAlignment.start
-                                : MainAxisAlignment.center,
-                            children: [
-                              _PulsatingSymptomCheckerButton(
-                                isFullWidth: false,
-                                onTap: () => showVisionDeckModal(context),
-                              ),
-                              const SizedBox(width: 14),
-                              AppButton(
-                                label: widget.data.cta2,
-                                isOutlined: true,
-                                onPressed: () => _handleSecondaryCta(context, widget.data.cta2),
-                              ),
-                            ],
-                          ),
-
-                        // Bottom spacer for indicators
-                        const SizedBox(height: 36),
-                      ],
+                      ),
                     ),
-                  ),
+                    SizedBox(height: isMobile ? 8 : 12),
+
+                    // Subtext (Clean bright off-white with deep shadow definition)
+                    SizedBox(
+                      width: isMobile
+                          ? double.infinity
+                          : MediaQuery.sizeOf(context).width * 0.45,
+                      child: _buildHighlightedText(
+                        text: widget.data.subtext,
+                        highlight: widget.data.subtextHighlight,
+                        highlightColor: widget.data.subtextHighlightColor,
+                        baseStyle: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w700,
+                          fontSize: subtextSize,
+                          height: 1.35,
+                          color: const Color(0xFFF1F5F9), // Crisp off-white
+                          shadows: const [
+                            Shadow(
+                              color: Color(0xFF09111E),
+                              blurRadius: 6,
+                              offset: Offset(0, 2),
+                            ),
+                            Shadow(
+                              color: Color(0xFF09111E),
+                              blurRadius: 16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Feature / Insurance Provider Pills (Rendered only on Health Insurance Slide)
+                    if (widget.data.featureTags != null) ...[
+                      const SizedBox(height: 16),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 6,
+                        children: widget.data.featureTags!.map((tag) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF0F172A).withValues(alpha: 0.90),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: AppColors.primaryLight.withValues(alpha: 0.50),
+                                width: 1.0,
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black38,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              tag,
+                              style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.primaryUltraLight,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+
+                    SizedBox(height: isMobile ? 18 : 24),
+
+                    // ── 2 CTA Buttons (Lower of text) ──
+                    if (isMobile)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _PulsatingSymptomCheckerButton(
+                            isFullWidth: true,
+                            onTap: () => showVisionDeckModal(context),
+                          ),
+                          const SizedBox(height: 8),
+                          _BookAppointmentCtaButton(
+                            isFullWidth: true,
+                            text: widget.data.cta2Text,
+                            icon: widget.data.cta2Icon,
+                            onTap: () => showBookingDialog(context),
+                          ),
+                          const SizedBox(height: 24), // Spacing for bottom dots
+                        ],
+                      )
+                    else
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _PulsatingSymptomCheckerButton(
+                            isFullWidth: false,
+                            onTap: () => showVisionDeckModal(context),
+                          ),
+                          const SizedBox(width: 12),
+                          _BookAppointmentCtaButton(
+                            isFullWidth: false,
+                            text: widget.data.cta2Text,
+                            icon: widget.data.cta2Icon,
+                            onTap: () => showBookingDialog(context),
+                          ),
+                        ],
+                      ),
+                  ],
                 ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
-  }
-
-  void _handleSecondaryCta(BuildContext context, String label) {
-    if (label.contains('Book') || label.contains('Consultation')) {
-      showBookingDialog(context);
-    } else if (label.contains('Doctor')) {
-      SectionNavigator.scrollTo(SectionNavigator.doctorsKey);
-    } else if (label.contains('Treatment') || label.contains('Services')) {
-      SectionNavigator.scrollTo(SectionNavigator.servicesKey);
-    } else {
-      SectionNavigator.scrollTo(SectionNavigator.aboutKey);
-    }
   }
 }
 
@@ -598,20 +662,20 @@ class _SliderArrowButtonState extends State<_SliderArrowButton> {
           height: 44,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: _isHovered
-                ? AppColors.primary.withValues(alpha: 0.9)
-                : Colors.white.withValues(alpha: 0.12),
+            color: _isHovered ? AppColors.primary : const Color(0xFF0F172A).withValues(alpha: 0.85),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.25),
+              color: _isHovered
+                  ? AppColors.primary
+                  : Colors.white24,
+              width: 1.2,
             ),
-            boxShadow: _isHovered
-                ? [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.4),
-                      blurRadius: 12,
-                    ),
-                  ]
-                : [],
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black45,
+                blurRadius: 10,
+                offset: Offset(0, 3),
+              ),
+            ],
           ),
           child: Icon(
             widget.icon,
@@ -624,106 +688,7 @@ class _SliderArrowButtonState extends State<_SliderArrowButton> {
   }
 }
 
-/// Subtle animated ambient glowing orbs in the hero background.
-class _AnimatedAmbientOrbs extends StatefulWidget {
-  const _AnimatedAmbientOrbs();
-
-  @override
-  State<_AnimatedAmbientOrbs> createState() => _AnimatedAmbientOrbsState();
-}
-
-class _AnimatedAmbientOrbsState extends State<_AnimatedAmbientOrbs>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 7),
-    )..repeat(reverse: true);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        final val = _controller.value;
-        return Stack(
-          children: [
-            // Top Right Orb
-            Positioned(
-              right: -60 + (val * 20),
-              top: -60 + (val * 15),
-              child: Container(
-                width: 320,
-                height: 320,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      AppColors.primaryLight.withValues(alpha: 0.08 + (val * 0.04)),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            // Bottom Left Orb
-            Positioned(
-              left: -50 - (val * 15),
-              bottom: -60 + (val * 20),
-              child: Container(
-                width: 280,
-                height: 280,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      AppColors.primary.withValues(alpha: 0.07 + (val * 0.03)),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            // Middle Center Orb
-            Positioned(
-              right: 200 - (val * 30),
-              bottom: 80 + (val * 20),
-              child: Container(
-                width: 160,
-                height: 160,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      AppColors.accent.withValues(alpha: 0.04 + (val * 0.02)),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-
-/// Pulsating Symptom Checker Action Button
+/// Instant Symptom Checker CTA Button with pulsating primary brand gradient
 class _PulsatingSymptomCheckerButton extends StatefulWidget {
   final bool isFullWidth;
   final VoidCallback onTap;
@@ -752,7 +717,7 @@ class _PulsatingSymptomCheckerButtonState
       vsync: this,
       duration: const Duration(milliseconds: 1600),
     )..repeat(reverse: true);
-    _glowAnimation = Tween<double>(begin: 4, end: 14).animate(
+    _glowAnimation = Tween<double>(begin: 2, end: 10).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
   }
@@ -777,24 +742,21 @@ class _PulsatingSymptomCheckerButtonState
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               width: widget.isFullWidth ? double.infinity : null,
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Color(_isHovered ? 0xFF0891B2 : 0xFF0E7490),
-                    Color(_isHovered ? 0xFF06B6D4 : 0xFF0891B2),
+                    _isHovered ? AppColors.primaryLight : AppColors.primary,
+                    _isHovered ? AppColors.primary : AppColors.primaryDark,
                   ],
                 ),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: _isHovered ? const Color(0xFFA5F3FC) : const Color(0xFF67E8F9),
-                  width: 1.2,
-                ),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF0891B2).withValues(alpha: _isHovered ? 0.7 : 0.5),
+                    color: AppColors.primary
+                        .withValues(alpha: _isHovered ? 0.55 : 0.35),
                     blurRadius: _glowAnimation.value + (_isHovered ? 4 : 0),
-                    spreadRadius: _isHovered ? 2 : 1,
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
@@ -804,8 +766,8 @@ class _PulsatingSymptomCheckerButtonState
                 children: [
                   FaIcon(
                     FontAwesomeIcons.stethoscope,
-                    size: 14,
-                    color: Colors.white,
+                    size: 13,
+                    color: AppColors.textWhite,
                   ),
                   SizedBox(width: 8),
                   Text(
@@ -814,14 +776,14 @@ class _PulsatingSymptomCheckerButtonState
                       fontFamily: 'Inter',
                       fontSize: 13.5,
                       fontWeight: FontWeight.w700,
-                      color: Colors.white,
+                      color: AppColors.textWhite,
                     ),
                   ),
                   SizedBox(width: 6),
                   Icon(
                     Icons.arrow_forward_rounded,
-                    size: 16,
-                    color: Colors.white,
+                    size: 15,
+                    color: AppColors.textWhite,
                   ),
                 ],
               ),
@@ -829,6 +791,88 @@ class _PulsatingSymptomCheckerButtonState
           ),
         );
       },
+    );
+  }
+}
+
+/// Secondary CTA Button (e.g. Book Appointment or Check Insurance Coverage)
+class _BookAppointmentCtaButton extends StatefulWidget {
+  final bool isFullWidth;
+  final String text;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _BookAppointmentCtaButton({
+    required this.isFullWidth,
+    this.text = 'Book Appointment',
+    this.icon = Icons.calendar_month_rounded,
+    required this.onTap,
+  });
+
+  @override
+  State<_BookAppointmentCtaButton> createState() =>
+      _BookAppointmentCtaButtonState();
+}
+
+class _BookAppointmentCtaButtonState extends State<_BookAppointmentCtaButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          width: widget.isFullWidth ? double.infinity : null,
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+          decoration: BoxDecoration(
+            color: _isHovered
+                ? AppColors.primaryDark
+                : Colors.white.withValues(alpha: 0.95),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: _isHovered ? AppColors.primaryLight : Colors.white,
+              width: 1.4,
+            ),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 8,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                widget.icon,
+                size: 16,
+                color: _isHovered
+                    ? AppColors.textWhite
+                    : AppColors.primaryDark,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                widget.text,
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w700,
+                  color: _isHovered
+                      ? AppColors.textWhite
+                      : AppColors.primaryDark,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

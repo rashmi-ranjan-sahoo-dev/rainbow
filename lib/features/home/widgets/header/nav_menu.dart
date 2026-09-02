@@ -11,7 +11,7 @@ class NavMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final horizontalItemPadding = isCompact ? 7.0 : 11.0;
+    final horizontalItemPadding = isCompact ? 9.0 : 13.0;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -19,41 +19,49 @@ class NavMenu extends StatelessWidget {
         _NavMenuItem(
           title: 'Home',
           isActive: true,
+          isCompact: isCompact,
           horizontalPadding: horizontalItemPadding,
           onTap: () => SectionNavigator.scrollTo(SectionNavigator.heroKey),
         ),
         _NavMenuItem(
           title: 'About',
+          isCompact: isCompact,
           horizontalPadding: horizontalItemPadding,
           onTap: () => SectionNavigator.scrollTo(SectionNavigator.aboutKey),
         ),
         _NavMenuItem(
           title: 'Services',
+          isCompact: isCompact,
           horizontalPadding: horizontalItemPadding,
           onTap: () => SectionNavigator.scrollTo(SectionNavigator.servicesKey),
         ),
         _NavMenuItem(
           title: 'Doctors',
+          isCompact: isCompact,
           horizontalPadding: horizontalItemPadding,
           onTap: () => SectionNavigator.scrollTo(SectionNavigator.doctorsKey),
         ),
         _NavMenuItem(
           title: 'Gallery',
+          isCompact: isCompact,
           horizontalPadding: horizontalItemPadding,
           onTap: () => SectionNavigator.scrollTo(SectionNavigator.galleryKey),
         ),
         _NavMenuItem(
           title: 'Testimonials',
+          isCompact: isCompact,
           horizontalPadding: horizontalItemPadding,
           onTap: () => SectionNavigator.scrollTo(SectionNavigator.testimonialsKey),
         ),
         _NavMenuItem(
           title: 'Blogs',
+          isCompact: isCompact,
           horizontalPadding: horizontalItemPadding,
           onTap: () => Navigator.pushNamed(context, '/blogs'),
         ),
         _NavMenuItem(
           title: 'Contact',
+          isCompact: isCompact,
           horizontalPadding: horizontalItemPadding,
           onTap: () => SectionNavigator.scrollTo(SectionNavigator.contactKey),
         ),
@@ -65,12 +73,14 @@ class NavMenu extends StatelessWidget {
 class _NavMenuItem extends StatefulWidget {
   final String title;
   final bool isActive;
+  final bool isCompact;
   final double horizontalPadding;
   final VoidCallback? onTap;
 
   const _NavMenuItem({
     required this.title,
     this.isActive = false,
+    this.isCompact = false,
     this.horizontalPadding = 14,
     this.onTap,
   });
@@ -96,7 +106,7 @@ class _NavMenuItemState extends State<_NavMenuItem> {
           duration: const Duration(milliseconds: 160),
           padding: EdgeInsets.symmetric(
             horizontal: widget.horizontalPadding,
-            vertical: 8,
+            vertical: 9,
           ),
           decoration: BoxDecoration(
             color: _isHovered
@@ -116,7 +126,7 @@ class _NavMenuItemState extends State<_NavMenuItem> {
                       : AppColors.textPrimary,
                   fontWeight:
                       isHighlighted ? FontWeight.w600 : FontWeight.w500,
-                  fontSize: 13.5,
+                  fontSize: widget.isCompact ? 14.5 : 15.5,
                 ),
               ),
               // Active bottom indicator bar

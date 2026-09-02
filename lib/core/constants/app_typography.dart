@@ -58,13 +58,13 @@ class AppTypography {
 
   // ── Navigation ──
   static TextStyle navLink = GoogleFonts.inter(
-    fontSize: 14.5,
+    fontSize: 15.5,
     fontWeight: FontWeight.w500,
     color: AppColors.textPrimary,
   );
 
   static TextStyle navLinkActive = GoogleFonts.inter(
-    fontSize: 14.5,
+    fontSize: 15.5,
     fontWeight: FontWeight.w600,
     color: AppColors.primary,
   );

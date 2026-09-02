@@ -250,7 +250,7 @@ class _HeaderButtonState extends State<HeaderButton>
               foregroundColor: AppColors.textWhite,
               shadowColor: Colors.transparent,
               elevation: 0,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 13),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -258,11 +258,11 @@ class _HeaderButtonState extends State<HeaderButton>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const FaIcon(FontAwesomeIcons.calendarCheck, size: 13, color: Colors.white),
+                const FaIcon(FontAwesomeIcons.calendarCheck, size: 14, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   widget.label,
-                  style: AppTypography.buttonPrimary.copyWith(fontSize: 13.5),
+                  style: AppTypography.buttonPrimary.copyWith(fontSize: 14.5),
                 ),
               ],
             ),

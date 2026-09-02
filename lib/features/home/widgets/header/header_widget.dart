@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/responsive_helper.dart';
 import '../../../../core/utils/section_navigator.dart';
@@ -119,7 +120,7 @@ class HeaderWidget extends StatelessWidget {
         children: [
           // ── 1. Official Logo Emblem & Typography ──
           RainbowLogo(
-            iconSize: isSticky ? 30 : (isMobile ? 28 : 34),
+            iconSize: isSticky ? 22 : (isMobile ? 22 : 28),
             onTap: () => SectionNavigator.scrollTo(SectionNavigator.heroKey),
           ),
 
@@ -151,7 +152,7 @@ class HeaderWidget extends StatelessWidget {
               // Hamburger Button (Visible on tablet & mobile < 1080px)
               if (!isDesktop) ...[
                 if (!isMobile) const SizedBox(width: 10),
-                _HamburgerButton(),
+                _HamburgerButton(showLabel: isMobile),
               ],
             ],
           ),
@@ -163,6 +164,10 @@ class HeaderWidget extends StatelessWidget {
 
 /// Hamburger menu button that opens the mobile/tablet drawer with smooth slide animation.
 class _HamburgerButton extends StatefulWidget {
+  final bool showLabel;
+
+  const _HamburgerButton({this.showLabel = false});
+
   @override
   State<_HamburgerButton> createState() => _HamburgerButtonState();
 }
@@ -176,24 +181,53 @@ class _HamburgerButtonState extends State<_HamburgerButton> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.click,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        decoration: BoxDecoration(
-          color: _isHovered
-              ? AppColors.primary.withValues(alpha: 0.08)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: IconButton(
-          onPressed: () {
-            openSmoothDrawer(context);
-          },
-          icon: const Icon(
-            Icons.menu_rounded,
-            color: AppColors.textPrimary,
-            size: 26,
+      child: GestureDetector(
+        onTap: () => openSmoothDrawer(context),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          padding: EdgeInsets.symmetric(
+            horizontal: widget.showLabel ? 11 : 8,
+            vertical: widget.showLabel ? 7 : 6,
           ),
-          tooltip: 'Open Menu',
+          decoration: BoxDecoration(
+            color: _isHovered
+                ? AppColors.primary.withValues(alpha: 0.10)
+                : (widget.showLabel
+                    ? AppColors.primary.withValues(alpha: 0.05)
+                    : Colors.transparent),
+            borderRadius: BorderRadius.circular(8),
+            border: widget.showLabel
+                ? Border.all(
+                    color: _isHovered
+                        ? AppColors.primary
+                        : AppColors.primary.withValues(alpha: 0.20),
+                    width: 1,
+                  )
+                : null,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.menu_rounded,
+                color: _isHovered ? AppColors.primary : AppColors.textPrimary,
+                size: 24,
+              ),
+              if (widget.showLabel) ...[
+                const SizedBox(width: 5),
+                Text(
+                  'Menu',
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: _isHovered ? AppColors.primary : AppColors.textPrimary,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );

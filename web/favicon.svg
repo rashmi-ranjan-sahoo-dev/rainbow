@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="rGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="50%" stop-color="#0891B2" />
+      <stop offset="100%" stop-color="#0E7490" />
+    </linearGradient>
+    <radialGradient id="rainbowIris" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="35%" stop-color="#8B5CF6" />
+      <stop offset="50%" stop-color="#3B82F6" />
+      <stop offset="65%" stop-color="#06B6D4" />
+      <stop offset="80%" stop-color="#10B981" />
+      <stop offset="90%" stop-color="#FBBF24" />
+      <stop offset="95%" stop-color="#F97316" />
+      <stop offset="100%" stop-color="#E11D48" />
+    </radialGradient>
+  </defs>
+
+  <!-- Outer R Body with Transparent Eye Cutout (EvenOdd) -->
+  <path
+    fill="url(#rGrad)"
+    fill-rule="evenodd"
+    d="M 40 40 
+       L 315 40 
+       C 465 40, 495 110, 495 200 
+       C 495 280, 440 330, 320 335 
+       L 485 490 
+       L 345 490 
+       L 225 335 
+       L 155 335 
+       L 155 490 
+       L 40 490 
+       Z
+       M 145 185 
+       C 205 105, 335 105, 395 185 
+       C 335 265, 205 265, 145 185 
+       Z"
+  />
+
+  <!-- Spectral Rainbow Iris Ring inside Eye -->
+  <circle cx="270" cy="185" r="50" fill="url(#rainbowIris)" />
+  <circle cx="270" cy="185" r="22" fill="#0F172A" />
+
+  <!-- Specular Light Reflection Highlight Bubble -->
+  <circle cx="304" cy="154" r="16" fill="url(#rGrad)" />
+</svg>

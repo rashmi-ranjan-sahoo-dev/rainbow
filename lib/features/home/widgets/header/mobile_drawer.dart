@@ -80,7 +80,7 @@ class MobileDrawer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RainbowLogo(
-                      iconSize: 34,
+                      iconSize: 30,
                       onTap: () {
                         Navigator.pop(context);
                         SectionNavigator.scrollTo(SectionNavigator.heroKey);
