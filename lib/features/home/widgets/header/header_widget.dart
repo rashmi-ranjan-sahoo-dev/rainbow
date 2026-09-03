@@ -119,9 +119,16 @@ class HeaderWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // ── 1. Official Logo Emblem & Typography ──
-          RainbowLogo(
-            iconSize: isSticky ? 22 : (isMobile ? 22 : 28),
-            onTap: () => SectionNavigator.scrollTo(SectionNavigator.heroKey),
+          Flexible(
+            flex: isMobile ? 1 : 0,
+            child: RainbowLogo(
+              height: isDesktop
+                  ? (isSticky ? 22.0 : 26.0) // Reduced size specifically for PC / Laptop screens
+                  : (isMobile
+                      ? (isSticky ? 25.0 : 28.0)
+                      : (isSticky ? 28.0 : 32.0)),
+              onTap: () => SectionNavigator.scrollTo(SectionNavigator.heroKey),
+            ),
           ),
 
           // ── 2. Desktop Navigation Menu (Screens >= 1080px) ──

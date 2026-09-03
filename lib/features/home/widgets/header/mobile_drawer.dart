@@ -79,12 +79,14 @@ class MobileDrawer extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    RainbowLogo(
-                      iconSize: 30,
-                      onTap: () {
-                        Navigator.pop(context);
-                        SectionNavigator.scrollTo(SectionNavigator.heroKey);
-                      },
+                    Flexible(
+                      child: RainbowLogo(
+                        height: 28,
+                        onTap: () {
+                          Navigator.pop(context);
+                          SectionNavigator.scrollTo(SectionNavigator.heroKey);
+                        },
+                      ),
                     ),
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),

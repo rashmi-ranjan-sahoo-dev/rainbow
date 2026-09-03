@@ -10,6 +10,7 @@ import '../booking/booking_modal.dart';
 /// Data model for each Hero Slide.
 class HeroSlideData {
   final String eyebrow;
+  final FaIconData eyebrowIcon;
   final String headline;
   final String? headlineHighlight;
   final Color? headlineHighlightColor;
@@ -17,12 +18,16 @@ class HeroSlideData {
   final String? subtextHighlight;
   final Color? subtextHighlightColor;
   final String photoAsset;
+  final String? mobilePhotoAsset;
   final List<String>? featureTags;
   final String cta2Text;
   final IconData cta2Icon;
+  final Alignment imageAlignment;
+  final Alignment mobileImageAlignment;
 
   const HeroSlideData({
     required this.eyebrow,
+    this.eyebrowIcon = FontAwesomeIcons.eye,
     required this.headline,
     this.headlineHighlight,
     this.headlineHighlightColor,
@@ -30,9 +35,12 @@ class HeroSlideData {
     this.subtextHighlight,
     this.subtextHighlightColor,
     required this.photoAsset,
+    this.mobilePhotoAsset,
     this.featureTags,
     this.cta2Text = 'Book Appointment',
     this.cta2Icon = Icons.calendar_month_rounded,
+    this.imageAlignment = const Alignment(0.40, -0.45),
+    this.mobileImageAlignment = const Alignment(0.20, -0.55),
   });
 }
 
@@ -50,7 +58,7 @@ class _HeroSliderState extends State<HeroSlider> {
   static const int _virtualMultiplier = 1000;
 
   static const _slides = [
-    // Slide 1 — Cataract Awareness (Elderly Couple)
+    // Slide 1 — Cataract Awareness (Elderly Couple in Hospital Corridor)
     HeroSlideData(
       eyebrow: 'CATARACT CARE & PREVENTION',
       headline: "Your Parents gave you the best, now it's your turn.",
@@ -58,48 +66,68 @@ class _HeroSliderState extends State<HeroSlider> {
       subtextHighlight: 'Cataracts',
       subtextHighlightColor: Color(0xFFF87171), // Bright Coral Red
       photoAsset: 'assets/images/hero_slide_1.jpg',
+      imageAlignment: Alignment(0.48, -0.60), // Perfectly frames the smiling couple's full heads & corridor
+      mobileImageAlignment: Alignment(0.30, -0.65),
       featureTags: null,
     ),
-    // Slide 2 — Services Overview (Woman with Heart Hands)
+    // Slide 2 — Glaucoma Care & Laser Therapy (The Silent Thief of Sight)
     HeroSlideData(
-      eyebrow: 'EXPERT OPHTHALMOLOGY',
-      headline: 'Clear Vision.\nBright Future.',
-      headlineHighlight: 'Bright Future.',
+      eyebrow: 'GLAUCOMA CARE & LASER THERAPY',
+      eyebrowIcon: FontAwesomeIcons.shieldHalved,
+      headline: "Your vision shouldn't fade in silence, protect tomorrow today.",
+      headlineHighlight: 'protect tomorrow today.',
       headlineHighlightColor: Color(0xFF38BDF8), // Vibrant Sky Cyan
-      subtext: 'Advanced eye care for a better tomorrow.',
+      subtext: "Don’t let Silent Glaucoma steal your peripheral sight unnoticed.",
+      subtextHighlight: 'Silent Glaucoma',
+      subtextHighlightColor: Color(0xFFF87171), // Coral Red Warning
       photoAsset: 'assets/images/hero_slide_2.jpg',
+      imageAlignment: Alignment(0.42, -0.52), // Preserves full hair, face, eye gesture and clinic setting
+      mobileImageAlignment: Alignment(0.20, -0.55),
       featureTags: null,
     ),
-    // Slide 3 — Comprehensive Eye Care (Elderly Man in Park)
+    // Slide 3 — LASIK & Contoura Vision (Specs-Free Lifestyle)
     HeroSlideData(
-      eyebrow: 'COMPREHENSIVE EYE CARE',
-      headline: 'Better Vision,\nBetter Life.',
-      headlineHighlight: 'Better Life.',
+      eyebrow: 'LASIK & CONTOURA VISION',
+      eyebrowIcon: FontAwesomeIcons.wandMagicSparkles,
+      headline: 'Your life is meant to be lived unfiltered, free from heavy frames.',
+      headlineHighlight: 'free from heavy frames.',
       headlineHighlightColor: Color(0xFF34D399), // Radiant Mint Emerald
-      subtext:
-          'From routine check-ups to advanced treatments, we care for your eyes.',
+      subtext: 'Say goodbye to Spectacle Dependence with custom HD laser precision.',
+      subtextHighlight: 'Spectacle Dependence',
+      subtextHighlightColor: Color(0xFFFBBF24), // Amber Gold
       photoAsset: 'assets/images/hero_slide_3.jpg',
+      imageAlignment: Alignment(0.32, -0.50), // Full head, hair, laughing expression, tea cup & park
+      mobileImageAlignment: Alignment(0.12, -0.55),
       featureTags: null,
     ),
-    // Slide 4 — Family Eye Care (Multi-generational Family on Couch)
+    // Slide 4 — Diabetic Eye Care & Retinal Laser Therapy (Family Protection)
     HeroSlideData(
-      eyebrow: 'FAMILY VISION CARE',
-      headline: 'Protect Your Vision.\nCherish Every Moment.',
-      headlineHighlight: 'Every Moment.',
-      headlineHighlightColor: Color(0xFFC084FC), // Radiant Lilac Purple
-      subtext: 'Trusted eye care for you and your family.',
+      eyebrow: 'DIABETIC RETINOPATHY & RETINAL CARE',
+      eyebrowIcon: FontAwesomeIcons.stethoscope,
+      headline: "Managing diabetes is tough, keeping your sight shouldn't be.",
+      headlineHighlight: "keeping your sight shouldn't be.",
+      headlineHighlightColor: Color(0xFF38BDF8), // Vibrant Sky Cyan
+      subtext: "Don’t let Diabetic Retinopathy weaken your vision without warning.",
+      subtextHighlight: 'Diabetic Retinopathy',
+      subtextHighlightColor: Color(0xFFF87171), // Coral Red Warning
       photoAsset: 'assets/images/hero_slide_4.jpg',
+      imageAlignment: Alignment(0.18, -0.42), // Shows all 5 family members and warm home setting
+      mobileImageAlignment: Alignment(0.05, -0.45),
       featureTags: null,
     ),
     // Slide 5 — Health Insurance & Cashless Treatment (Insurance Desk)
     HeroSlideData(
       eyebrow: 'HEALTH INSURANCE',
+      eyebrowIcon: FontAwesomeIcons.shieldHalved,
       headline: 'Your Vision,\nFully Covered.',
       headlineHighlight: 'Fully Covered.',
       headlineHighlightColor: Color(0xFF38BDF8), // Vibrant Sky Cyan
       subtext:
           'Cashless hospitalization & hassle-free claims with all major insurance providers.',
       photoAsset: 'assets/images/hero_slide_5.jpg',
+      mobilePhotoAsset: 'assets/images/hero_slide_5_mobile.jpg',
+      imageAlignment: Alignment(0.22, -0.36), // Balanced view on desktop & tablet
+      mobileImageAlignment: Alignment(0.0, -0.65), // Centers both patient and coordinator with heads completely in-frame!
       cta2Text: 'Check Insurance Coverage',
       cta2Icon: Icons.verified_user_rounded,
       featureTags: [
@@ -157,14 +185,14 @@ class _HeroSliderState extends State<HeroSlider> {
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
 
-    // Responsive container height
+    // Responsive container height - generous vertical proportions avoid letterboxing & head clipping
     double heroHeight;
     if (isMobile) {
-      heroHeight = 620;
+      heroHeight = 640;
     } else if (isTablet) {
-      heroHeight = 540;
+      heroHeight = 580;
     } else {
-      heroHeight = 520;
+      heroHeight = 600;
     }
 
     final activeSlideIndex = _currentRealPage % _slides.length;
@@ -403,91 +431,140 @@ class _HeroSeamlessSlideState extends State<_HeroSeamlessSlide>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
 
     // Responsive Typography Sizes
-    final double headlineSize = isMobile ? 24 : (isTablet ? 32 : 40);
-    final double subtextSize = isMobile ? 14 : (isTablet ? 15.5 : 17);
+    final double headlineSize = isMobile ? (screenWidth < 360 ? 20.0 : 23.0) : (isTablet ? 30.0 : 38.0);
+    final double subtextSize = isMobile ? 13.5 : (isTablet ? 15.0 : 16.5);
 
     return Stack(
       fit: StackFit.expand,
       children: [
-        // ── 1. Full-Width Background Image (100% Pure, Zero Background Blur/Fog) ──
+        // ── 1. Full-Width Background Image with Tailored Focal Alignment ──
         Positioned.fill(
           child: Image.asset(
-            widget.data.photoAsset,
+            (isMobile && widget.data.mobilePhotoAsset != null)
+                ? widget.data.mobilePhotoAsset!
+                : widget.data.photoAsset,
             fit: BoxFit.cover,
-            alignment: isMobile ? Alignment.topCenter : Alignment.centerRight,
+            alignment: isMobile
+                ? widget.data.mobileImageAlignment
+                : widget.data.imageAlignment,
+            filterQuality: FilterQuality.high,
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                widget.data.photoAsset,
+                fit: BoxFit.cover,
+                alignment: isMobile
+                    ? widget.data.mobileImageAlignment
+                    : widget.data.imageAlignment,
+                filterQuality: FilterQuality.high,
+              );
+            },
           ),
         ),
 
-        // ── 2. Foreground Content (Ultra-Crisp White Text & 2 CTA Buttons on Left) ──
+        // ── 2. Light, Crystal-Clear Scrim: Minimal Tint (No Heavy Fog/Blur) ──
+        Positioned.fill(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: isMobile
+                  ? const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [0.0, 0.40, 0.65, 1.0],
+                      colors: [
+                        Color(0x22050C16), // Barely-there top tint behind header
+                        Colors.transparent, // 100% crystal clear over subject's face & scene
+                        Color(0x35050C16), // Soft feather over desk
+                        Color(0x85050C16), // Crisp contrast behind buttons
+                      ],
+                    )
+                  : const LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      stops: [0.0, 0.22, 0.40, 1.0],
+                      colors: [
+                        Color(0x5E050C16), // Gentle 37% tint at far left edge for text clarity
+                        Color(0x2E050C16), // Soft 18% feather
+                        Color(0x08050C16), // Barely 3% transition
+                        Colors.transparent, // Completely crisp, vibrant, 100% transparent across the rest!
+                      ],
+                    ),
+            ),
+          ),
+        ),
+
+        // ── 3. Foreground Content (Ultra-Crisp White Text & 2 CTA Buttons on Left) ──
         Align(
           alignment: isMobile ? Alignment.bottomLeft : Alignment.centerLeft,
           child: Padding(
             padding: EdgeInsets.only(
               left: isMobile ? 20 : (isTablet ? 36 : 56),
               right: isMobile ? 20 : 32,
-              top: isMobile ? 20 : 28,
-              bottom: isMobile ? 24 : 28,
+              top: isMobile ? 70 : (isTablet ? 80 : 92),
+              bottom: isMobile ? 24 : 32,
             ),
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: SlideTransition(
-                position: _slideAnimation,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Brand Tag / Eyebrow Badge (Dark frosted pill with teal icon for 100% clarity)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0F172A).withValues(alpha: 0.88),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: AppColors.primaryLight.withValues(alpha: 0.50),
-                          width: 1.0,
-                        ),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black45,
-                            blurRadius: 8,
-                            offset: Offset(0, 2),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: isMobile
+                    ? double.infinity
+                    : (isTablet ? screenWidth * 0.48 : 520),
+              ),
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: SlideTransition(
+                  position: _slideAnimation,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Brand Tag / Eyebrow Badge (Dark frosted pill with teal icon for 100% clarity)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0F172A).withValues(alpha: 0.88),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: AppColors.primaryLight.withValues(alpha: 0.50),
+                            width: 1.0,
                           ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const FaIcon(
-                            FontAwesomeIcons.eye,
-                            size: 12,
-                            color: AppColors.primaryLight,
-                          ),
-                          const SizedBox(width: 7),
-                          Text(
-                            widget.data.eyebrow,
-                            style: TextStyle(
-                              fontFamily: 'Orbitron',
-                              fontWeight: FontWeight.w900,
-                              fontSize: isMobile ? 11.5 : 13,
-                              letterSpacing: 1.1,
-                              color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black38,
+                              blurRadius: 4,
+                              offset: Offset(0, 1.5),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            FaIcon(
+                              widget.data.eyebrowIcon,
+                              size: 12,
+                              color: AppColors.primaryLight,
+                            ),
+                            const SizedBox(width: 7),
+                            Text(
+                              widget.data.eyebrow,
+                              style: TextStyle(
+                                fontFamily: 'Orbitron',
+                                fontWeight: FontWeight.w900,
+                                fontSize: isMobile ? 11.5 : 13,
+                                letterSpacing: 1.1,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: isMobile ? 12 : 16),
+                      SizedBox(height: isMobile ? 12 : 16),
 
-                    // Headline (Brilliant pure white with deep dark drop-shadows for 100% readability)
-                    SizedBox(
-                      width: isMobile
-                          ? double.infinity
-                          : MediaQuery.sizeOf(context).width * 0.48,
-                      child: _buildHighlightedText(
+                      // Headline (Brilliant pure white with sharp contrast, zero blurry haze)
+                      _buildHighlightedText(
                         text: widget.data.headline,
                         highlight: widget.data.headlineHighlight,
                         highlightColor: widget.data.headlineHighlightColor,
@@ -500,26 +577,22 @@ class _HeroSeamlessSlideState extends State<_HeroSeamlessSlide>
                           letterSpacing: -0.6,
                           shadows: const [
                             Shadow(
-                              color: Color(0xFF09111E),
-                              blurRadius: 8,
-                              offset: Offset(0, 2),
+                              color: Color(0xD9000000),
+                              blurRadius: 4,
+                              offset: Offset(0, 1.5),
                             ),
                             Shadow(
-                              color: Color(0xFF09111E),
-                              blurRadius: 20,
+                              color: Color(0x80000000),
+                              blurRadius: 8,
+                              offset: Offset(0, 2),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    SizedBox(height: isMobile ? 8 : 12),
+                      SizedBox(height: isMobile ? 8 : 12),
 
-                    // Subtext (Clean bright off-white with deep shadow definition)
-                    SizedBox(
-                      width: isMobile
-                          ? double.infinity
-                          : MediaQuery.sizeOf(context).width * 0.45,
-                      child: _buildHighlightedText(
+                      // Subtext (Clean bright off-white with crisp, tight shadow definition)
+                      _buildHighlightedText(
                         text: widget.data.subtext,
                         highlight: widget.data.subtextHighlight,
                         highlightColor: widget.data.subtextHighlightColor,
@@ -531,99 +604,136 @@ class _HeroSeamlessSlideState extends State<_HeroSeamlessSlide>
                           color: const Color(0xFFF1F5F9), // Crisp off-white
                           shadows: const [
                             Shadow(
-                              color: Color(0xFF09111E),
-                              blurRadius: 6,
-                              offset: Offset(0, 2),
+                              color: Color(0xD9000000),
+                              blurRadius: 3,
+                              offset: Offset(0, 1),
                             ),
                             Shadow(
-                              color: Color(0xFF09111E),
-                              blurRadius: 16,
+                              color: Color(0x80000000),
+                              blurRadius: 6,
+                              offset: Offset(0, 1.5),
                             ),
                           ],
                         ),
                       ),
-                    ),
 
-                    // Feature / Insurance Provider Pills (Rendered only on Health Insurance Slide)
-                    if (widget.data.featureTags != null) ...[
-                      const SizedBox(height: 16),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 6,
-                        children: widget.data.featureTags!.map((tag) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 5,
+                      // Feature / Insurance Provider Pills (Rendered only on Health Insurance Slide)
+                      if (widget.data.featureTags != null) ...[
+                        SizedBox(height: isMobile ? 8 : 16),
+                        if (isMobile)
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            physics: const BouncingScrollPhysics(),
+                            child: Row(
+                              children: widget.data.featureTags!.map((tag) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 6),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 9,
+                                      vertical: 3.5,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF0F172A).withValues(alpha: 0.90),
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: AppColors.primaryLight.withValues(alpha: 0.50),
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      tag,
+                                      style: const TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.primaryUltraLight,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
                             ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF0F172A).withValues(alpha: 0.90),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: AppColors.primaryLight.withValues(alpha: 0.50),
-                                width: 1.0,
-                              ),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black38,
-                                  blurRadius: 6,
-                                  offset: Offset(0, 2),
+                          )
+                        else
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 6,
+                            children: widget.data.featureTags!.map((tag) {
+                              return Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 5,
                                 ),
-                              ],
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF0F172A).withValues(alpha: 0.90),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: AppColors.primaryLight.withValues(alpha: 0.50),
+                                    width: 1.0,
+                                  ),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black38,
+                                      blurRadius: 6,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  tag,
+                                  style: const TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.primaryUltraLight,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                      ],
+
+                      SizedBox(height: isMobile ? 10 : 24),
+
+                      // ── 2 CTA Buttons (Lower of text) ──
+                      if (isMobile)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _PulsatingSymptomCheckerButton(
+                              isFullWidth: true,
+                              onTap: () => showVisionDeckModal(context),
                             ),
-                            child: Text(
-                              tag,
-                              style: const TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.primaryUltraLight,
-                              ),
+                            const SizedBox(height: 8),
+                            _BookAppointmentCtaButton(
+                              isFullWidth: true,
+                              text: widget.data.cta2Text,
+                              icon: widget.data.cta2Icon,
+                              onTap: () => showBookingDialog(context),
                             ),
-                          );
-                        }).toList(),
-                      ),
+                            const SizedBox(height: 24), // Spacing for bottom dots
+                          ],
+                        )
+                      else
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _PulsatingSymptomCheckerButton(
+                              isFullWidth: false,
+                              onTap: () => showVisionDeckModal(context),
+                            ),
+                            const SizedBox(width: 12),
+                            _BookAppointmentCtaButton(
+                              isFullWidth: false,
+                              text: widget.data.cta2Text,
+                              icon: widget.data.cta2Icon,
+                              onTap: () => showBookingDialog(context),
+                            ),
+                          ],
+                        ),
                     ],
-
-                    SizedBox(height: isMobile ? 18 : 24),
-
-                    // ── 2 CTA Buttons (Lower of text) ──
-                    if (isMobile)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          _PulsatingSymptomCheckerButton(
-                            isFullWidth: true,
-                            onTap: () => showVisionDeckModal(context),
-                          ),
-                          const SizedBox(height: 8),
-                          _BookAppointmentCtaButton(
-                            isFullWidth: true,
-                            text: widget.data.cta2Text,
-                            icon: widget.data.cta2Icon,
-                            onTap: () => showBookingDialog(context),
-                          ),
-                          const SizedBox(height: 24), // Spacing for bottom dots
-                        ],
-                      )
-                    else
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _PulsatingSymptomCheckerButton(
-                            isFullWidth: false,
-                            onTap: () => showVisionDeckModal(context),
-                          ),
-                          const SizedBox(width: 12),
-                          _BookAppointmentCtaButton(
-                            isFullWidth: false,
-                            text: widget.data.cta2Text,
-                            icon: widget.data.cta2Icon,
-                            onTap: () => showBookingDialog(context),
-                          ),
-                        ],
-                      ),
-                  ],
+                  ),
                 ),
               ),
             ),
