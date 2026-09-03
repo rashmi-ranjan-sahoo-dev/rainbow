@@ -80,7 +80,7 @@ class _HeroSliderState extends State<HeroSlider> {
       subtextHighlightColor: Color(0xFFF87171), // Coral Red Warning
       photoAsset: 'assets/images/hero_slide_2.jpg',
       imageAlignment: Alignment(0.35, -0.50), // High-tech slit-lamp, doctor, patient & retina display
-      mobileImageAlignment: Alignment(0.15, -0.55), // Doctor & patient faces, heads, and machine 100% in-frame
+      mobileImageAlignment: Alignment(0.0, -0.55), // Centered directly in the middle on mobile
       featureTags: null,
     ),
     // Slide 3 — LASIK & Contoura Vision (Specs-Free Lifestyle)
@@ -95,7 +95,7 @@ class _HeroSliderState extends State<HeroSlider> {
       subtextHighlightColor: Color(0xFFFBBF24), // Amber Gold
       photoAsset: 'assets/images/hero_slide_3.jpg',
       imageAlignment: Alignment(0.42, -0.45), // Smiling woman holding glasses & laser suite on right
-      mobileImageAlignment: Alignment(0.35, -0.55), // Full portrait view of smiling woman with glasses
+      mobileImageAlignment: Alignment(0.0, -0.55), // Centered directly in the middle on mobile
       featureTags: null,
     ),
     // Slide 4 — Diabetic Eye Care & Retinal Laser Therapy (Family Protection)
@@ -110,7 +110,7 @@ class _HeroSliderState extends State<HeroSlider> {
       subtextHighlightColor: Color(0xFFF87171), // Coral Red Warning
       photoAsset: 'assets/images/hero_slide_4.jpg',
       imageAlignment: Alignment(0.40, -0.45), // Happy elderly uncle wearing glasses enjoying tea on sunlit veranda
-      mobileImageAlignment: Alignment(0.40, -0.55), // Full view of smiling senior wearing glasses with restored sight
+      mobileImageAlignment: Alignment(0.05, -0.55), // Centered directly in the middle on mobile
       featureTags: null,
     ),
     // Slide 5 — Health Insurance & Cashless Treatment (Insurance Desk)
@@ -124,7 +124,7 @@ class _HeroSliderState extends State<HeroSlider> {
           'Cashless hospitalization & hassle-free claims with all major insurance providers.',
       photoAsset: 'assets/images/hero_slide_5.jpg',
       imageAlignment: Alignment(0.22, -0.36), // Balanced view on desktop & tablet
-      mobileImageAlignment: Alignment(0.20, -0.55), // Centers both patient and coordinator with heads completely in-frame!
+      mobileImageAlignment: Alignment(-0.05, -0.55), // Centered directly in the middle on mobile
       cta2Text: 'Check Insurance Coverage',
       cta2Icon: Icons.verified_user_rounded,
       featureTags: [
