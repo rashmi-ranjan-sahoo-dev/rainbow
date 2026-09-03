@@ -42,15 +42,15 @@ class HeaderWidget extends StatelessWidget {
     // ── Floating Margin (Top on Hero) vs Edge-to-Edge (Sticky Scroll Up) ──
     final margin = isFloating
         ? EdgeInsets.fromLTRB(
-            isMobile ? 10 : 20,
-            isMobile ? 3 : 5,
-            isMobile ? 10 : 20,
+            isMobile ? 6 : 20,
+            isMobile ? 2 : 5,
+            isMobile ? 6 : 20,
             0,
           )
         : EdgeInsets.zero;
 
     final borderRadius = isFloating
-        ? BorderRadius.circular(isMobile ? 12 : 16)
+        ? BorderRadius.circular(isMobile ? 10 : 16)
         : BorderRadius.zero;
 
     return Center(
@@ -109,10 +109,12 @@ class HeaderWidget extends StatelessWidget {
   Widget _buildContent(BuildContext context, bool isSticky, bool isFloating, bool isMobile, bool isDesktop, double screenWidth) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: isFloating
-            ? (isMobile ? 14 : 20)
-            : ResponsiveHelper.horizontalPadding(context),
-        vertical: isSticky ? 5 : 7,
+        horizontal: isMobile
+            ? 8.0
+            : (isFloating
+                ? 20.0
+                : ResponsiveHelper.horizontalPadding(context)),
+        vertical: isMobile ? (isSticky ? 2.0 : 3.0) : (isSticky ? 5.0 : 7.0),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,7 +127,9 @@ class HeaderWidget extends StatelessWidget {
               height: isDesktop
                   ? (isSticky ? 22.0 : 26.0) // Reduced size specifically for PC / Laptop screens
                   : (isMobile
-                      ? (isSticky ? 25.0 : 28.0)
+                      ? (screenWidth < 360
+                          ? (isSticky ? 30.0 : 33.0)
+                          : (isSticky ? 33.0 : 37.0)) // Increased size specifically for Mobile screens
                       : (isSticky ? 28.0 : 32.0)),
               onTap: () => SectionNavigator.scrollTo(SectionNavigator.heroKey),
             ),

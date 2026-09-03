@@ -81,7 +81,7 @@ class MobileDrawer extends StatelessWidget {
                   children: [
                     Flexible(
                       child: RainbowLogo(
-                        height: 28,
+                        height: 36,
                         onTap: () {
                           Navigator.pop(context);
                           SectionNavigator.scrollTo(SectionNavigator.heroKey);

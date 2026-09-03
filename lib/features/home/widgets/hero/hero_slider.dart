@@ -81,8 +81,9 @@ class _HeroSliderState extends State<HeroSlider> {
       subtextHighlight: 'Silent Glaucoma',
       subtextHighlightColor: Color(0xFFF87171), // Coral Red Warning
       photoAsset: 'assets/images/hero_slide_2.jpg',
-      imageAlignment: Alignment(0.42, -0.52), // Preserves full hair, face, eye gesture and clinic setting
-      mobileImageAlignment: Alignment(0.20, -0.55),
+      mobilePhotoAsset: 'assets/images/hero_slide_2_mobile.jpg',
+      imageAlignment: Alignment(0.48, -0.42), // High-tech slit-lamp, doctor, patient & retina display on right
+      mobileImageAlignment: Alignment(0.0, -0.60), // Both doctor & patient faces, heads, and machine 100% in-frame
       featureTags: null,
     ),
     // Slide 3 — LASIK & Contoura Vision (Specs-Free Lifestyle)
@@ -96,8 +97,9 @@ class _HeroSliderState extends State<HeroSlider> {
       subtextHighlight: 'Spectacle Dependence',
       subtextHighlightColor: Color(0xFFFBBF24), // Amber Gold
       photoAsset: 'assets/images/hero_slide_3.jpg',
-      imageAlignment: Alignment(0.32, -0.50), // Full head, hair, laughing expression, tea cup & park
-      mobileImageAlignment: Alignment(0.12, -0.55),
+      mobilePhotoAsset: 'assets/images/hero_slide_3_mobile.jpg',
+      imageAlignment: Alignment(0.42, -0.45), // Smiling woman holding glasses & laser surgery suite on right
+      mobileImageAlignment: Alignment(0.0, -0.55), // Full portrait view of smiling woman with glasses
       featureTags: null,
     ),
     // Slide 4 — Diabetic Eye Care & Retinal Laser Therapy (Family Protection)
@@ -110,9 +112,10 @@ class _HeroSliderState extends State<HeroSlider> {
       subtext: "Don’t let Diabetic Retinopathy weaken your vision without warning.",
       subtextHighlight: 'Diabetic Retinopathy',
       subtextHighlightColor: Color(0xFFF87171), // Coral Red Warning
-      photoAsset: 'assets/images/hero_slide_4.jpg',
-      imageAlignment: Alignment(0.18, -0.42), // Shows all 5 family members and warm home setting
-      mobileImageAlignment: Alignment(0.05, -0.45),
+      photoAsset: 'assets/images/hero_slide_4_happy_senior.jpg',
+      mobilePhotoAsset: 'assets/images/hero_slide_4_happy_senior_mobile.jpg',
+      imageAlignment: Alignment(0.40, -0.45), // Happy elderly senior enjoying tea on sunlit home veranda
+      mobileImageAlignment: Alignment(0.0, -0.55), // Full portrait view of smiling senior with restored sight
       featureTags: null,
     ),
     // Slide 5 — Health Insurance & Cashless Treatment (Insurance Desk)
