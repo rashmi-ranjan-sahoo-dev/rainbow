@@ -112,7 +112,7 @@ class HeaderWidget extends StatelessWidget {
         horizontal: isFloating
             ? (isMobile ? 12.0 : 20.0)
             : ResponsiveHelper.horizontalPadding(context),
-        // vertical: isMobile ? (isSticky ? 4.0 : 5.5) : (isSticky ? 5.0 : 7.0),
+         vertical: isMobile ? (isSticky ? 0.0 : 0.0) : (isSticky ? 3.0 : 4.0),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -187,52 +187,48 @@ class _HamburgerButtonState extends State<_HamburgerButton> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () => openSmoothDrawer(context),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
-          padding: EdgeInsets.symmetric(
-            horizontal: widget.showLabel ? 9 : 8,
-            vertical: widget.showLabel ? 4.5 : 6,
-          ),
-          decoration: BoxDecoration(
+        child:AnimatedContainer(
+  duration: const Duration(milliseconds: 180),
+  padding: EdgeInsets.symmetric(
+    horizontal: widget.showLabel ? 9 : 8,
+    vertical: widget.showLabel ? 4.5 : 6,
+  ),
+  decoration: BoxDecoration(
+    color: _isHovered
+        ? AppColors.primary.withValues(alpha: 0.10)
+        : (widget.showLabel
+            ? AppColors.primary.withValues(alpha: 0.05)
+            : Colors.transparent),
+    borderRadius: BorderRadius.circular(8),
+  ),
+  child: Row(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Icon(
+        Icons.menu_rounded,
+        color: _isHovered
+            ? AppColors.primary
+            : AppColors.textPrimary,
+        size: widget.showLabel ? 28 : 30,
+      ),
+      if (widget.showLabel) ...[
+        const SizedBox(width: 4),
+        Text(
+          'Menu',
+          style: GoogleFonts.inter(
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
             color: _isHovered
-                ? AppColors.primary.withValues(alpha: 0.10)
-                : (widget.showLabel
-                    ? AppColors.primary.withValues(alpha: 0.05)
-                    : Colors.transparent),
-            borderRadius: BorderRadius.circular(8),
-            border: widget.showLabel
-                ? Border.all(
-                    color: _isHovered
-                        ? AppColors.primary
-                        : AppColors.primary.withValues(alpha: 0.20),
-                    width: 1,
-                  )
-                : null,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.menu_rounded,
-                color: _isHovered ? AppColors.primary : AppColors.textPrimary,
-                size: widget.showLabel ? 22 : 24,
-              ),
-              if (widget.showLabel) ...[
-                const SizedBox(width: 4),
-                Text(
-                  'Menu',
-                  style: GoogleFonts.inter(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w600,
-                    color: _isHovered ? AppColors.primary : AppColors.textPrimary,
-                    letterSpacing: 0.2,
-                  ),
-                ),
-              ],
-            ],
+                ? AppColors.primary
+                : AppColors.textPrimary,
+            letterSpacing: 0.2,
           ),
         ),
+      ],
+    ],
+  ),
+)
       ),
     );
   }

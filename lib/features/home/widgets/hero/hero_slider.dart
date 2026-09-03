@@ -80,8 +80,9 @@ class _HeroSliderState extends State<HeroSlider> {
       subtext: "Don’t let Silent Glaucoma steal your peripheral sight unnoticed.",
       subtextHighlight: 'Silent Glaucoma',
       subtextHighlightColor: Color(0xFFF87171), // Coral Red Warning
-      photoAsset: 'assets/images/hero_slide_2_mobile.jpg',
-      imageAlignment: Alignment(0.35, -0.65), // High-tech slit-lamp, doctor, patient & retina display
+      photoAsset: 'assets/images/hero_slide_2.jpg',
+      mobilePhotoAsset: 'assets/images/hero_slide_2_mobile.jpg',
+      imageAlignment: Alignment(0.48, -0.42), // High-tech slit-lamp, doctor, patient & retina display on right
       mobileImageAlignment: Alignment(0.0, -0.60), // Doctor & patient faces, heads, and machine 100% in-frame
       featureTags: null,
     ),
@@ -95,8 +96,9 @@ class _HeroSliderState extends State<HeroSlider> {
       subtext: 'Say goodbye to Spectacle Dependence with custom HD laser precision.',
       subtextHighlight: 'Spectacle Dependence',
       subtextHighlightColor: Color(0xFFFBBF24), // Amber Gold
-      photoAsset: 'assets/images/hero_slide_3_mobile.jpg',
-      imageAlignment: Alignment(0.35, -0.65), // Smiling woman holding glasses & laser suite
+      photoAsset: 'assets/images/hero_slide_3.jpg',
+      mobilePhotoAsset: 'assets/images/hero_slide_3_mobile.jpg',
+      imageAlignment: Alignment(0.42, -0.45), // Smiling woman holding glasses & laser suite on right
       mobileImageAlignment: Alignment(0.0, -0.55), // Full portrait view of smiling woman with glasses
       featureTags: null,
     ),
@@ -110,8 +112,9 @@ class _HeroSliderState extends State<HeroSlider> {
       subtext: "Don’t let Diabetic Retinopathy weaken your vision without warning.",
       subtextHighlight: 'Diabetic Retinopathy',
       subtextHighlightColor: Color(0xFFF87171), // Coral Red Warning
-      photoAsset: 'assets/images/hero_slide_4_glasses.jpg',
-      imageAlignment: Alignment(0.35, -0.65), // Happy elderly uncle wearing glasses enjoying tea on sunlit veranda
+      photoAsset: 'assets/images/hero_slide_4_desktop_glasses.jpg',
+      mobilePhotoAsset: 'assets/images/hero_slide_4_glasses.jpg',
+      imageAlignment: Alignment(0.40, -0.45), // Happy elderly uncle wearing glasses enjoying tea on sunlit veranda
       mobileImageAlignment: Alignment(0.0, -0.60), // Full portrait view of smiling senior wearing glasses with restored sight
       featureTags: null,
     ),
