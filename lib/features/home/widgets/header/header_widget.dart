@@ -112,7 +112,7 @@ class HeaderWidget extends StatelessWidget {
         horizontal: isFloating
             ? (isMobile ? 12.0 : 20.0)
             : ResponsiveHelper.horizontalPadding(context),
-        vertical: isMobile ? (isSticky ? 4.0 : 5.5) : (isSticky ? 5.0 : 7.0),
+        // vertical: isMobile ? (isSticky ? 4.0 : 5.5) : (isSticky ? 5.0 : 7.0),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
