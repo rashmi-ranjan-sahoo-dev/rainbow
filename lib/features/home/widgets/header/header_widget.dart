@@ -121,19 +121,23 @@ class HeaderWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // ── 1. Official Logo Emblem & Typography ──
-          Flexible(
-            flex: isMobile ? 1 : 0,
-            child: RainbowLogo(
+          if (isMobile)
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: RainbowLogo(
+                  height: isSticky ? 38.0 : 44.0,
+                  onTap: () => SectionNavigator.scrollTo(SectionNavigator.heroKey),
+                ),
+              ),
+            )
+          else
+            RainbowLogo(
               height: isDesktop
                   ? (isSticky ? 22.0 : 26.0) // Reduced size specifically for PC / Laptop screens
-                  : (isMobile
-                      ? (screenWidth < 360
-                          ? (isSticky ? 38.0 : 42.0)
-                          : (isSticky ? 41.0 : 46.0)) // Fills the vertical height on Mobile to cover padding
-                      : (isSticky ? 28.0 : 32.0)),
+                  : (isSticky ? 28.0 : 32.0), // Tablet
               onTap: () => SectionNavigator.scrollTo(SectionNavigator.heroKey),
             ),
-          ),
 
           // ── 2. Desktop Navigation Menu (Screens >= 1080px) ──
           if (isDesktop)
@@ -145,8 +149,10 @@ class HeaderWidget extends StatelessWidget {
                 ),
               ),
             )
+          else if (!isMobile)
+            const Spacer()
           else
-            const Spacer(),
+            const SizedBox(width: 8),
 
           // ── 3. Actions (CTA Button + Hamburger) ──
           Row(
