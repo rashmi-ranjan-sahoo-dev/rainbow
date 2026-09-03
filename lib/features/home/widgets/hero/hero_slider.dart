@@ -18,7 +18,6 @@ class HeroSlideData {
   final String? subtextHighlight;
   final Color? subtextHighlightColor;
   final String photoAsset;
-  final String? mobilePhotoAsset;
   final List<String>? featureTags;
   final String cta2Text;
   final IconData cta2Icon;
@@ -35,7 +34,6 @@ class HeroSlideData {
     this.subtextHighlight,
     this.subtextHighlightColor,
     required this.photoAsset,
-    this.mobilePhotoAsset,
     this.featureTags,
     this.cta2Text = 'Book Appointment',
     this.cta2Icon = Icons.calendar_month_rounded,
@@ -81,9 +79,8 @@ class _HeroSliderState extends State<HeroSlider> {
       subtextHighlight: 'Silent Glaucoma',
       subtextHighlightColor: Color(0xFFF87171), // Coral Red Warning
       photoAsset: 'assets/images/hero_slide_2.jpg',
-      mobilePhotoAsset: 'assets/images/hero_slide_2_mobile.jpg',
-      imageAlignment: Alignment(0.48, -0.42), // High-tech slit-lamp, doctor, patient & retina display on right
-      mobileImageAlignment: Alignment(0.0, -0.60), // Doctor & patient faces, heads, and machine 100% in-frame
+      imageAlignment: Alignment(0.35, -0.50), // High-tech slit-lamp, doctor, patient & retina display
+      mobileImageAlignment: Alignment(0.15, -0.55), // Doctor & patient faces, heads, and machine 100% in-frame
       featureTags: null,
     ),
     // Slide 3 — LASIK & Contoura Vision (Specs-Free Lifestyle)
@@ -97,9 +94,8 @@ class _HeroSliderState extends State<HeroSlider> {
       subtextHighlight: 'Spectacle Dependence',
       subtextHighlightColor: Color(0xFFFBBF24), // Amber Gold
       photoAsset: 'assets/images/hero_slide_3.jpg',
-      mobilePhotoAsset: 'assets/images/hero_slide_3_mobile.jpg',
       imageAlignment: Alignment(0.42, -0.45), // Smiling woman holding glasses & laser suite on right
-      mobileImageAlignment: Alignment(0.0, -0.55), // Full portrait view of smiling woman with glasses
+      mobileImageAlignment: Alignment(0.35, -0.55), // Full portrait view of smiling woman with glasses
       featureTags: null,
     ),
     // Slide 4 — Diabetic Eye Care & Retinal Laser Therapy (Family Protection)
@@ -112,10 +108,9 @@ class _HeroSliderState extends State<HeroSlider> {
       subtext: "Don’t let Diabetic Retinopathy weaken your vision without warning.",
       subtextHighlight: 'Diabetic Retinopathy',
       subtextHighlightColor: Color(0xFFF87171), // Coral Red Warning
-      photoAsset: 'assets/images/hero_slide_4_desktop_glasses.jpg',
-      mobilePhotoAsset: 'assets/images/hero_slide_4_glasses.jpg',
+      photoAsset: 'assets/images/hero_slide_4.jpg',
       imageAlignment: Alignment(0.40, -0.45), // Happy elderly uncle wearing glasses enjoying tea on sunlit veranda
-      mobileImageAlignment: Alignment(0.0, -0.60), // Full portrait view of smiling senior wearing glasses with restored sight
+      mobileImageAlignment: Alignment(0.40, -0.55), // Full view of smiling senior wearing glasses with restored sight
       featureTags: null,
     ),
     // Slide 5 — Health Insurance & Cashless Treatment (Insurance Desk)
@@ -128,9 +123,8 @@ class _HeroSliderState extends State<HeroSlider> {
       subtext:
           'Cashless hospitalization & hassle-free claims with all major insurance providers.',
       photoAsset: 'assets/images/hero_slide_5.jpg',
-      mobilePhotoAsset: 'assets/images/hero_slide_5_mobile.jpg',
       imageAlignment: Alignment(0.22, -0.36), // Balanced view on desktop & tablet
-      mobileImageAlignment: Alignment(0.0, -0.65), // Centers both patient and coordinator with heads completely in-frame!
+      mobileImageAlignment: Alignment(0.20, -0.55), // Centers both patient and coordinator with heads completely in-frame!
       cta2Text: 'Check Insurance Coverage',
       cta2Icon: Icons.verified_user_rounded,
       featureTags: [
@@ -448,24 +442,12 @@ class _HeroSeamlessSlideState extends State<_HeroSeamlessSlide>
         // ── 1. Full-Width Background Image with Tailored Focal Alignment ──
         Positioned.fill(
           child: Image.asset(
-            (isMobile && widget.data.mobilePhotoAsset != null)
-                ? widget.data.mobilePhotoAsset!
-                : widget.data.photoAsset,
+            widget.data.photoAsset,
             fit: BoxFit.cover,
             alignment: isMobile
                 ? widget.data.mobileImageAlignment
                 : widget.data.imageAlignment,
             filterQuality: FilterQuality.high,
-            errorBuilder: (context, error, stackTrace) {
-              return Image.asset(
-                widget.data.photoAsset,
-                fit: BoxFit.cover,
-                alignment: isMobile
-                    ? widget.data.mobileImageAlignment
-                    : widget.data.imageAlignment,
-                filterQuality: FilterQuality.high,
-              );
-            },
           ),
         ),
 
