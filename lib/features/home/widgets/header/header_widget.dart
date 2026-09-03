@@ -42,15 +42,15 @@ class HeaderWidget extends StatelessWidget {
     // ── Floating Margin (Top on Hero) vs Edge-to-Edge (Sticky Scroll Up) ──
     final margin = isFloating
         ? EdgeInsets.fromLTRB(
-            isMobile ? 6 : 20,
-            isMobile ? 2 : 5,
-            isMobile ? 6 : 20,
+            isMobile ? 10 : 20,
+            isMobile ? 3 : 5,
+            isMobile ? 10 : 20,
             0,
           )
         : EdgeInsets.zero;
 
     final borderRadius = isFloating
-        ? BorderRadius.circular(isMobile ? 10 : 16)
+        ? BorderRadius.circular(isMobile ? 12 : 16)
         : BorderRadius.zero;
 
     return Center(
@@ -109,35 +109,24 @@ class HeaderWidget extends StatelessWidget {
   Widget _buildContent(BuildContext context, bool isSticky, bool isFloating, bool isMobile, bool isDesktop, double screenWidth) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile
-            ? 8.0
-            : (isFloating
-                ? 20.0
-                : ResponsiveHelper.horizontalPadding(context)),
-        vertical: isMobile ? (isSticky ? 2.0 : 3.0) : (isSticky ? 5.0 : 7.0),
+        horizontal: isFloating
+            ? (isMobile ? 12.0 : 20.0)
+            : ResponsiveHelper.horizontalPadding(context),
+        vertical: isMobile ? (isSticky ? 4.0 : 5.5) : (isSticky ? 5.0 : 7.0),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // ── 1. Official Logo Emblem & Typography ──
-          if (isMobile)
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: RainbowLogo(
-                  height: isSticky ? 38.0 : 44.0,
-                  onTap: () => SectionNavigator.scrollTo(SectionNavigator.heroKey),
-                ),
-              ),
-            )
-          else
-            RainbowLogo(
-              height: isDesktop
-                  ? (isSticky ? 22.0 : 26.0) // Reduced size specifically for PC / Laptop screens
-                  : (isSticky ? 28.0 : 32.0), // Tablet
-              onTap: () => SectionNavigator.scrollTo(SectionNavigator.heroKey),
-            ),
+          RainbowLogo(
+            height: isDesktop
+                ? (isSticky ? 22.0 : 26.0) // Reduced size specifically for PC / Laptop screens
+                : (isMobile
+                    ? (isSticky ? 29.0 : 33.0) // Just more than previous size (28.0 -> 33.0)
+                    : (isSticky ? 28.0 : 32.0)), // Tablet
+            onTap: () => SectionNavigator.scrollTo(SectionNavigator.heroKey),
+          ),
 
           // ── 2. Desktop Navigation Menu (Screens >= 1080px) ──
           if (isDesktop)
@@ -149,10 +138,8 @@ class HeaderWidget extends StatelessWidget {
                 ),
               ),
             )
-          else if (!isMobile)
-            const Spacer()
           else
-            const SizedBox(width: 8),
+            const Spacer(),
 
           // ── 3. Actions (CTA Button + Hamburger) ──
           Row(
