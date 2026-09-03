@@ -114,7 +114,7 @@ class HeaderWidget extends StatelessWidget {
             : (isFloating
                 ? 20.0
                 : ResponsiveHelper.horizontalPadding(context)),
-        vertical: isMobile ? (isSticky ? 2.0 : 3.0) : (isSticky ? 5.0 : 7.0),
+        vertical: isMobile ? (isSticky ? 1.0 : 1.5) : (isSticky ? 5.0 : 7.0),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,8 +128,8 @@ class HeaderWidget extends StatelessWidget {
                   ? (isSticky ? 22.0 : 26.0) // Reduced size specifically for PC / Laptop screens
                   : (isMobile
                       ? (screenWidth < 360
-                          ? (isSticky ? 30.0 : 33.0)
-                          : (isSticky ? 33.0 : 37.0)) // Increased size specifically for Mobile screens
+                          ? (isSticky ? 38.0 : 42.0)
+                          : (isSticky ? 41.0 : 46.0)) // Fills the vertical height on Mobile to cover padding
                       : (isSticky ? 28.0 : 32.0)),
               onTap: () => SectionNavigator.scrollTo(SectionNavigator.heroKey),
             ),
@@ -197,8 +197,8 @@ class _HamburgerButtonState extends State<_HamburgerButton> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
           padding: EdgeInsets.symmetric(
-            horizontal: widget.showLabel ? 11 : 8,
-            vertical: widget.showLabel ? 7 : 6,
+            horizontal: widget.showLabel ? 9 : 8,
+            vertical: widget.showLabel ? 4.5 : 6,
           ),
           decoration: BoxDecoration(
             color: _isHovered
@@ -223,14 +223,14 @@ class _HamburgerButtonState extends State<_HamburgerButton> {
               Icon(
                 Icons.menu_rounded,
                 color: _isHovered ? AppColors.primary : AppColors.textPrimary,
-                size: 24,
+                size: widget.showLabel ? 22 : 24,
               ),
               if (widget.showLabel) ...[
-                const SizedBox(width: 5),
+                const SizedBox(width: 4),
                 Text(
                   'Menu',
                   style: GoogleFonts.inter(
-                    fontSize: 14,
+                    fontSize: 13.5,
                     fontWeight: FontWeight.w600,
                     color: _isHovered ? AppColors.primary : AppColors.textPrimary,
                     letterSpacing: 0.2,

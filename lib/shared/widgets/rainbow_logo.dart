@@ -84,7 +84,7 @@ class _RainbowLogoState extends State<RainbowLogo> {
           curve: Curves.easeOutCubic,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
               boxShadow: [
