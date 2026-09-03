@@ -123,8 +123,8 @@ class HeaderWidget extends StatelessWidget {
             height: isDesktop
                 ? (isSticky ? 22.0 : 26.0) // Reduced size specifically for PC / Laptop screens
                 : (isMobile
-                    ? (isSticky ? 29.0 : 33.0) // Just more than previous size (28.0 -> 33.0)
-                    : (isSticky ? 28.0 : 32.0)), // Tablet
+                    ? (isSticky ? 25.0 : 26.0) // Just more than previous size (28.0 -> 33.0)
+                    : (isSticky ? 26.0 : 32.0)), // Tablet
             onTap: () => SectionNavigator.scrollTo(SectionNavigator.heroKey),
           ),
 
